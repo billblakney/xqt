@@ -21,6 +21,12 @@ MainWindow::~MainWindow()
 void MainWindow::onSend()
 {
   std::cout << "onSend" << std::endl;
+  QString tChecked = "false";
+  if (_checkBox->checkState() == Qt::Checked)
+  {
+    tChecked = "true";
+  }
+  std::cout << "_checkBox: " << qPrintable(tChecked) << std::endl;
   std::cout << "_lineEdit1: " << qPrintable(_lineEdit1->text()) << std::endl;
   std::cout << "_lineEdit2: " << qPrintable(_lineEdit2->text()) << std::endl;
 }
@@ -30,6 +36,8 @@ void MainWindow::onSend()
 void MainWindow::setupView()
 {
   std::cout << "setupView" << std::endl;
+
+  _checkBox = new QCheckBox("CheckBox");
 
   _label1 = new QLabel("SomeReallyReallyLongLabel",this);
   _lineEdit1 = new QLineEdit();
@@ -41,11 +49,12 @@ void MainWindow::setupView()
   tGridLayout->setRowStretch(1,0);
   tGridLayout->setRowStretch(2,0);
 
-  tGridLayout->addWidget(_label1,0,0);
-  tGridLayout->addWidget(_label2,1,0);
+  tGridLayout->addWidget(_checkBox,0,0);
+  tGridLayout->addWidget(_label1,1,0);
+  tGridLayout->addWidget(_label2,2,0);
 
-  tGridLayout->addWidget(_lineEdit1,0,1);
-  tGridLayout->addWidget(_lineEdit2,1,1);
+  tGridLayout->addWidget(_lineEdit1,1,1);
+  tGridLayout->addWidget(_lineEdit2,2,1);
 
   QWidget *tEditorsWidget = new QWidget(this);
   tEditorsWidget->setLayout(tGridLayout);

@@ -2,10 +2,11 @@
 #define MAINWINDOW_HH_
 
 #include <string>
-#include <QWidget>
+#include <QCheckBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QWidget>
 
 class MainWindow: public QWidget
 {
@@ -24,6 +25,7 @@ public slots:
 
 protected:
 
+  QCheckBox *_checkBox;
   QLabel *_label1;
   QLabel *_label2;
   QLineEdit *_lineEdit1;

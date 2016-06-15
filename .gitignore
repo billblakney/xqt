@@ -2,4 +2,6 @@
 .project
 language.settings.xml
 Makefile
-
+*.o
+moc_*
+go
