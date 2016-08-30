@@ -5,3 +5,4 @@ Makefile
 *.o
 moc_*
 go
+lib*so*

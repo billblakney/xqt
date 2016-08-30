@@ -32,6 +32,8 @@ protected:
   QLineEdit *_lineEdit2;
   QPushButton *_sendButton;
 
+  QPushButton *_sendButton;
+
 };
 
 #endif /* MAINWINDOW_HH_ */
