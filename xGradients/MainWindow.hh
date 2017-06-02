@@ -21,19 +21,21 @@ public:
 
 public slots:
 
-  void onSend();
+//  void onSend();
 
 protected:
 
-  QCheckBox *_checkBox;
-  QLabel *_label1;
-  QLabel *_label2;
-  QLineEdit *_lineEdit1;
-  QLineEdit *_lineEdit2;
-  QPushButton *_startButton;
+//  QCheckBox *_checkBox;
+//  QLabel *_label1;
+//  QLabel *_label2;
+//  QLineEdit *_lineEdit1;
+//  QLineEdit *_lineEdit2;
+//  QPushButton *_startButton;
 
-  QPushButton *_startButton;
-
+  QPushButton *_DefaultButton;
+  QPushButton *_button1;
+  QPushButton *_button2;
+  QPushButton *_button3;
 };
 
 #endif /* MAINWINDOW_HH_ */
