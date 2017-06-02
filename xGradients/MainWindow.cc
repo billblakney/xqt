@@ -81,6 +81,7 @@ void MainWindow::setupView()
   _button3 = new QPushButton(QString("Button3"),this);
   _button3->setFlat(true);
   _button3->setAutoFillBackground(true);
+_button3->setCheckable(true);
 
   QLinearGradient tGradient(QPointF(0,0),QPointF(0,1));
   tGradient.setCoordinateMode(QGradient::ObjectBoundingMode);
