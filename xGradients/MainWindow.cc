@@ -36,22 +36,47 @@ MainWindow::~MainWindow()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+QPushButton *MainWindow::createButton1()
+{
+  QPushButton *tButton = new QPushButton(QString("Button1"),this);
+
+  tButton->setFlat(true);
+  tButton->setAutoFillBackground(true);
+
+  QPalette tPalette = tButton->palette();
+  tPalette.setBrush(QPalette::Active, QPalette::Button,QBrush(Qt::red));
+  tPalette.setBrush(QPalette::Active, QPalette::Button,QBrush(Qt::red));
+  tPalette.setBrush(QPalette::Inactive, QPalette::Button,QBrush(Qt::blue));
+
+  tButton->setPalette(tPalette);
+
+  return tButton;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+QPushButton *MainWindow::createButton2()
+{
+  return new QPushButton(QString("Button2"),this);
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+QPushButton *MainWindow::createButton3()
+{
+  return NULL;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void MainWindow::setupView()
 {
   std::cout << "setupView" << std::endl;
 
   _DefaultButton = new QPushButton(QString("Default"),this);
 
-  _button1 = new QPushButton(QString("Button1"),this);
-  QPalette tFlatButtonPalette = _button1->palette();
-  tFlatButtonPalette.setBrush(QPalette::Active, QPalette::Button,QBrush(Qt::red));
-  tFlatButtonPalette.setBrush(QPalette::Active, QPalette::Button,QBrush(Qt::red));
-  tFlatButtonPalette.setBrush(QPalette::Inactive, QPalette::Button,QBrush(Qt::blue));
-  _button1->setFlat(true);
-  _button1->setAutoFillBackground(true);
-  _button1->setPalette(tFlatButtonPalette);
-
-  _button2 = new QPushButton(QString("Button2"),this);
+  _button1 = createButton1();
+  _button2 = createButton2();
 
   QPalette tPalette = _button1->palette();
   tPalette.setColor(QPalette::Window, Qt::blue);
@@ -71,12 +96,6 @@ void MainWindow::setupView()
   tPalette.setBrush(QPalette::Active, QPalette::Window, tBrushCyan);
   tPalette.setBrush(QPalette::Inactive, QPalette::Window, tBrushCyan);
   tPalette.setBrush(QPalette::Disabled, QPalette::Window, tBrushCyan);
-
-
-  _button1->setFlat(true);
-  _button1->setAutoFillBackground(true);
-  _button1->setPalette(tPalette);
-  _button1->update();
 
   _button3 = new QPushButton(QString("Button3"),this);
   _button3->setFlat(true);

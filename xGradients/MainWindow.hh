@@ -36,6 +36,10 @@ protected:
   QPushButton *_button1;
   QPushButton *_button2;
   QPushButton *_button3;
+
+  QPushButton *createButton1();
+  QPushButton *createButton2();
+  QPushButton *createButton3();
 };
 
 #endif /* MAINWINDOW_HH_ */
