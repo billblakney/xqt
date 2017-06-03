@@ -6,6 +6,7 @@ TEMPLATE = lib
 TARGET = testlib
 DEPENDPATH += .
 INCLUDEPATH += .
+QT += widgets
 
 #QMAKE_CXX = g++
 #QMAKE_CC = g++

@@ -6,6 +6,7 @@ TEMPLATE = app
 TARGET = go
 DEPENDPATH += .
 INCLUDEPATH += .
+QT += widgets
 
 # Input
 HEADERS += MainWindow.hh

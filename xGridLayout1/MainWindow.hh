@@ -31,9 +31,6 @@ protected:
   QLineEdit *_lineEdit1;
   QLineEdit *_lineEdit2;
   QPushButton *_startButton;
-
-  QPushButton *_startButton;
-
 };
 
 #endif /* MAINWINDOW_HH_ */
