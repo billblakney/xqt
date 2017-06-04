@@ -7,6 +7,7 @@
 #include <QPalette>
 #include <QPointF>
 #include "MainWindow.hh"
+#include "TestStyle.hh"
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -44,9 +45,16 @@ QPushButton *MainWindow::createButton1()
   tButton->setAutoFillBackground(true);
 
   QPalette tPalette = tButton->palette();
+
+  // when app window is in focus, Active palette is used
   tPalette.setBrush(QPalette::Active, QPalette::Button,QBrush(Qt::red));
-  tPalette.setBrush(QPalette::Active, QPalette::Button,QBrush(Qt::red));
-  tPalette.setBrush(QPalette::Inactive, QPalette::Button,QBrush(Qt::blue));
+
+  // when app window is not in focus, Inactive palette is used
+  tPalette.setBrush(QPalette::Inactive, QPalette::Button,QBrush(Qt::gray));
+
+  // When widget is disabled, Disabled palette is always used.
+  tPalette.setBrush(QPalette::Disabled, QPalette::Button,QBrush(Qt::darkGray));
+//  tButton->setEnabled(false); // disable the button
 
   tButton->setPalette(tPalette);
 
@@ -55,30 +63,30 @@ QPushButton *MainWindow::createButton1()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-QPushButton *MainWindow::createButton2()
+QPushButton *MainWindow::createStylizedButton()
 {
-  return new QPushButton(QString("Button2"),this);
+  QPushButton *tButton = new QPushButton(QString("Button2"),this);
+  tButton->setStyle(new TestStyle);
+
+  QPalette tPalette(Qt::green);
+  tButton->setPalette(tPalette);
+
+  return tButton;
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 QPushButton *MainWindow::createButton3()
 {
-  return NULL;
-}
+  QPushButton *tButton = new QPushButton(QString("Button3"),this);
 
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-void MainWindow::setupView()
-{
-  std::cout << "setupView" << std::endl;
+  tButton->setFlat(true);
+  tButton->setAutoFillBackground(true);
+  tButton->setCheckable(true);
 
-  _DefaultButton = new QPushButton(QString("Default"),this);
+#if 0
+  QPalette tPalette = tButton->palette();
 
-  _button1 = createButton1();
-  _button2 = createButton2();
-
-  QPalette tPalette = _button1->palette();
   tPalette.setColor(QPalette::Window, Qt::blue);
   tPalette.setBrush(QPalette::Window, Qt::red);
   tPalette.setBrush(QPalette::Button, Qt::green);
@@ -97,80 +105,47 @@ void MainWindow::setupView()
   tPalette.setBrush(QPalette::Inactive, QPalette::Window, tBrushCyan);
   tPalette.setBrush(QPalette::Disabled, QPalette::Window, tBrushCyan);
 
-  _button3 = new QPushButton(QString("Button3"),this);
-  _button3->setFlat(true);
-  _button3->setAutoFillBackground(true);
-_button3->setCheckable(true);
-
-  QLinearGradient tGradient(QPointF(0,0),QPointF(0,1));
-  tGradient.setCoordinateMode(QGradient::ObjectBoundingMode);
-//  QLinearGradient tGradient(QPointF(0,0),QPointF(50,50));
-  tGradient.setColorAt(0,Qt::yellow);
-  tGradient.setColorAt(1,Qt::blue);
-
 //  tPalette.setBrush(QPalette::Window, QBrush(tGradient));
 //  tPalette.setBrush(QPalette::Button, QBrush(tGradient));
 //  tPalette.setBrush(QPalette::ButtonText, QBrush(tGradient));
 
 //  tPalette.setColor(QPalette::WindowText, Qt::yellow);
-
-  QPalette tPaletteG = _button3->palette();
-//  tPaletteG.setBrush(_button1->backgroundRole(),tGradient);
-//  tPaletteG.setBrush(_button1->foregroundRole(),tGradient);
-//  tPaletteG.setColor(_button1->backgroundRole(), Qt::yellow);
-//  tPaletteG.setColor(_button1->foregroundRole(), Qt::yellow);
-  tPaletteG.setBrush(QPalette::Button,tGradient);
-  tPaletteG.setBrush(QPalette::Button,tGradient);
-//  tPaletteG.setColor(QPalette::Button, Qt::yellow);
-//  tPaletteG.setColor(QPalette::Button, Qt::yellow);
-
-  _button3->setPalette(tPaletteG);
-  _button3->update();
-
-  setPalette(tPalette);
-
-
-  QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
-  tBoxLayout->addWidget(_DefaultButton);
-  tBoxLayout->addWidget(_button1);
-  tBoxLayout->addWidget(_button2);
-  tBoxLayout->addWidget(_button3);
-
-#if 0
-  _checkBox = new QCheckBox("CheckBox");
-
-  _label1 = new QLabel("SomeReallyReallyLongLabel",this);
-  _lineEdit1 = new QLineEdit();
-
-  _label2 = new QLabel("Label",this);
-  _lineEdit2 = new QLineEdit();
-
-  QVGridLayout *tGridLayout = new QGridLayout(this);
-  tGridLayout->setRowStretch(1,0);
-  tGridLayout->setRowStretch(2,0);
-
-  tGridLayout->addWidget(_checkBox,0,0);
-  tGridLayout->addWidget(_label1,1,0);
-  tGridLayout->addWidget(_label2,2,0);
-
-  tGridLayout->addWidget(_lineEdit1,1,1);
-  tGridLayout->addWidget(_lineEdit2,2,1);
-
-  QWidget *tEditorsWidget = new QWidget(this);
-  tEditorsWidget->setLayout(tGridLayout);
-
-
-  QPushButton *tSendButton = new QPushButton(QString("Send"),this);
-  tSendButton->resize(100, 30);
-
-  QObject::connect( tSendButton, SIGNAL(clicked()), this, SLOT(onSend()) );
-
-  QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
-  tBoxLayout->setStretch(0,0);
-  tBoxLayout->setStretch(1,1);
-  tBoxLayout->addWidget(tEditorsWidget);
-  tBoxLayout->addWidget(tSendButton);
 #endif
+
+  QPalette tPalette = tButton->palette();
+
+  QLinearGradient tGradient(QPointF(0,0),QPointF(0,1));
+  tGradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+  tGradient.setColorAt(0,Qt::yellow);
+  tGradient.setColorAt(1,Qt::blue);
+
+  tPalette.setBrush(QPalette::Button,tGradient);
+
+  tButton->setPalette(tPalette);
+
+  return tButton;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::setupView()
+{
+  std::cout << "setupView" << std::endl;
+
+  _BasicButton = new QPushButton(QString("Default"),this);
+  _BasicCheckableButton = new QPushButton(QString("Default Checkable"),this);
+  _BasicCheckableButton->setCheckable(true);
+
+  _button1 = createButton1();
+  _StylizedButton = createStylizedButton();
+  _button3 = createButton3();
+
+  QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
+  tBoxLayout->addWidget(_BasicButton);
+  tBoxLayout->addWidget(_BasicCheckableButton);
+  tBoxLayout->addWidget(_StylizedButton);
+  tBoxLayout->addWidget(_button1);
+  tBoxLayout->addWidget(_button3);
 
 //  resize(200,120);
 

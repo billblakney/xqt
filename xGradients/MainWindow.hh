@@ -32,13 +32,14 @@ protected:
 //  QLineEdit *_lineEdit2;
 //  QPushButton *_startButton;
 
-  QPushButton *_DefaultButton;
+  QPushButton *_BasicButton;
+  QPushButton *_BasicCheckableButton;
   QPushButton *_button1;
-  QPushButton *_button2;
+  QPushButton *_StylizedButton;
   QPushButton *_button3;
 
   QPushButton *createButton1();
-  QPushButton *createButton2();
+  QPushButton *createStylizedButton();
   QPushButton *createButton3();
 };
 

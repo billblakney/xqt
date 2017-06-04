@@ -9,5 +9,5 @@ INCLUDEPATH += .
 QT += widgets
 
 # Input
-HEADERS += MainWindow.hh
-SOURCES += main.cc MainWindow.cc
+HEADERS += MainWindow.hh TestStyle.hh
+SOURCES += main.cc MainWindow.cc TestStyle.cc
