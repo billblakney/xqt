@@ -1,11 +1,13 @@
+#include <iostream>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPolygon>
 #include <QStyleOptionButton>
+#include <QStyleFactory>
 #include "TestStyle.hh"
 
 TestStyle::TestStyle()
-  : QCommonStyle()
+  : QProxyStyle(QStyleFactory::create("windowsxp"))
 {
 }
 
@@ -13,6 +15,58 @@ TestStyle::~TestStyle()
 {
 }
 
+void TestStyle::drawControl(ControlElement control, const QStyleOption *option,
+    QPainter *painter, const QWidget *widget) const
+{
+  switch (control)
+  {
+  case CE_PushButton:
+    std::cout << std::endl;
+    std::cout << "drawControl CE_PushButton" << std::endl;
+    break;
+  case CE_PushButtonBevel:
+    std::cout << "drawControl CE_PushButtonBevel" << std::endl;
+    break;
+  case CE_PushButtonLabel:
+    std::cout << "drawControl CE_PushButtonLabel" << std::endl;
+    break;
+  default:
+    {
+    std::cout << "drawControl DEFAULT" << std::endl;
+    break;
+    }
+  }
+
+  QProxyStyle::drawControl(control, option, painter, widget);//TODO
+}
+
+void TestStyle::drawPrimitive(PrimitiveElement element,
+    const QStyleOption *option,
+    QPainter *painter,
+    const QWidget *widget) const
+{
+  switch (element)
+  {
+  case PE_FrameDefaultButton:
+    std::cout << "drawPrimitive PE_FrameDefaultButton" << std::endl;
+    break;
+  case PE_FrameButtonBevel:
+    std::cout << "drawPrimitive PE_FrameButtonBevel" << std::endl;
+    break;
+  case PE_PanelButtonCommand:
+    std::cout << "drawPrimitive PE_PanelButtonCommand" << std::endl;
+//    painter->fillRect(option->rect, Qt::cyan);
+    break;
+  case PE_FrameFocusRect:
+    std::cout << "drawPrimitive PE_FrameFocusRect" << std::endl;
+    break;
+  default:
+    std::cout << "drawPrimitive default" << std::endl;
+  }
+  QProxyStyle::drawPrimitive(element, option, painter, widget);
+}
+
+#if 0
 void TestStyle::drawPrimitive(PrimitiveElement element,
     const QStyleOption *option,
     QPainter *painter,
@@ -113,6 +167,7 @@ void TestStyle::drawPrimitive(PrimitiveElement element,
   }
   break;
   default:
-    QCommonStyle::drawPrimitive(element, option, painter, widget);
+    QProxyStyle::drawPrimitive(element, option, painter, widget);
   }
 }
+#endif

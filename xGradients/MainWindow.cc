@@ -6,6 +6,7 @@
 #include <QLinearGradient>
 #include <QPalette>
 #include <QPointF>
+#include <QStyleFactory>
 #include "MainWindow.hh"
 #include "TestStyle.hh"
 
@@ -65,8 +66,11 @@ QPushButton *MainWindow::createButton1()
 //-----------------------------------------------------------------------------
 QPushButton *MainWindow::createStylizedButton()
 {
-  QPushButton *tButton = new QPushButton(QString("Button2"),this);
+  QPushButton *tButton = new QPushButton(QString("Stylized Button"),this);
   tButton->setStyle(new TestStyle);
+//  tButton->setStyle(new QWindowsStyle);
+//  tButton->setStyle(QStyleFactory::create("windowsxp"));
+//tButton->setFlat(false);
 
   QPalette tPalette(Qt::green);
   tButton->setPalette(tPalette);
@@ -136,8 +140,8 @@ void MainWindow::setupView()
   _BasicCheckableButton = new QPushButton(QString("Default Checkable"),this);
   _BasicCheckableButton->setCheckable(true);
 
-  _button1 = createButton1();
   _StylizedButton = createStylizedButton();
+  _button1 = createButton1();
   _button3 = createButton3();
 
   QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
