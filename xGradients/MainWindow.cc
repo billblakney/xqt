@@ -70,10 +70,14 @@ QPushButton *MainWindow::createStylizedButton()
   tButton->setStyle(new TestStyle);
 //  tButton->setStyle(new QWindowsStyle);
 //  tButton->setStyle(QStyleFactory::create("windowsxp"));
+
 //tButton->setFlat(false);
 
+//  QPalette tPalette(Qt::darkGreen);
   QPalette tPalette(Qt::green);
   tButton->setPalette(tPalette);
+
+  tButton->setCheckable(true);
 
   return tButton;
 }

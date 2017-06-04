@@ -1,4 +1,6 @@
 #include <iostream>
+#include <QString>
+#include <QStringList>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPolygon>
@@ -6,9 +8,16 @@
 #include <QStyleFactory>
 #include "TestStyle.hh"
 
+// Windows, GTK+, Fusion
 TestStyle::TestStyle()
-  : QProxyStyle(QStyleFactory::create("windowsxp"))
+//  : QProxyStyle(QStyleFactory::create("windowsxp"))
+  : QProxyStyle(QStyleFactory::create("fusion"))
 {
+  QStringList tList = QStyleFactory::keys();
+  for (int i = 0; i < tList.size(); i++ )
+  {
+    std::cout << tList[i].toStdString() << std::endl;
+  }
 }
 
 TestStyle::~TestStyle()
@@ -23,9 +32,11 @@ void TestStyle::drawControl(ControlElement control, const QStyleOption *option,
   case CE_PushButton:
     std::cout << std::endl;
     std::cout << "drawControl CE_PushButton" << std::endl;
+    // exiting at this point leaves nothing drawn
     break;
   case CE_PushButtonBevel:
     std::cout << "drawControl CE_PushButtonBevel" << std::endl;
+//return;
     break;
   case CE_PushButtonLabel:
     std::cout << "drawControl CE_PushButtonLabel" << std::endl;
@@ -41,29 +52,84 @@ void TestStyle::drawControl(ControlElement control, const QStyleOption *option,
 }
 
 void TestStyle::drawPrimitive(PrimitiveElement element,
-    const QStyleOption *option,
+    const QStyleOption *opt,
     QPainter *painter,
     const QWidget *widget) const
 {
   switch (element)
   {
   case PE_FrameDefaultButton:
+    {
     std::cout << "drawPrimitive PE_FrameDefaultButton" << std::endl;
+    return;
+    }
     break;
   case PE_FrameButtonBevel:
     std::cout << "drawPrimitive PE_FrameButtonBevel" << std::endl;
+return;
     break;
-  case PE_PanelButtonCommand:
-    std::cout << "drawPrimitive PE_PanelButtonCommand" << std::endl;
-//    painter->fillRect(option->rect, Qt::cyan);
+//  case PE_PanelButtonCommand: // draw background here
+//    std::cout << "drawPrimitive PE_PanelButtonCommand" << std::endl;
+//QProxyStyle::drawPrimitive(element, option, painter, widget);
+//return;
+////    painter->fillRect(option->rect, Qt::cyan);
+//    break;
+
+  case PE_PanelButtonCommand: //drawing of button background HERE!!!
+    {
+//    QProxyStyle::drawPrimitive(element, opt, painter, widget);
+    QBrush fill;
+//fill = opt->palette.brush(QPalette::Mid);
+//return;
+    if (opt->state & State_Sunken) // press in progress
+    {
+std::cout << "drawPrimitive PE_PanelButtonCommand fillFor(SUNKEN)" << std::endl;
+      fill = opt->palette.brush(QPalette::Mid);
+    }
+    else if ((opt->state & State_On) && (opt->state & State_Enabled)) // checked
+    {
+std::cout << "drawPrimitive PE_PanelButtonCommand fillFor(ON && ENABLED)" << std::endl;
+      fill = QBrush(opt->palette.mid().color(), Qt::Dense4Pattern);
+    }
+    else // normal nothing going on
+    {
+std::cout << "drawPrimitive PE_PanelButtonCommand fillFor(--OTHER--)" << std::endl;
+      fill = opt->palette.brush(QPalette::Button);
+    }
+    if ((opt->state & State_Enabled || opt->state & State_On) || !(opt->state & State_AutoRaise))
+std::cout << "drawPrimitive PE_PanelButtonCommand shadingFor(ON || ENABLED and !autoraise)" << std::endl;
+    {
+//      qDrawShadePanel(p, opt->rect, opt->palette, bool(opt->state & (State_Sunken | State_On)),
+//          proxy()->pixelMetric(PM_DefaultFrameWidth), &fill);
+    }
+//    painter->fillRect(opt->rect,Qt::cyan);
+    painter->fillRect(opt->rect,fill);
+    painter->setPen(QPen(Qt::black));
+    QRect tRect = opt->rect;
+    tRect.setWidth(tRect.width()-1);
+    tRect.setHeight(tRect.height()-1);
+    painter->drawRect(tRect);
+//QProxyStyle::drawPrimitive(element, opt, painter, widget);
+return;
     break;
+    }
+  case PE_PanelButtonBevel:
+    {
+//    QProxyStyle::drawPrimitive(element, opt, painter, widget);
+    break;
+    }
+  case PE_PanelButtonTool:
+    {
+return;
+    }
+
   case PE_FrameFocusRect:
     std::cout << "drawPrimitive PE_FrameFocusRect" << std::endl;
     break;
   default:
     std::cout << "drawPrimitive default" << std::endl;
   }
-  QProxyStyle::drawPrimitive(element, option, painter, widget);
+  QProxyStyle::drawPrimitive(element, opt, painter, widget);
 }
 
 #if 0
