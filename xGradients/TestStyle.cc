@@ -8,6 +8,8 @@
 #include <QStyleFactory>
 #include "TestStyle.hh"
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 TestStyle::TestStyle()
 //  : QProxyStyle(QStyleFactory::create("windowsxp"))
   : QProxyStyle(QStyleFactory::create("fusion"))
@@ -23,10 +25,14 @@ TestStyle::TestStyle()
 #endif
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 TestStyle::~TestStyle()
 {
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void TestStyle::drawControl(ControlElement control, const QStyleOption *option,
     QPainter *painter, const QWidget *widget) const
 {
@@ -41,8 +47,13 @@ void TestStyle::drawControl(ControlElement control, const QStyleOption *option,
     std::cout << "drawControl CE_PushButtonBevel" << std::endl;
 //return;
     break;
-  case CE_PushButtonLabel:
+  case CE_PushButtonLabel: // I think any custom drawing of label should be done here
+// maybe useful note
+//    subopt.rect = subElementRect(SE_PushButtonContents, btn, widget);
+//    proxy()->drawControl(CE_PushButtonLabel, &subopt, p, widget);
+// end maybe useful note
     std::cout << "drawControl CE_PushButtonLabel" << std::endl;
+//return; // label will not be drawn
     break;
   default:
     {
@@ -54,6 +65,8 @@ void TestStyle::drawControl(ControlElement control, const QStyleOption *option,
   QProxyStyle::drawControl(control, option, painter, widget);//TODO
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void TestStyle::drawPrimitive(PrimitiveElement element,
     const QStyleOption *opt,
     QPainter *painter,
@@ -92,7 +105,8 @@ std::cout << "drawPrimitive PE_PanelButtonCommand fillFor(SUNKEN)" << std::endl;
     else if ((opt->state & State_On) && (opt->state & State_Enabled)) // checked
     {
 std::cout << "drawPrimitive PE_PanelButtonCommand fillFor(ON && ENABLED)" << std::endl;
-      fill = QBrush(opt->palette.mid().color(), Qt::Dense4Pattern);
+//      fill = QBrush(opt->palette.mid().color(), Qt::Dense4Pattern);
+      fill = QBrush(opt->palette.brush(QPalette::Highlight)/*, Qt::Dense4Pattern*/);
     }
     else // normal nothing going on
     {
@@ -136,6 +150,8 @@ return;
 }
 
 #if 0
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void TestStyle::drawPrimitive(PrimitiveElement element,
     const QStyleOption *option,
     QPainter *painter,

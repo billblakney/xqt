@@ -26,6 +26,33 @@ MainWindow::~MainWindow()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+QPalette MainWindow::getFunkyPalette(QPalette aPalette)
+{
+  QPalette tPalette = aPalette;
+
+  QLinearGradient tButtonGrad(QPointF(0,0),QPointF(0,1));
+  tButtonGrad.setCoordinateMode(QGradient::ObjectBoundingMode);
+  tButtonGrad.setColorAt(0,Qt::cyan);
+  tButtonGrad.setColorAt(0.67,Qt::gray);
+  tButtonGrad.setColorAt(1.0,Qt::blue);
+
+  tPalette.setBrush(QPalette::Button,tButtonGrad);
+
+  QLinearGradient tMidGrad(QPointF(0,0),QPointF(0,1));
+  tMidGrad.setCoordinateMode(QGradient::ObjectBoundingMode);
+  tMidGrad.setColorAt(0,Qt::yellow);
+  tMidGrad.setColorAt(0.67,Qt::green);
+  tMidGrad.setColorAt(1.0,Qt::darkGreen);
+
+  tPalette.setBrush(QPalette::Mid,tMidGrad);
+
+  tPalette.setBrush(QPalette::Highlight,Qt::yellow);
+
+  return tPalette;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 QPushButton *MainWindow::createStylizedButton()
 {
   QPushButton *tButton = new QPushButton(QString("Stylized Button"),this);
@@ -35,9 +62,13 @@ QPushButton *MainWindow::createStylizedButton()
 
 //tButton->setFlat(false);
 
+#ifdef USE_PLAIN_PALETTE
 //  QPalette tPalette(Qt::darkGreen);
-  QPalette tPalette(Qt::green);
-  tButton->setPalette(tPalette);
+//  QPalette tPalette(Qt::green);
+//  tButton->setPalette(tPalette);
+#else
+  tButton->setPalette(getFunkyPalette(tButton->palette()));
+#endif
 
   tButton->setCheckable(true);
 
@@ -108,16 +139,7 @@ QPushButton *MainWindow::createButton3()
 //  tPalette.setColor(QPalette::WindowText, Qt::yellow);
 #endif
 
-  QPalette tPalette = tButton->palette();
-
-  QLinearGradient tGradient(QPointF(0,0),QPointF(0,1));
-  tGradient.setCoordinateMode(QGradient::ObjectBoundingMode);
-  tGradient.setColorAt(0,Qt::yellow);
-  tGradient.setColorAt(1,Qt::blue);
-
-  tPalette.setBrush(QPalette::Button,tGradient);
-
-  tButton->setPalette(tPalette);
+  tButton->setPalette(getFunkyPalette(tButton->palette()));
 
   return tButton;
 }
