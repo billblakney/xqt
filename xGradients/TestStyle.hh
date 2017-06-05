@@ -29,6 +29,13 @@ public:
       const QStyleOption *option,
       QPainter *painter,
       const QWidget *widget) const;
+
+#if 0
+  int pixelMetric(PixelMetric pm, const QStyleOption *opt,
+                             const QWidget *widget) const;
+#endif
+
+  bool event(QEvent *e);
 };
 
 #endif /* TestStyle_hh */

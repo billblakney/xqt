@@ -30,4 +30,66 @@ case CE_PushButton:
    proxy()->drawControl(CE_PushButtonLabel, &subopt, p, widget);
    proxy()->drawPrimitive(PE_FrameFocusRect, &fropt, p, widget);
 
-case CE_PushButtonBevel:
+LAUNCH:
+drawControl CE_PushButton
+drawControl DEFAULT
+drawControl CE_PushButtonBevel
+drawControl DEFAULT
+drawControl CE_PushButtonLabel
+drawControl DEFAULT
+
+PRESS:
+drawControl CE_PushButton
+drawControl DEFAULT
+drawControl CE_PushButtonBevel
+drawControl DEFAULT
+drawPrimitive PE_PanelButtonCommand
+drawPrimitive PE_PanelButtonCommand fillFor(SUNKEN)
+drawPrimitive PE_PanelButtonCommand shadingFor(ON || ENABLED and !autoraise)
+drawPrimitive DEFAULT
+drawControl CE_PushButtonLabel
+drawControl DEFAULT
+
+RELEASE:
+drawControl CE_PushButton
+drawControl CE_PushButton
+drawControl DEFAULT
+drawControl CE_PushButtonBevel
+drawControl DEFAULT
+drawPrimitive PE_PanelButtonCommand
+drawPrimitive PE_PanelButtonCommand fillFor(ON && ENABLED)
+drawPrimitive PE_PanelButtonCommand shadingFor(ON || ENABLED and !autoraise)
+drawPrimitive DEFAULT
+drawControl CE_PushButtonLabel
+drawControl DEFAULT
+
+MOVE_OFF_WINDOW:
+drawControl CE_PushButton
+drawControl DEFAULT
+drawControl CE_PushButtonBevel
+drawControl DEFAULT
+drawPrimitive PE_PanelButtonCommand
+drawPrimitive PE_PanelButtonCommand fillFor(ON && ENABLED)
+drawPrimitive PE_PanelButtonCommand shadingFor(ON || ENABLED and !autoraise)
+drawPrimitive DEFAULT
+drawControl CE_PushButtonLabel
+drawControl DEFAULT
+
+........
+
+ENTER_WINDOW:
+drawControl CE_PushButton
+drawControl DEFAULT
+drawControl CE_PushButtonBevel
+drawControl DEFAULT
+drawControl CE_PushButtonLabel
+drawControl DEFAULT
+
+EXIT_WINDOW:
+drawControl CE_PushButton
+drawControl DEFAULT
+drawControl CE_PushButtonBevel
+drawControl DEFAULT
+drawControl CE_PushButtonLabel
+drawControl DEFAULT
+

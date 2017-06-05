@@ -1,5 +1,6 @@
 #include <iostream>
 #include <QApplication>
+#include <QWindowsStyle>
 #include "MainWindow.hh"
 #include "TestStyle.hh"
 
@@ -7,6 +8,8 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+  QApplication::setStyle(new QMotifStyle);
+//  QApplication::setStyle(new QWindowsStyle);
 //  QApplication::setStyle(new TestStyle);
   QApplication app(argc, argv);
 

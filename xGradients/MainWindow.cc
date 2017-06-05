@@ -11,6 +11,8 @@
 #include "MainWindow.hh"
 #include "TestStyle.hh"
 
+//#define USE_FUNKY
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *aParent)
@@ -53,6 +55,39 @@ QPalette MainWindow::getFunkyPalette(QPalette aPalette)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+QPalette MainWindow::getSteelPalette(QPalette aPalette)
+{
+  QPalette tPalette = aPalette;
+
+  QLinearGradient tButtonGrad(QPointF(0,0),QPointF(0,1));
+  tButtonGrad.setCoordinateMode(QGradient::ObjectBoundingMode);
+
+  QColor tButtonColorA(0x676767);
+  QColor tButtonColorB(0x2b2b2b);
+//  QColor tButtonColorA(Qt::white);
+//  QColor tButtonColorB(Qt::blue);
+  tButtonGrad.setColorAt(0,tButtonColorA);
+  tButtonGrad.setColorAt(0.5,tButtonColorB);
+  tButtonGrad.setColorAt(1,tButtonColorB);
+
+  tPalette.setBrush(QPalette::Button,tButtonGrad);
+
+  QLinearGradient tMidGrad(QPointF(0,0),QPointF(0,1));
+  tMidGrad.setCoordinateMode(QGradient::ObjectBoundingMode);
+  tMidGrad.setColorAt(0,QColor(0x2b2b2b));
+  tMidGrad.setColorAt(1.0,QColor(0x2b2b2b));
+
+  tPalette.setBrush(QPalette::Mid,tMidGrad);
+
+  tPalette.setBrush(QPalette::ButtonText,QColor(0xC0C0C0));
+
+  tPalette.setBrush(QPalette::Highlight,Qt::yellow);
+
+  return tPalette;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 QPushButton *MainWindow::createStylizedButton()
 {
   QPushButton *tButton = new QPushButton(QString("Stylized Button"),this);
@@ -60,16 +95,27 @@ QPushButton *MainWindow::createStylizedButton()
 //  tButton->setStyle(new QWindowsStyle);
 //  tButton->setStyle(QStyleFactory::create("windowsxp"));
 
-//tButton->setFlat(false);
 
 #ifdef USE_PLAIN_PALETTE
 //  QPalette tPalette(Qt::darkGreen);
 //  QPalette tPalette(Qt::green);
 //  tButton->setPalette(tPalette);
 #else
+#ifdef USE_FUNKY
   tButton->setPalette(getFunkyPalette(tButton->palette()));
+#else
+  tButton->setPalette(getSteelPalette(tButton->palette()));
+#endif
 #endif
 
+  // TODO may want to note this somewhere
+  // Note: Setting flat to false gives button bevel with thicker lighter gray
+  // on top and left sides, and darker gray on bottom and right sides.
+//  tButton->setFlat(true);
+  // Note: If auto fill background is set to false, button background is not
+  // drawn in normal state (active, unpressed, unchecked), but is when pressed
+  // or checked.
+  tButton->setAutoFillBackground(true);
   tButton->setCheckable(true);
 
   return tButton;
@@ -139,7 +185,11 @@ QPushButton *MainWindow::createButton3()
 //  tPalette.setColor(QPalette::WindowText, Qt::yellow);
 #endif
 
+#ifdef USE_FUNKY
   tButton->setPalette(getFunkyPalette(tButton->palette()));
+#else
+  tButton->setPalette(getSteelPalette(tButton->palette()));
+#endif
 
   return tButton;
 }
@@ -156,6 +206,7 @@ void MainWindow::setupView()
   _BasicCheckableButton->setCheckable(true);
 
   _StylizedButton = createStylizedButton();
+
   _button1 = createButton1();
   _button3 = createButton3();
 
@@ -167,6 +218,11 @@ void MainWindow::setupView()
   tBoxLayout->addWidget(_button3);
 
 //  resize(200,120);
-
   setLayout(tBoxLayout);
+
+  QPalette pal = palette();
+  // set black background
+  pal.setColor(QPalette::Background, Qt::black);
+  setAutoFillBackground(true);
+  setPalette(pal);
 }

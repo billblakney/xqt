@@ -39,6 +39,8 @@ protected:
   QPushButton *_button3;
 
   QPalette getFunkyPalette(QPalette aPalette);
+  QPalette getSteelPalette(QPalette aPalette);
+
   QPushButton *createStylizedButton();
   QPushButton *createButton1();
   QPushButton *createButton3();
