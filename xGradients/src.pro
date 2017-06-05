@@ -6,7 +6,12 @@ TEMPLATE = app
 TARGET = go
 DEPENDPATH += .
 INCLUDEPATH += .
-QT += widgets
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += widgets
+}
+
+DEFINES += QT_V4
 
 # Input
 HEADERS += MainWindow.hh TestStyle.hh

@@ -11,8 +11,11 @@
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 TestStyle::TestStyle()
-//  : QProxyStyle(QStyleFactory::create("windowsxp"))
+#ifdef QT_V4
+  : QMotifStyle()
+#else
   : QProxyStyle(QStyleFactory::create("fusion"))
+#endif
 {
 #define SHOW_STYLES
 #ifdef SHOW_STYLES
@@ -62,7 +65,11 @@ void TestStyle::drawControl(ControlElement control, const QStyleOption *option,
     }
   }
 
+#ifdef QT_V4
+  QMotifStyle::drawControl(control, option, painter, widget);//TODO
+#else
   QProxyStyle::drawControl(control, option, painter, widget);//TODO
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -146,7 +153,12 @@ return;
   default:
     std::cout << "drawPrimitive default" << std::endl;
   }
+
+#ifdef QT_V4
+  QMotifStyle::drawPrimitive(element, opt, painter, widget);
+#else
   QProxyStyle::drawPrimitive(element, opt, painter, widget);
+#endif
 }
 
 #if 0
