@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <iostream>
 #include <QString>
+#include <QWidget>
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QLinearGradient>
@@ -23,18 +24,25 @@ MainWindow::~MainWindow()
 {
 }
 
-//void MainWindow::onSend()
-//{
-//  std::cout << "onSend" << std::endl;
-//  QString tChecked = "false";
-//  if (_checkBox->checkState() == Qt::Checked)
-//  {
-//    tChecked = "true";
-//  }
-//  std::cout << "_checkBox: " << qPrintable(tChecked) << std::endl;
-//  std::cout << "_lineEdit1: " << qPrintable(_lineEdit1->text()) << std::endl;
-//  std::cout << "_lineEdit2: " << qPrintable(_lineEdit2->text()) << std::endl;
-//}
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+QPushButton *MainWindow::createStylizedButton()
+{
+  QPushButton *tButton = new QPushButton(QString("Stylized Button"),this);
+  tButton->setStyle(new TestStyle);
+//  tButton->setStyle(new QWindowsStyle);
+//  tButton->setStyle(QStyleFactory::create("windowsxp"));
+
+//tButton->setFlat(false);
+
+//  QPalette tPalette(Qt::darkGreen);
+  QPalette tPalette(Qt::green);
+  tButton->setPalette(tPalette);
+
+  tButton->setCheckable(true);
+
+  return tButton;
+}
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -58,26 +66,6 @@ QPushButton *MainWindow::createButton1()
 //  tButton->setEnabled(false); // disable the button
 
   tButton->setPalette(tPalette);
-
-  return tButton;
-}
-
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-QPushButton *MainWindow::createStylizedButton()
-{
-  QPushButton *tButton = new QPushButton(QString("Stylized Button"),this);
-  tButton->setStyle(new TestStyle);
-//  tButton->setStyle(new QWindowsStyle);
-//  tButton->setStyle(QStyleFactory::create("windowsxp"));
-
-//tButton->setFlat(false);
-
-//  QPalette tPalette(Qt::darkGreen);
-  QPalette tPalette(Qt::green);
-  tButton->setPalette(tPalette);
-
-  tButton->setCheckable(true);
 
   return tButton;
 }
@@ -141,6 +129,7 @@ void MainWindow::setupView()
   std::cout << "setupView" << std::endl;
 
   _BasicButton = new QPushButton(QString("Default"),this);
+
   _BasicCheckableButton = new QPushButton(QString("Default Checkable"),this);
   _BasicCheckableButton->setCheckable(true);
 
