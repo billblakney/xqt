@@ -1,0 +1,33 @@
+drawControl CE_PushButton
+drawControl CE_PushButtonBevel
+drawPrimitive PE_PanelButtonCommand
+drawControl CE_PushButtonLabel
+
+drawControl CE_PushButton
+drawControl CE_PushButtonBevel
+drawPrimitive PE_PanelButtonCommand
+drawControl CE_PushButtonLabel
+drawPrimitive PE_FrameFocusRect
+
+drawControl CE_PushButton
+drawControl CE_PushButtonBevel
+drawPrimitive PE_PanelButtonCommand
+drawControl CE_PushButtonLabel
+drawPrimitive PE_FrameFocusRect
+
+drawControl CE_PushButton
+drawControl CE_PushButtonBevel
+drawPrimitive PE_PanelButtonCommand
+drawControl CE_PushButtonLabel
+
+drawControl CE_PushButton
+drawControl CE_PushButtonBevel
+drawPrimitive PE_PanelButtonCommand
+drawControl CE_PushButtonLabel
+
+case CE_PushButton:
+   proxy()->drawControl(CE_PushButtonBevel, btn, p, widget);
+   proxy()->drawControl(CE_PushButtonLabel, &subopt, p, widget);
+   proxy()->drawPrimitive(PE_FrameFocusRect, &fropt, p, widget);
+
+case CE_PushButtonBevel:

@@ -8,16 +8,19 @@
 #include <QStyleFactory>
 #include "TestStyle.hh"
 
-// Windows, GTK+, Fusion
 TestStyle::TestStyle()
 //  : QProxyStyle(QStyleFactory::create("windowsxp"))
   : QProxyStyle(QStyleFactory::create("fusion"))
 {
+#define SHOW_STYLES
+#ifdef SHOW_STYLES
   QStringList tList = QStyleFactory::keys();
   for (int i = 0; i < tList.size(); i++ )
   {
     std::cout << tList[i].toStdString() << std::endl;
   }
+  // on ubuntu: Windows, GTK+, Fusion
+#endif
 }
 
 TestStyle::~TestStyle()
