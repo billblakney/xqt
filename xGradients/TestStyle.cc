@@ -92,6 +92,26 @@ std::cout << "MOTIFSYTLE drawControl CE_PushButton" << std::endl;
         break;
 #else
     std::cout << "Custom drawControl CE_PushButton" << std::endl;
+    // first call the base class version,
+    // then afterwards, draw the custom border
+    if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(opt))
+    {
+#ifdef QT_V5
+    QProxyStyle::drawControl(control, opt, p, widget);
+#else
+    QMotifStyle::drawControl(control, opt, p, widget);
+#endif
+#define CUSTOMIZE_ADD_BORDER
+#ifdef CUSTOMIZE_ADD_BORDER
+    p->setPen(QPen(QColor(0x527596)));
+//    QRect tRect = subopt.rect;
+    QRect tRect = opt->rect;
+    tRect.setWidth(tRect.width()-1);
+    tRect.setHeight(tRect.height()-1);
+    p->drawRect(tRect);
+#endif
+    }
+    tUseDefaultDraw = false; // @added
     break;
 #endif
   case CE_PushButtonBevel:
@@ -310,7 +330,9 @@ std::cout << "drawPrimitive PE_PanelButtonCommand shadingFor(ON || ENABLED and !
           proxy()->pixelMetric(PM_DefaultFrameWidth), &fill);
 #endif
     }
-#if 0 // a my custom
+//TODO marker (temp)
+//#define CUSTOMIZE_ADD_BORDER
+#ifdef CUSTOMIZE_ADD_BORDER
 //    painter->fillRect(opt->rect,Qt::cyan);
 //    painter->fillRect(opt->rect,fill);
     painter->setPen(QPen(Qt::white));
