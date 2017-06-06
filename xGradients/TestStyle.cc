@@ -355,8 +355,8 @@ std::cout << "drawPrimitive PE_PanelButtonCommand fillFor(--OTHER--)" << std::en
       fill = opt->palette.brush(QPalette::Button);
     }
     if ((opt->state & State_Enabled || opt->state & State_On) || !(opt->state & State_AutoRaise))
-std::cout << "drawPrimitive PE_PanelButtonCommand shadingFor(ON || ENABLED and !autoraise)" << std::endl;
     {
+std::cout << "drawPrimitive PE_PanelButtonCommand shadingFor(ON || ENABLED and !autoraise)" << std::endl;
       qDrawShadePanel(painter, opt->rect, opt->palette, bool(opt->state & (State_Sunken | State_On)),
 // TODO no need for this customization - just use setFlat(true) and setAutoFillBackground(true)
 // Note: Can disable bevel for normal state via setFlat(true) and setAutoFillBackground(true).
@@ -368,21 +368,7 @@ std::cout << "drawPrimitive PE_PanelButtonCommand shadingFor(ON || ENABLED and !
           proxy()->pixelMetric(PM_DefaultFrameWidth), &fill);
 #endif
     }
-//TODO marker (temp)
-// Doesn't always work here. Must be
-#define CUSTOMIZE_ADD_BORDER
-#ifdef CUSTOMIZE_ADD_BORDER
-#if 0
-    painter->setPen(QPen(opt->palette.midlight().color()));
-    QRect tRect = opt->rect;
-    tRect.setWidth(tRect.width()-1);
-    tRect.setHeight(tRect.height()-1);
-    painter->drawRect(tRect);
-#endif
-#endif
 
-//QProxyStyle::drawPrimitive(element, opt, painter, widget);
-//return;
     tUseDefaultDraw = false;
     break;
     }
