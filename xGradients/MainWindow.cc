@@ -57,42 +57,39 @@ QPalette MainWindow::getFunkyPalette(QPalette aPalette)
 //-----------------------------------------------------------------------------
 QPalette MainWindow::getSteelPalette(QPalette aPalette)
 {
-  QPalette tPalette = aPalette;
+  static QColor _DefaultButtonBaseColor(0x2b2b2b); // "med jungle green"
+  static QColor _DefaultButtonFadeColor(0x747474); // "old lavender"
+  static QColor _DefaultButtonBorderColor(0x7a8a99); // "lt slate gray"
+  static QColor _DefaultButtonCheckedColor(0x404040); // "payne's gray"
+  static QColor _DefaultButtonTextColor(0xc0c0c0); // "silver"
 
-  QLinearGradient tButtonGrad(QPointF(0,0),QPointF(0,1));
-  tButtonGrad.setCoordinateMode(QGradient::ObjectBoundingMode);
+  QPalette tPalette = aPalette;
 
   /*
    * Setup QPalette::Button brush, which is used for button background
    * when button is "normal", i.e. active and not pressed or checked
    */
-  QColor tButtonColorA(0x676767);
-  QColor tButtonColorB(0x2b2b2b);
-//  QColor tButtonColorA(Qt::white);
-//  QColor tButtonColorB(Qt::blue);
-  tButtonGrad.setColorAt(0,tButtonColorA);
-  tButtonGrad.setColorAt(0.5,tButtonColorB);
-  tButtonGrad.setColorAt(1,tButtonColorB);
-
+  QLinearGradient tButtonGrad(QPointF(0,0),QPointF(0,1));
+  tButtonGrad.setCoordinateMode(QGradient::ObjectBoundingMode);
+  tButtonGrad.setColorAt(0,_DefaultButtonFadeColor);
+  tButtonGrad.setColorAt(0.5,_DefaultButtonBaseColor);
+  tButtonGrad.setColorAt(1,_DefaultButtonBaseColor);
   tPalette.setBrush(QPalette::Button,tButtonGrad);
 
   /*
    * Setup QPalette::Mid brush, which is used for button background
    * when button is pressed
    */
-  QLinearGradient tMidGrad(QPointF(0,0),QPointF(0,1));
-  tMidGrad.setCoordinateMode(QGradient::ObjectBoundingMode);
-  tMidGrad.setColorAt(0,QColor(0x2b2b2b));
-  tMidGrad.setColorAt(1.0,QColor(0x2b2b2b));
-
-  tPalette.setBrush(QPalette::Mid,tMidGrad);
-tPalette.setBrush(QPalette::Mid,Qt::darkGray);
+  tPalette.setBrush(QPalette::Mid,_DefaultButtonCheckedColor);
 
   /*
-   *
+   * Setup QPalette::Text brush, which is used for button text
    */
-  tPalette.setBrush(QPalette::ButtonText,QColor(0xC0C0C0));
+  tPalette.setBrush(QPalette::ButtonText,_DefaultButtonTextColor);
 
+  /*
+   * Setup QPalette::Highlight brush, which is used for...
+   */
   tPalette.setBrush(QPalette::Highlight,Qt::yellow);
 
   return tPalette;
@@ -129,6 +126,7 @@ QPushButton *MainWindow::createStylizedButton()
   // or checked.
   tButton->setAutoFillBackground(true);
   tButton->setCheckable(true);
+  tButton->setFlat(true);
 
   return tButton;
 }

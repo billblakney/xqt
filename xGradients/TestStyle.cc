@@ -281,7 +281,7 @@ std::cout << "drawPrimitive PE_PanelButtonCommand fillFor(SUNKEN)" << std::endl;
     else if ((opt->state & State_On) && (opt->state & State_Enabled)) // checked
     {
 std::cout << "drawPrimitive PE_PanelButtonCommand fillFor(ON && ENABLED)" << std::endl;
-//#define CUSTOMIZE_CHECKED_FILL
+#define CUSTOMIZE_CHECKED_FILL
 #ifdef CUSTOMIZE_CHECKED_FILL
 //      fill = QBrush(opt->palette.brush(QPalette::Highlight)/*, Qt::Dense4Pattern*/);
 //      fill = QBrush(opt->palette.brush(QPalette::Highlight)/*, Qt::Dense4Pattern*/);
@@ -300,6 +300,9 @@ std::cout << "drawPrimitive PE_PanelButtonCommand fillFor(--OTHER--)" << std::en
 std::cout << "drawPrimitive PE_PanelButtonCommand shadingFor(ON || ENABLED and !autoraise)" << std::endl;
     {
       qDrawShadePanel(painter, opt->rect, opt->palette, bool(opt->state & (State_Sunken | State_On)),
+// TODO no need for this customization - just use setFlat(true) and setAutoFillBackground(true)
+// Note: Can disable bevel for normal state via setFlat(true) and setAutoFillBackground(true).
+// But need this customization to eliminate the bevel for the checked state.
 #define CUSTOMIZE_NO_BEVEL
 #ifdef CUSTOMIZE_NO_BEVEL
           0, &fill);
@@ -307,7 +310,7 @@ std::cout << "drawPrimitive PE_PanelButtonCommand shadingFor(ON || ENABLED and !
           proxy()->pixelMetric(PM_DefaultFrameWidth), &fill);
 #endif
     }
-#if 1 // a my custom
+#if 0 // a my custom
 //    painter->fillRect(opt->rect,Qt::cyan);
 //    painter->fillRect(opt->rect,fill);
     painter->setPen(QPen(Qt::white));
