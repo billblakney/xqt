@@ -9,9 +9,8 @@ INCLUDEPATH += .
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets
+	DEFINES += QT_V5
 }
-
-DEFINES += QT_V4
 
 # Input
 HEADERS += MainWindow.hh TestStyle.hh

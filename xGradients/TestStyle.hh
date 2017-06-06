@@ -1,17 +1,17 @@
 #ifndef TestStyle_hh
 #define TestStyle_hh
 
-#ifdef QT_V4
-#include <QMotifStyle>
-#else
+#ifdef QT_V5
 #include <QProxyStyle>
+#else
+#include <QMotifStyle>
 #endif
 #include <QStyleOption>
 
-#ifdef QT_V4
-class TestStyle : public QMotifStyle
-#else
+#ifdef QT_V5
 class TestStyle : public QProxyStyle
+#else
+class TestStyle : public QMotifStyle
 #endif
 {
   Q_OBJECT;

@@ -5,7 +5,12 @@
 #include <QPainterPath>
 #include <QPolygon>
 #include <QStyleOptionButton>
+#ifdef QT_V5
 #include <QStyleFactory>
+#include <qdrawutil.h>
+#else
+#include <QMotifStyle>
+#endif
 
 #include <QEvent>
 #include <QApplication>
@@ -21,12 +26,13 @@
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 TestStyle::TestStyle()
-#ifdef QT_V4
-  : QMotifStyle()
-#else
+#ifdef QT_V5
   : QProxyStyle(QStyleFactory::create("fusion"))
+#else
+  : QMotifStyle()
 #endif
 {
+#ifdef QT_V5
 #define SHOW_STYLES
   // ubuntu: Windows, GTK+, Fusion
   // work: Windows, Motif, CDE, Plastique, GTK+, Cleanlooks
@@ -36,6 +42,7 @@ TestStyle::TestStyle()
   {
     std::cout << tList[i].toStdString() << std::endl;
   }
+#endif
 #endif
 }
 
@@ -51,10 +58,10 @@ void TestStyle::drawControl(ControlElement control, const QStyleOption *opt,
     QPainter *p, const QWidget *widget) const
 {
 #ifdef INVALIDATE_TEST_STYLE
-#ifdef QT_V4
-    QMotifStyle::drawControl(control, opt, p, widget);
-#else
+#ifdef QT_V5
     QProxyStyle::drawControl(control, opt, p, widget);
+#else
+    QMotifStyle::drawControl(control, opt, p, widget);
 #endif
   return;
 #endif
@@ -209,10 +216,10 @@ tUseDefaultDraw = false;
   if (tUseDefaultDraw == true)
   {
     std::cout << "drawControl DEFAULT" << std::endl;
-#ifdef QT_V4
-    QMotifStyle::drawControl(control, opt, p, widget);
+#ifdef QT_V5
+    QProxyStyle::drawControl(control, opt, p, widget);
 #else
-//    QProxyStyle::drawControl(control, opt, p, widget);
+    QMotifStyle::drawControl(control, opt, p, widget);
 #endif
   }
 }
@@ -225,10 +232,10 @@ void TestStyle::drawPrimitive(PrimitiveElement element,
     const QWidget *widget) const
 {
 #ifdef INVALIDATE_TEST_STYLE
-#ifdef QT_V4
-  QMotifStyle::drawPrimitive(element, opt, painter, widget);
-#else
+#ifdef QT_V5
   QProxyStyle::drawPrimitive(element, opt, painter, widget);
+#else
+  QMotifStyle::drawPrimitive(element, opt, painter, widget);
 #endif
   return;
 #endif
@@ -300,6 +307,7 @@ std::cout << "drawPrimitive PE_PanelButtonCommand shadingFor(ON || ENABLED and !
 //    painter->fillRect(opt->rect,Qt::cyan);
 //    painter->fillRect(opt->rect,fill);
     painter->setPen(QPen(Qt::white));
+    painter->setPen(QPen(Qt::yellow));
     painter->setPen(QPen(QColor(0x527596)));
     QRect tRect = opt->rect;
     tRect.setWidth(tRect.width()-1);
@@ -344,10 +352,10 @@ return;
   if (tUseDefaultDraw == true)
   {
     std::cout << "drawPrimitive DEFAULT" << std::endl;
-#ifdef QT_V4
-  QMotifStyle::drawPrimitive(element, opt, painter, widget);
+#ifdef QT_V5
+  QProxyStyle::drawPrimitive(element, opt, painter, widget);
 #else
-//  QProxyStyle::drawPrimitive(element, opt, painter, widget);
+  QMotifStyle::drawPrimitive(element, opt, painter, widget);
 #endif
   }
 }
