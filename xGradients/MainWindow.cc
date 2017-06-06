@@ -8,6 +8,7 @@
 #include <QPalette>
 #include <QPointF>
 #include <QStyleFactory>
+#include <QMotifStyle>
 #include "MainWindow.hh"
 #include "TestStyle.hh"
 
@@ -55,7 +56,7 @@ QPalette MainWindow::getFunkyPalette(QPalette aPalette)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-QPalette MainWindow::getSteelPalette(QPalette aPalette)
+QPalette MainWindow::getSonarPalette(QPalette aPalette)
 {
   static QColor _DefaultButtonBaseColor(0x2b2b2b); // "med jungle green"
   static QColor _DefaultButtonFadeColor(0x747474); // "old lavender"
@@ -111,37 +112,47 @@ QPalette MainWindow::getSteelPalette(QPalette aPalette)
 }
 
 //-----------------------------------------------------------------------------
+// TODO may want to note this somewhere
+// Note: Setting flat to false gives button bevel with thicker lighter gray
+// on top and left sides, and darker gray on bottom and right sides.
+// Note: If auto fill background is set to false, button background is not
+// drawn in normal state (active, unpressed, unchecked), but is when pressed
+// or checked.
 //-----------------------------------------------------------------------------
-QPushButton *MainWindow::createStylizedButton()
+#ifndef QT_V5
+  QPushButton *MainWindow::createSonarButton(
+      QString aName,QStyle *aStyle,bool aIsCheckable)
+#else
+  QPushButton *MainWindow::createSonarButton(QString aName,QString aStyle)
+#endif
+  {
+    QPushButton *tButton = new QPushButton(aName,this);
+
+#ifndef QT_V5
+  tButton->setStyle(aStyle);
+#else
+  tButton->setStyle(QStyleFactor::create(aStyle);
+#endif
+
+  tButton->setPalette(getSonarPalette(tButton->palette()));
+  tButton->setAutoFillBackground(true);
+  tButton->setFlat(true);
+  tButton->setCheckable(aIsCheckable);
+
+  return tButton;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+QPushButton *MainWindow::createButton3()
 {
-  QPushButton *tButton = new QPushButton(QString("Stylized Button"),this);
-  tButton->setStyle(new TestStyle);
-//  tButton->setStyle(new QWindowsStyle);
-//  tButton->setStyle(QStyleFactory::create("windowsxp"));
+  QPushButton *tButton = new QPushButton(QString("Button3"),this);
 
-
-#ifdef USE_PLAIN_PALETTE
-//  QPalette tPalette(Qt::darkGreen);
-//  QPalette tPalette(Qt::green);
-//  tButton->setPalette(tPalette);
-#else
-#ifdef USE_FUNKY
-  tButton->setPalette(getFunkyPalette(tButton->palette()));
-#else
-  tButton->setPalette(getSteelPalette(tButton->palette()));
-#endif
-#endif
-
-  // TODO may want to note this somewhere
-  // Note: Setting flat to false gives button bevel with thicker lighter gray
-  // on top and left sides, and darker gray on bottom and right sides.
-//  tButton->setFlat(true);
-  // Note: If auto fill background is set to false, button background is not
-  // drawn in normal state (active, unpressed, unchecked), but is when pressed
-  // or checked.
+  tButton->setFlat(true);
   tButton->setAutoFillBackground(true);
   tButton->setCheckable(true);
-  tButton->setFlat(true);
+
+  tButton->setPalette(getSonarPalette(tButton->palette()));
 
   return tButton;
 }
@@ -174,53 +185,6 @@ QPushButton *MainWindow::createButton1()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-QPushButton *MainWindow::createButton3()
-{
-  QPushButton *tButton = new QPushButton(QString("Button3"),this);
-
-  tButton->setFlat(true);
-  tButton->setAutoFillBackground(true);
-  tButton->setCheckable(true);
-
-#if 0
-  QPalette tPalette = tButton->palette();
-
-  tPalette.setColor(QPalette::Window, Qt::blue);
-  tPalette.setBrush(QPalette::Window, Qt::red);
-  tPalette.setBrush(QPalette::Button, Qt::green);
-
-  QBrush tBrushRed(Qt::red);
-  tBrushRed.setStyle(Qt::SolidPattern);
-
-  tPalette.setBrush(QPalette::Active, QPalette::Button, tBrushRed);
-  tPalette.setBrush(QPalette::Inactive, QPalette::Button, tBrushRed);
-  tPalette.setBrush(QPalette::Disabled, QPalette::Button, tBrushRed);
-
-  QBrush tBrushCyan(Qt::cyan);
-  tBrushCyan.setStyle(Qt::SolidPattern);
-
-  tPalette.setBrush(QPalette::Active, QPalette::Window, tBrushCyan);
-  tPalette.setBrush(QPalette::Inactive, QPalette::Window, tBrushCyan);
-  tPalette.setBrush(QPalette::Disabled, QPalette::Window, tBrushCyan);
-
-//  tPalette.setBrush(QPalette::Window, QBrush(tGradient));
-//  tPalette.setBrush(QPalette::Button, QBrush(tGradient));
-//  tPalette.setBrush(QPalette::ButtonText, QBrush(tGradient));
-
-//  tPalette.setColor(QPalette::WindowText, Qt::yellow);
-#endif
-
-#ifdef USE_FUNKY
-  tButton->setPalette(getFunkyPalette(tButton->palette()));
-#else
-  tButton->setPalette(getSteelPalette(tButton->palette()));
-#endif
-
-  return tButton;
-}
-
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
 void MainWindow::setupView()
 {
   std::cout << "setupView" << std::endl;
@@ -230,17 +194,17 @@ void MainWindow::setupView()
   _BasicCheckableButton = new QPushButton(QString("Default Checkable"),this);
   _BasicCheckableButton->setCheckable(true);
 
-  _StylizedButton1 = createStylizedButton();
-  _StylizedButton2 = createStylizedButton();
+  _SonarButton1 = createSonarButton("SonarStyle Checkable Button #1",new TestStyle);
+  _SonarButton2 = createSonarButton("SonarStyle Checkable Button #2",new TestStyle);
 
   _button1 = createButton1();
-  _button3 = createButton3();
+  _button3 = createSonarButton("MotifStyle Button",new QMotifStyle);
 
   QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
   tBoxLayout->addWidget(_BasicButton);
   tBoxLayout->addWidget(_BasicCheckableButton);
-  tBoxLayout->addWidget(_StylizedButton1);
-  tBoxLayout->addWidget(_StylizedButton2);
+  tBoxLayout->addWidget(_SonarButton1);
+  tBoxLayout->addWidget(_SonarButton2);
   tBoxLayout->addWidget(_button1);
   tBoxLayout->addWidget(_button3);
 

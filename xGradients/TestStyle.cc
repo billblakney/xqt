@@ -115,8 +115,8 @@ std::cout << "MOTIFSYTLE drawControl CE_PushButton" << std::endl;
     break;
 #endif
   case CE_PushButtonBevel:
-//#define USE_MOTIFSTYLE_CE_PUSHBUTTONBEVEL
-#define USE_MODIFIED_MOTIFSTYLE_CE_PUSHBUTTONBEVEL
+#define USE_MOTIFSTYLE_CE_PUSHBUTTONBEVEL
+//#define USE_MODIFIED_MOTIFSTYLE_CE_PUSHBUTTONBEVEL
 #ifdef USE_MOTIFSTYLE_CE_PUSHBUTTONBEVEL
     std::cout << "drawControl MotifStyle CE_PushButtonBevel" << std::endl;
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(opt)) {

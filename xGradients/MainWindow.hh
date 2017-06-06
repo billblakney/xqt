@@ -7,6 +7,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QWidget>
+#include <QStyle>
 
 class MainWindow: public QWidget
 {
@@ -34,17 +35,24 @@ protected:
 
   QPushButton *_BasicButton;
   QPushButton *_BasicCheckableButton;
-  QPushButton *_StylizedButton1;
-  QPushButton *_StylizedButton2;
+  QPushButton *_SonarButton1;
+  QPushButton *_SonarButton2;
   QPushButton *_button1;
   QPushButton *_button3;
 
   QPalette getFunkyPalette(QPalette aPalette);
-  QPalette getSteelPalette(QPalette aPalette);
+  QPalette getSonarPalette(QPalette aPalette);
 
-  QPushButton *createStylizedButton();
   QPushButton *createButton1();
   QPushButton *createButton3();
+
+#ifndef QT_V5
+  QPushButton *createSonarButton(
+      QString aName,QStyle *aStyle,bool aIsCheckable = true);
+#else
+  QPushButton *createSonarButton(
+      QString aName,QString aStyle,bool aIsCheckable = true);
+#endif
 };
 
 #endif /* MAINWINDOW_HH_ */
