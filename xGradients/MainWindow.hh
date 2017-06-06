@@ -34,7 +34,8 @@ protected:
 
   QPushButton *_BasicButton;
   QPushButton *_BasicCheckableButton;
-  QPushButton *_StylizedButton;
+  QPushButton *_StylizedButton1;
+  QPushButton *_StylizedButton2;
   QPushButton *_button1;
   QPushButton *_button3;
 

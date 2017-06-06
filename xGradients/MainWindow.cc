@@ -88,9 +88,24 @@ QPalette MainWindow::getSteelPalette(QPalette aPalette)
   tPalette.setBrush(QPalette::ButtonText,_DefaultButtonTextColor);
 
   /*
+   * Setup QPalette::WindowText brush, which is used for the focus rectangle
+   * that goes around the label of the in-focus widget.
+   */
+  tPalette.setColor(QPalette::WindowText, Qt::white);
+
+  /*
    * Setup QPalette::Highlight brush, which is used for...
    */
-  tPalette.setBrush(QPalette::Highlight,Qt::yellow);
+//  tPalette.setBrush(QPalette::Highlight,Qt::yellow);
+//  tPalette.setBrush(QPalette::Shadow,Qt::yellow);
+//  tPalette.setBrush(QPalette::Light,Qt::yellow);
+//  tPalette.setBrush(QPalette::BrightText,Qt::yellow);
+
+  tPalette.setBrush(QPalette::Light,Qt::blue); // bottom right focus rect
+//  tPalette.setBrush(QPalette::Midlight,Qt::yellow);
+  tPalette.setBrush(QPalette::Dark,Qt::yellow); // top, left focus rect
+//  tPalette.setBrush(QPalette::Mid,Qt::yellow); set above
+//  tPalette.setBrush(QPalette::Shadow,Qt::yellow);
 
   return tPalette;
 }
@@ -215,7 +230,8 @@ void MainWindow::setupView()
   _BasicCheckableButton = new QPushButton(QString("Default Checkable"),this);
   _BasicCheckableButton->setCheckable(true);
 
-  _StylizedButton = createStylizedButton();
+  _StylizedButton1 = createStylizedButton();
+  _StylizedButton2 = createStylizedButton();
 
   _button1 = createButton1();
   _button3 = createButton3();
@@ -223,7 +239,8 @@ void MainWindow::setupView()
   QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
   tBoxLayout->addWidget(_BasicButton);
   tBoxLayout->addWidget(_BasicCheckableButton);
-  tBoxLayout->addWidget(_StylizedButton);
+  tBoxLayout->addWidget(_StylizedButton1);
+  tBoxLayout->addWidget(_StylizedButton2);
   tBoxLayout->addWidget(_button1);
   tBoxLayout->addWidget(_button3);
 
