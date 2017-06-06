@@ -281,8 +281,12 @@ std::cout << "drawPrimitive PE_PanelButtonCommand fillFor(SUNKEN)" << std::endl;
     else if ((opt->state & State_On) && (opt->state & State_Enabled)) // checked
     {
 std::cout << "drawPrimitive PE_PanelButtonCommand fillFor(ON && ENABLED)" << std::endl;
-#ifdef CUSTOMIZED
-      fill = QBrush(opt->palette.brush(QPalette::Highlight)/*, Qt::Dense4Pattern*/);
+//#define CUSTOMIZE_CHECKED_FILL
+#ifdef CUSTOMIZE_CHECKED_FILL
+//      fill = QBrush(opt->palette.brush(QPalette::Highlight)/*, Qt::Dense4Pattern*/);
+//      fill = QBrush(opt->palette.brush(QPalette::Highlight)/*, Qt::Dense4Pattern*/);
+//      fill = QBrush(opt->palette.brush(QPalette::Mid));
+      fill = opt->palette.brush(QPalette::Mid);
 #else
       fill = QBrush(opt->palette.mid().color(), Qt::Dense4Pattern);
 #endif

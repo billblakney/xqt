@@ -62,6 +62,10 @@ QPalette MainWindow::getSteelPalette(QPalette aPalette)
   QLinearGradient tButtonGrad(QPointF(0,0),QPointF(0,1));
   tButtonGrad.setCoordinateMode(QGradient::ObjectBoundingMode);
 
+  /*
+   * Setup QPalette::Button brush, which is used for button background
+   * when button is "normal", i.e. active and not pressed or checked
+   */
   QColor tButtonColorA(0x676767);
   QColor tButtonColorB(0x2b2b2b);
 //  QColor tButtonColorA(Qt::white);
@@ -72,13 +76,21 @@ QPalette MainWindow::getSteelPalette(QPalette aPalette)
 
   tPalette.setBrush(QPalette::Button,tButtonGrad);
 
+  /*
+   * Setup QPalette::Mid brush, which is used for button background
+   * when button is pressed
+   */
   QLinearGradient tMidGrad(QPointF(0,0),QPointF(0,1));
   tMidGrad.setCoordinateMode(QGradient::ObjectBoundingMode);
   tMidGrad.setColorAt(0,QColor(0x2b2b2b));
   tMidGrad.setColorAt(1.0,QColor(0x2b2b2b));
 
   tPalette.setBrush(QPalette::Mid,tMidGrad);
+tPalette.setBrush(QPalette::Mid,Qt::darkGray);
 
+  /*
+   *
+   */
   tPalette.setBrush(QPalette::ButtonText,QColor(0xC0C0C0));
 
   tPalette.setBrush(QPalette::Highlight,Qt::yellow);
