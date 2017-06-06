@@ -35,22 +35,22 @@ protected:
 
   QPushButton *_BasicButton;
   QPushButton *_BasicCheckableButton;
-  QPushButton *_SonarButton1;
-  QPushButton *_SonarButton2;
+  QPushButton *_Button1;
+  QPushButton *_Button2;
+  QPushButton *_Button3;
+
   QPushButton *_button1;
-  QPushButton *_button3;
 
   QPalette getFunkyPalette(QPalette aPalette);
   QPalette getSonarPalette(QPalette aPalette);
 
-  QPushButton *createButton1();
-  QPushButton *createButton3();
+  QPushButton *createButtonWithColorGroups();
 
 #ifndef QT_V5
-  QPushButton *createSonarButton(
+  QPushButton *createButton(
       QString aName,QStyle *aStyle,bool aIsCheckable = true);
 #else
-  QPushButton *createSonarButton(
+  QPushButton *createButton(
       QString aName,QString aStyle,bool aIsCheckable = true);
 #endif
 };

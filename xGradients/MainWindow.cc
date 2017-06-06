@@ -9,6 +9,7 @@
 #include <QPointF>
 #include <QStyleFactory>
 #include <QMotifStyle>
+#include <vector>
 #include "MainWindow.hh"
 #include "TestStyle.hh"
 
@@ -120,10 +121,10 @@ QPalette MainWindow::getSonarPalette(QPalette aPalette)
 // or checked.
 //-----------------------------------------------------------------------------
 #ifndef QT_V5
-  QPushButton *MainWindow::createSonarButton(
+  QPushButton *MainWindow::createButton(
       QString aName,QStyle *aStyle,bool aIsCheckable)
 #else
-  QPushButton *MainWindow::createSonarButton(QString aName,QString aStyle)
+  QPushButton *MainWindow::createButton(QString aName,QString aStyle)
 #endif
   {
     QPushButton *tButton = new QPushButton(aName,this);
@@ -144,24 +145,10 @@ QPalette MainWindow::getSonarPalette(QPalette aPalette)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-QPushButton *MainWindow::createButton3()
+QPushButton *MainWindow::createButtonWithColorGroups()
 {
-  QPushButton *tButton = new QPushButton(QString("Button3"),this);
-
-  tButton->setFlat(true);
-  tButton->setAutoFillBackground(true);
-  tButton->setCheckable(true);
-
-  tButton->setPalette(getSonarPalette(tButton->palette()));
-
-  return tButton;
-}
-
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-QPushButton *MainWindow::createButton1()
-{
-  QPushButton *tButton = new QPushButton(QString("Button1"),this);
+  QPushButton *tButton =
+      new QPushButton(QString("Button Active/Inactive Palette"),this);
 
   tButton->setFlat(true);
   tButton->setAutoFillBackground(true);
@@ -189,24 +176,43 @@ void MainWindow::setupView()
 {
   std::cout << "setupView" << std::endl;
 
+  std::vector<QPushButton *> tButtons;
+  QPushButton *tButton = NULL;
+
+  tButtons.push_back(new QPushButton(QString("Default"),this));
+
+  tButton = new QPushButton(QString("Default Checkable"),this);
+  tButton->setCheckable(true);
+  tButtons.push_back(tButton);
+
+  tButtons.push_back(createButton("SonarStyle Button #1",new TestStyle,false));
+  tButtons.push_back(createButton("SonarStyle Button #2",new TestStyle,false));
+  tButtons.push_back(createButton("SonarStyle Checkable Button #1",new TestStyle,true));
+  tButtons.push_back(createButton("SonarStyle Checkable Button #2",new TestStyle,true));
+
+  tButtons.push_back(createButton("MotifStyle Button",new QMotifStyle,false));
+  tButtons.push_back(createButton("MotifStyle Button",new QMotifStyle,true));
+
+  tButtons.push_back(createButtonWithColorGroups());
+
+#if 0
   _BasicButton = new QPushButton(QString("Default"),this);
 
   _BasicCheckableButton = new QPushButton(QString("Default Checkable"),this);
   _BasicCheckableButton->setCheckable(true);
 
-  _SonarButton1 = createSonarButton("SonarStyle Checkable Button #1",new TestStyle);
-  _SonarButton2 = createSonarButton("SonarStyle Checkable Button #2",new TestStyle);
+  _Button1 = createButton("SonarStyle Checkable Button #1",new TestStyle);
+  _Button2 = createButton("SonarStyle Checkable Button #2",new TestStyle);
+  _Button3 = createButton("MotifStyle Button",new QMotifStyle);
 
-  _button1 = createButton1();
-  _button3 = createSonarButton("MotifStyle Button",new QMotifStyle);
+  _button1 = createButtonWithColorGroups();
+#endif
 
   QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
-  tBoxLayout->addWidget(_BasicButton);
-  tBoxLayout->addWidget(_BasicCheckableButton);
-  tBoxLayout->addWidget(_SonarButton1);
-  tBoxLayout->addWidget(_SonarButton2);
-  tBoxLayout->addWidget(_button1);
-  tBoxLayout->addWidget(_button3);
+  for (size_t i = 0; i < tButtons.size(); i++)
+  {
+    tBoxLayout->addWidget(tButtons[i]);
+  }
 
 //  resize(200,120);
   setLayout(tBoxLayout);
