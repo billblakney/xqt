@@ -98,29 +98,54 @@ std::cout << "MOTIFSYTLE drawControl CE_PushButton" << std::endl;
     {
       QStyleOptionButton subopt = *btn;
 
-      if (btn->state & State_MouseOver)
-      {
-        std::cout << "MOUSE is OVERRRRRRRRRRRRRRRR" << std::endl;
-      }
-      else
-      {
-        std::cout << "MOUSE is NOT Overrrrrrrrrrrrrrrr" << std::endl;
-      }
-
-#define CUSTOMIZE_ADD_BORDER
-#ifdef CUSTOMIZE_ADD_BORDER
-    p->setPen(QPen(opt->palette.midlight().color()));
-//    QRect tRect = subopt.rect;
-    QRect tRect = opt->rect;
-    tRect.setWidth(tRect.width()-1);
-    tRect.setHeight(tRect.height()-1);
-    p->drawRect(tRect);
-#endif
 
 #ifdef QT_V5
     QProxyStyle::drawControl(control, opt, p, widget);
 #else
     QMotifStyle::drawControl(control, opt, p, widget);
+#endif
+
+#define CUSTOMIZE_HOVER
+#ifdef CUSTOMIZE_HOVER
+    if (btn->state & State_MouseOver) // mouse is hovering over
+    {
+      /*
+       * If the mouse is hovering over this button, create a 3 pix border on
+       * the widget (that is completely contained in the widget). The outer and
+       * inner edges of the border are of color Palette::Highlight, and the
+       * inner band of the border is of color Palette::Midlight.
+       */
+      // Create a rect that lies 1 px inside the widget's bounding rect.
+      QRect tRect = opt->rect;
+      tRect.setX(tRect.x()+1);
+      tRect.setY(tRect.y()+1);
+      tRect.setWidth(tRect.width()-2);
+      tRect.setHeight(tRect.height()-2);
+
+      // Draw a 3px line on that rect using Palette::Highlight.
+      QPen tPen = QPen(opt->palette.highlight().color());
+      tPen.setWidth(3);
+      p->setPen(tPen);
+      p->drawRect(tRect);
+
+      // Draw a 1px line on top of the previous line.
+      p->setPen(QPen(opt->palette.midlight().color()));
+      tPen.setWidth(1);
+      p->drawRect(tRect);
+    }
+    else // mouse is not hovering over
+    {
+      /*
+       * If the mouse is not hovering over this button, create a 1 pix border on
+       * the widget (that is completely contained in the widget) using the
+       * Palette::Midlight color.
+       */
+      p->setPen(QPen(opt->palette.midlight().color()));
+      QRect tRect = opt->rect;
+      tRect.setWidth(tRect.width()-1);
+      tRect.setHeight(tRect.height()-1);
+      p->drawRect(tRect);
+    }
 #endif
 
     }
