@@ -26,21 +26,6 @@ public slots:
 
 protected:
 
-//  QCheckBox *_checkBox;
-//  QLabel *_label1;
-//  QLabel *_label2;
-//  QLineEdit *_lineEdit1;
-//  QLineEdit *_lineEdit2;
-//  QPushButton *_startButton;
-
-  QPushButton *_BasicButton;
-  QPushButton *_BasicCheckableButton;
-  QPushButton *_Button1;
-  QPushButton *_Button2;
-  QPushButton *_Button3;
-
-  QPushButton *_button1;
-
   QPalette getFunkyPalette(QPalette aPalette);
   QPalette getSonarPalette(QPalette aPalette);
 

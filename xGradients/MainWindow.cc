@@ -174,8 +174,9 @@ QPushButton *MainWindow::createButtonWithColorGroups()
 //-----------------------------------------------------------------------------
 void MainWindow::setupView()
 {
-  std::cout << "setupView" << std::endl;
-
+  /*
+   * Create buttons.
+   */
   std::vector<QPushButton *> tButtons;
   QPushButton *tButton = NULL;
 
@@ -195,31 +196,25 @@ void MainWindow::setupView()
 
   tButtons.push_back(createButtonWithColorGroups());
 
-#if 0
-  _BasicButton = new QPushButton(QString("Default"),this);
-
-  _BasicCheckableButton = new QPushButton(QString("Default Checkable"),this);
-  _BasicCheckableButton->setCheckable(true);
-
-  _Button1 = createButton("SonarStyle Checkable Button #1",new TestStyle);
-  _Button2 = createButton("SonarStyle Checkable Button #2",new TestStyle);
-  _Button3 = createButton("MotifStyle Button",new QMotifStyle);
-
-  _button1 = createButtonWithColorGroups();
-#endif
-
+  /*
+   * Add buttons to the layout.
+   */
   QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
   for (size_t i = 0; i < tButtons.size(); i++)
   {
     tBoxLayout->addWidget(tButtons[i]);
   }
 
-//  resize(200,120);
   setLayout(tBoxLayout);
 
+  /*
+   * Set overall background.
+   */
   QPalette pal = palette();
   // set black background
   pal.setColor(QPalette::Background, Qt::black);
   setAutoFillBackground(true);
   setPalette(pal);
+
+//  resize(200,120);
 }
