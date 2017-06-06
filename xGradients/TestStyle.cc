@@ -96,20 +96,33 @@ std::cout << "MOTIFSYTLE drawControl CE_PushButton" << std::endl;
     // then afterwards, draw the custom border
     if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(opt))
     {
-#ifdef QT_V5
-    QProxyStyle::drawControl(control, opt, p, widget);
-#else
-    QMotifStyle::drawControl(control, opt, p, widget);
-#endif
+      QStyleOptionButton subopt = *btn;
+
+      if (btn->state & State_MouseOver)
+      {
+        std::cout << "MOUSE is OVERRRRRRRRRRRRRRRR" << std::endl;
+      }
+      else
+      {
+        std::cout << "MOUSE is NOT Overrrrrrrrrrrrrrrr" << std::endl;
+      }
+
 #define CUSTOMIZE_ADD_BORDER
 #ifdef CUSTOMIZE_ADD_BORDER
-    p->setPen(QPen(QColor(0x527596)));
+    p->setPen(QPen(opt->palette.midlight().color()));
 //    QRect tRect = subopt.rect;
     QRect tRect = opt->rect;
     tRect.setWidth(tRect.width()-1);
     tRect.setHeight(tRect.height()-1);
     p->drawRect(tRect);
 #endif
+
+#ifdef QT_V5
+    QProxyStyle::drawControl(control, opt, p, widget);
+#else
+    QMotifStyle::drawControl(control, opt, p, widget);
+#endif
+
     }
     tUseDefaultDraw = false; // @added
     break;
@@ -331,17 +344,16 @@ std::cout << "drawPrimitive PE_PanelButtonCommand shadingFor(ON || ENABLED and !
 #endif
     }
 //TODO marker (temp)
-//#define CUSTOMIZE_ADD_BORDER
+// Doesn't always work here. Must be
+#define CUSTOMIZE_ADD_BORDER
 #ifdef CUSTOMIZE_ADD_BORDER
-//    painter->fillRect(opt->rect,Qt::cyan);
-//    painter->fillRect(opt->rect,fill);
-    painter->setPen(QPen(Qt::white));
-    painter->setPen(QPen(Qt::yellow));
-    painter->setPen(QPen(QColor(0x527596)));
+#if 0
+    painter->setPen(QPen(opt->palette.midlight().color()));
     QRect tRect = opt->rect;
     tRect.setWidth(tRect.width()-1);
     tRect.setHeight(tRect.height()-1);
     painter->drawRect(tRect);
+#endif
 #endif
 
 //QProxyStyle::drawPrimitive(element, opt, painter, widget);

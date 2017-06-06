@@ -90,6 +90,11 @@ QPalette MainWindow::getSonarPalette(QPalette aPalette)
   tPalette.setBrush(QPalette::ButtonText,_DefaultButtonTextColor);
 
   /*
+   * Setup QPalette::Midlight brush, which is used to draw the button border.
+   */
+  tPalette.setColor(QPalette::Midlight,_DefaultButtonBorderColor);
+
+  /*
    * Setup QPalette::WindowText brush, which is used for the focus rectangle
    * that goes around the label of the in-focus widget.
    */
@@ -139,6 +144,8 @@ QPalette MainWindow::getSonarPalette(QPalette aPalette)
   tButton->setAutoFillBackground(true);
   tButton->setFlat(true);
   tButton->setCheckable(aIsCheckable);
+
+  tButton->setAttribute(Qt::WA_Hover);
 
   return tButton;
 }
