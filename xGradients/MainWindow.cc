@@ -65,48 +65,40 @@ QPalette MainWindow::getSonarPalette(QPalette aPalette)
   static QColor _DefaultButtonCheckedColor(0x404040); // "payne's gray"
   static QColor _DefaultButtonTextColor(0xc0c0c0); // "silver"
   static QColor _DefaultButtonHoverColor(0xb8cfe5); // "beau blue"
+  static QColor _DefaultDisabledButtonBaseColor(0x202020); // "onyx"
+  static QColor _DefaultDisabledButtonTextColor(0x999999); // "manatee"
+  static QColor _DefaultDisabledButtonBorderColor(0x424242); // "dim gray"
+
+  /*
+   * The palette for a default push button.
+   * Brushes are set as follows:
+   * - QPalette::Button = background active, unchecked button
+   * - QPalette::ButtonText = text label
+   * - QPalette::Mid = background for pressed or checked button
+   * - QPalette::Midlight = button border
+   * - QPalette::WindowText = focus rectangle around button text
+   * - QPalette::Highlight = hover highlight (the hover button border actually
+   *   uses a combination of this and Midlight)
+   */
 
   QPalette tPalette = aPalette;
 
-  /*
-   * Setup QPalette::Button brush, which is used for button background
-   * when button is "normal", i.e. active and not pressed or checked
-   */
   QLinearGradient tButtonGrad(QPointF(0,0),QPointF(0,1));
   tButtonGrad.setCoordinateMode(QGradient::ObjectBoundingMode);
   tButtonGrad.setColorAt(0,_DefaultButtonFadeColor);
   tButtonGrad.setColorAt(0.5,_DefaultButtonBaseColor);
   tButtonGrad.setColorAt(1,_DefaultButtonBaseColor);
+
   tPalette.setBrush(QPalette::Button,tButtonGrad);
-
-  /*
-   * Setup QPalette::Mid brush, which is used for button background
-   * when button is pressed
-   */
   tPalette.setBrush(QPalette::Mid,_DefaultButtonCheckedColor);
-
-  /*
-   * Setup QPalette::Text brush, which is used for button text
-   */
   tPalette.setBrush(QPalette::ButtonText,_DefaultButtonTextColor);
-
-  /*
-   * Setup QPalette::Midlight brush, which is used to draw the button border.
-   */
   tPalette.setColor(QPalette::Midlight,_DefaultButtonBorderColor);
-
-  /*
-   * Setup QPalette::WindowText brush, which is used for the focus rectangle
-   * that goes around the label of the in-focus widget.
-   */
   tPalette.setColor(QPalette::WindowText,Qt::white);
-
-  /*
-   * Setup QPalette::Highlight brush, which is used for the rectangle drawn
-   * when the mouse hovers over the button. The Midlight color role is also
-   * used as part of that effect.
-   */
   tPalette.setColor(QPalette::Highlight,_DefaultButtonHoverColor);
+
+  tPalette.setBrush(QPalette::Disabled,QPalette::Button,_DefaultDisabledButtonBaseColor);
+  tPalette.setBrush(QPalette::Disabled,QPalette::ButtonText,_DefaultDisabledButtonBorderColor);
+  tPalette.setColor(QPalette::Disabled,QPalette::Midlight,_DefaultDisabledButtonBorderColor);
 
   /*
    * Setup QPalette::Highlight brush, which is used for...
@@ -202,6 +194,7 @@ void MainWindow::setupView()
   tButtons.push_back(tButton);
 
   tButtons.push_back(createButton("SonarStyle Button #1",new TestStyle,false));
+  tButtons[tButtons.size()-1]->setEnabled(false);
   tButtons.push_back(createButton("SonarStyle Button #2",new TestStyle,false));
   tButtons.push_back(createButton("SonarStyle Checkable Button #1",new TestStyle,true));
   tButtons.push_back(createButton("SonarStyle Checkable Button #2",new TestStyle,true));
