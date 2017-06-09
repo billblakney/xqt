@@ -6,3 +6,6 @@ Makefile
 moc_*
 go
 lib*so*
+*.stash
+*.app/
+.DS_Store
