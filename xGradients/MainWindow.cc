@@ -8,7 +8,29 @@
 #include <QPalette>
 #include <QPointF>
 #include <QStyleFactory>
+#ifndef QT_V5
+#include <QWindows>
 #include <QMotifStyle>
+#include <QCDEStyle>
+#include <QPlastiqueStyle>
+#include <QPlastiqueStyle>
+
+#include <QCDEStyle>
+#include <QCleanlooksStyle>
+#include <QCommonStyle>
+#include <QGtkStyle>
+#include <QMacStyle>
+#include <QMotifStyle>
+#include <QPlastiqueStyle>
+#include <QProxyStyle>
+#include <QS60Style>
+#include <QStyle>
+#include <QWindowsCEStyle>
+#include <QWindowsMobileStyle>
+#include <QWindowsStyle>
+#include <QWindowsVistaStyle>
+#include <QWindowsXPStyle>
+#endif
 #include <vector>
 #include "MainWindow.hh"
 #include "TestStyle.hh"
@@ -188,6 +210,9 @@ void MainWindow::setupView()
   QPushButton *tButton = NULL;
 
   tButtons.push_back(new QPushButton(QString("Default"),this));
+
+  tButtons.push_back(new QPushButton(QString("Default"),this));
+  tButtons[tButtons.size()-1]->setStyle(new QPlastiqueStyle);
 
   tButton = new QPushButton(QString("Default Checkable"),this);
   tButton->setCheckable(true);
