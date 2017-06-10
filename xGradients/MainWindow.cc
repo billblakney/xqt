@@ -1,3 +1,28 @@
+/*
+ * Style classes on Dell laptop ubuntu:
+ *
+ ******* /usr/include/qt5/QWidgets *****
+ * QProxyStyle
+ * QCommonStyle
+ * QStyle
+ *
+ ******* at/usr/include/qt4/QtGui *****
+ * QProxyStyle
+ * QWindowsStyle
+ * QWindowsMobileStyle
+ * QWindowsVistaStyle
+ * QWindowsXPStyle
+ * QGtkStyle
+ * QCommonStyle
+ * QCleanlooksStyle
+ * QStyle
+ * QWindowsCEStyle
+ * QCDEStyle
+ * QMacStyle
+ * QMotifStyle
+ * QPlastiqueStyle
+ * QS60Style
+*/
 #include <cstdio>
 #include <iostream>
 #include <QString>
@@ -272,28 +297,3 @@ void MainWindow::setupView()
 
 //  resize(200,120);
 }
-/*
- * Style classes on Dell laptop ubuntu:
- *
- ******* /usr/include/qt5/QWidgets *****
- * QProxyStyle
- * QCommonStyle
- * QStyle
- *
- ******* at/usr/include/qt4/QtGui *****
- * QProxyStyle
- * QWindowsStyle
- * QWindowsMobileStyle
- * QWindowsVistaStyle
- * QWindowsXPStyle
- * QGtkStyle
- * QCommonStyle
- * QCleanlooksStyle
- * QStyle
- * QWindowsCEStyle
- * QCDEStyle
- * QMacStyle
- * QMotifStyle
- * QPlastiqueStyle
- * QS60Style
-*/
