@@ -8,34 +8,38 @@
 #include <QPalette>
 #include <QPointF>
 #include <QStyleFactory>
-#ifndef QT_V5
-#include <QWindows>
-#include <QMotifStyle>
-#include <QCDEStyle>
-#include <QPlastiqueStyle>
-#include <QPlastiqueStyle>
+#ifdef QT_V5
+#else
+//#include <QCDEStyle>
+//#include <QCleanlooksStyle>
+//#include <QCommonStyle>
+//#include <QGtkStyle>
+//#include <QMacStyle>
+//#include <QMotifStyle>
+//#include <QPlastiqueStyle>
+//#include <QProxyStyle>
+//#include <QS60Style>
+//#include <QStyle>
+//#include <QWindowsCEStyle>
+//#include <QWindowsMobileStyle>
+//#include <QWindowsStyle>
+//#include <QWindowsVistaStyle>
+//#include <QWindowsXPStyle>
 
-#include <QCDEStyle>
-#include <QCleanlooksStyle>
-#include <QCommonStyle>
-#include <QGtkStyle>
-#include <QMacStyle>
-#include <QMotifStyle>
-#include <QPlastiqueStyle>
-#include <QProxyStyle>
-#include <QS60Style>
-#include <QStyle>
-#include <QWindowsCEStyle>
-#include <QWindowsMobileStyle>
 #include <QWindowsStyle>
-#include <QWindowsVistaStyle>
-#include <QWindowsXPStyle>
 #endif
 #include <vector>
 #include "MainWindow.hh"
 #include "TestStyle.hh"
 
-//#define USE_FUNKY
+//-----------------------------------------------------------------------------
+// TODO may want to note this somewhere
+// Note: Setting flat to false gives button bevel with thicker lighter gray
+// on top and left sides, and darker gray on bottom and right sides.
+// Note: If auto fill background is set to false, button background is not
+// drawn in normal state (active, unpressed, unchecked), but is when pressed
+// or checked.
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -140,27 +144,13 @@ QPalette MainWindow::getSonarPalette(QPalette aPalette)
 }
 
 //-----------------------------------------------------------------------------
-// TODO may want to note this somewhere
-// Note: Setting flat to false gives button bevel with thicker lighter gray
-// on top and left sides, and darker gray on bottom and right sides.
-// Note: If auto fill background is set to false, button background is not
-// drawn in normal state (active, unpressed, unchecked), but is when pressed
-// or checked.
 //-----------------------------------------------------------------------------
-#ifndef QT_V5
   QPushButton *MainWindow::createButton(
       QString aName,QStyle *aStyle,bool aIsCheckable)
-#else
-  QPushButton *MainWindow::createButton(QString aName,QString aStyle)
-#endif
   {
     QPushButton *tButton = new QPushButton(aName,this);
 
-#ifndef QT_V5
   tButton->setStyle(aStyle);
-#else
-  tButton->setStyle(QStyleFactor::create(aStyle);
-#endif
 
   tButton->setPalette(getSonarPalette(tButton->palette()));
   tButton->setAutoFillBackground(true);
@@ -171,6 +161,27 @@ QPalette MainWindow::getSonarPalette(QPalette aPalette)
 
   return tButton;
 }
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+#ifdef QT_V5
+  QPushButton *MainWindow::createButton(
+      QString aName,QString aStyle,bool aIsCheckable)
+  {
+    QPushButton *tButton = new QPushButton(aName,this);
+
+  tButton->setStyle(QStyleFactory::create(aStyle));
+
+  tButton->setPalette(getSonarPalette(tButton->palette()));
+  tButton->setAutoFillBackground(true);
+  tButton->setFlat(true);
+  tButton->setCheckable(aIsCheckable);
+
+  tButton->setAttribute(Qt::WA_Hover);
+
+  return tButton;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -211,8 +222,11 @@ void MainWindow::setupView()
 
   tButtons.push_back(new QPushButton(QString("Default"),this));
 
+#ifdef QT_V5
+#else
   tButtons.push_back(new QPushButton(QString("Default"),this));
-  tButtons[tButtons.size()-1]->setStyle(new QPlastiqueStyle);
+  tButtons[tButtons.size()-1]->setStyle(new QWindowsStyle);
+#endif
 
   tButton = new QPushButton(QString("Default Checkable"),this);
   tButton->setCheckable(true);
@@ -224,8 +238,15 @@ void MainWindow::setupView()
   tButtons.push_back(createButton("SonarStyle Checkable Button #1",new TestStyle,true));
   tButtons.push_back(createButton("SonarStyle Checkable Button #2",new TestStyle,true));
 
+#ifdef QT_V5
+  tButtons.push_back(createButton(
+      "MotifStyle Button",QStyleFactory::create("motif"),false));
+  tButtons.push_back(createButton(
+      "MotifStyle Button",QStyleFactory::create("motif"),true));
+#else
   tButtons.push_back(createButton("MotifStyle Button",new QMotifStyle,false));
   tButtons.push_back(createButton("MotifStyle Button",new QMotifStyle,true));
+#endif
 
   tButtons.push_back(createButtonWithColorGroups());
 
@@ -251,3 +272,28 @@ void MainWindow::setupView()
 
 //  resize(200,120);
 }
+/*
+ * Style classes on Dell laptop ubuntu:
+ *
+ ******* /usr/include/qt5/QWidgets *****
+ * QProxyStyle
+ * QCommonStyle
+ * QStyle
+ *
+ ******* at/usr/include/qt4/QtGui *****
+ * QProxyStyle
+ * QWindowsStyle
+ * QWindowsMobileStyle
+ * QWindowsVistaStyle
+ * QWindowsXPStyle
+ * QGtkStyle
+ * QCommonStyle
+ * QCleanlooksStyle
+ * QStyle
+ * QWindowsCEStyle
+ * QCDEStyle
+ * QMacStyle
+ * QMotifStyle
+ * QPlastiqueStyle
+ * QS60Style
+*/

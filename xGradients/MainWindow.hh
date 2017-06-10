@@ -31,10 +31,10 @@ protected:
 
   QPushButton *createButtonWithColorGroups();
 
-#ifndef QT_V5
   QPushButton *createButton(
       QString aName,QStyle *aStyle,bool aIsCheckable = true);
-#else
+
+#ifdef QT_V5
   QPushButton *createButton(
       QString aName,QString aStyle,bool aIsCheckable = true);
 #endif
