@@ -26,6 +26,9 @@
 #include <cstdio>
 #include <iostream>
 #include <QString>
+#include <QCheckBox>
+#include <QRadioButton>
+#include <QComboBox>
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QGridLayout>
@@ -160,8 +163,9 @@ QPalette MainWindow::getSonarPalette(QPalette aPalette)
 //  tPalette.setBrush(QPalette::BrightText,Qt::yellow);
 
   tPalette.setBrush(QPalette::Light,Qt::blue); // bottom right focus rect
+  tPalette.setBrush(QPalette::Light,Qt::yellow); // bottom right focus rect
 //  tPalette.setBrush(QPalette::Midlight,Qt::yellow);
-  tPalette.setBrush(QPalette::Dark,Qt::yellow); // top, left focus rect
+//  tPalette.setBrush(QPalette::Dark,Qt::yellow); // top, left focus rect
 //  tPalette.setBrush(QPalette::Mid,Qt::yellow); set above
 //  tPalette.setBrush(QPalette::Shadow,Qt::yellow);
 
@@ -235,10 +239,182 @@ QPushButton *MainWindow::createButtonWithColorGroups()
   return tButton;
 }
 
+#include <QCDEStyle>
+//#include <QCleanlooksStyle>
+//#include <QCommonStyle>
+//#include <QGtkStyle>
+//#include <QMacStyle>
+//#include <QMotifStyle>
+//#include <QPlastiqueStyle>
+//#include <QProxyStyle>
+//#include <QS60Style>
+//#include <QStyle>
+//#include <QWindowsCEStyle>
+//#include <QWindowsMobileStyle>
+//#include <QWindowsStyle>
+//#include <QWindowsVistaStyle>
+//#include <QWindowsXPStyle>
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 void MainWindow::setupView()
 {
+  std::vector<QCheckBox *> tCheckBoxes;
+  std::vector<QRadioButton *> tRadioButtons;
+  std::vector<QComboBox *> tComboBoxes;
+
+//#define CHECKBOXES
+#ifdef CHECKBOXES
+  /*
+   * Create checkboxes.
+   */
+  QCheckBox *tCheckBox = NULL;
+
+  QStyle *tStyle = NULL;
+
+  tStyle = new QMotifStyle;
+
+  tCheckBox = new QCheckBox("Motif CheckBox",this);
+  tCheckBox->setStyle(tStyle);
+  tCheckBox->setPalette(getSonarPalette(tCheckBox->palette()));
+  tCheckBoxes.push_back(tCheckBox);
+
+  tCheckBox = new QCheckBox("Motif CheckBox",this);
+  tCheckBox->setStyle(tStyle);
+  tCheckBox->setPalette(getSonarPalette(tCheckBox->palette()));
+  tCheckBox->setEnabled(false);
+  tCheckBoxes.push_back(tCheckBox);
+
+  tStyle = new QCDEStyle;
+
+  tCheckBox = new QCheckBox("CDE CheckBox",this);
+  tCheckBox->setStyle(tStyle);
+  tCheckBox->setPalette(getSonarPalette(tCheckBox->palette()));
+  tCheckBoxes.push_back(tCheckBox);
+
+  tCheckBox = new QCheckBox("CDE CheckBox",this);
+  tCheckBox->setStyle(tStyle);
+  tCheckBox->setPalette(getSonarPalette(tCheckBox->palette()));
+  tCheckBox->setEnabled(false);
+  tCheckBoxes.push_back(tCheckBox);
+
+  tStyle = new QWindowsStyle;
+
+  tCheckBox = new QCheckBox("Windows CheckBox",this);
+  tCheckBox->setStyle(tStyle);
+  tCheckBox->setPalette(getSonarPalette(tCheckBox->palette()));
+  tCheckBoxes.push_back(tCheckBox);
+
+  tCheckBox = new QCheckBox("Windows CheckBox",this);
+  tCheckBox->setStyle(tStyle);
+  tCheckBox->setPalette(getSonarPalette(tCheckBox->palette()));
+  tCheckBox->setEnabled(false);
+  tCheckBoxes.push_back(tCheckBox);
+#endif
+
+//#define RADIO_BUTTONS
+#ifdef RADIO_BUTTONS
+  /*
+   * Create RadioButtons.
+   */
+  QRadioButton *tRadioButton = NULL;
+
+  QStyle *tStyle = NULL;
+
+  tStyle = new QMotifStyle;
+
+  tRadioButton = new QRadioButton("Motif RadioButton",this);
+  tRadioButton->setStyle(tStyle);
+  tRadioButton->setPalette(getSonarPalette(tRadioButton->palette()));
+  tRadioButtons.push_back(tRadioButton);
+
+  tRadioButton = new QRadioButton("Motif RadioButton",this);
+  tRadioButton->setStyle(tStyle);
+  tRadioButton->setPalette(getSonarPalette(tRadioButton->palette()));
+  tRadioButton->setEnabled(false);
+  tRadioButtons.push_back(tRadioButton);
+
+  tStyle = new QCDEStyle;
+
+  tRadioButton = new QRadioButton("CDE RadioButton",this);
+  tRadioButton->setStyle(tStyle);
+  tRadioButton->setPalette(getSonarPalette(tRadioButton->palette()));
+  tRadioButtons.push_back(tRadioButton);
+
+  tRadioButton = new QRadioButton("CDE RadioButton",this);
+  tRadioButton->setStyle(tStyle);
+  tRadioButton->setPalette(getSonarPalette(tRadioButton->palette()));
+  tRadioButton->setEnabled(false);
+  tRadioButtons.push_back(tRadioButton);
+
+  tStyle = new QWindowsStyle;
+
+  tRadioButton = new QRadioButton("Windows RadioButton",this);
+  tRadioButton->setStyle(tStyle);
+  tRadioButton->setPalette(getSonarPalette(tRadioButton->palette()));
+  tRadioButtons.push_back(tRadioButton);
+
+  tRadioButton = new QRadioButton("Windows RadioButton",this);
+  tRadioButton->setStyle(tStyle);
+  tRadioButton->setPalette(getSonarPalette(tRadioButton->palette()));
+  tRadioButton->setEnabled(false);
+  tRadioButtons.push_back(tRadioButton);
+#endif
+
+#define COMBOBOXES
+#ifdef COMBOBOXES
+  /*
+   * Create comboboxes.
+   */
+  QComboBox *tComboBox = NULL;
+
+  QStyle *tStyle = NULL;
+
+  tStyle = new QMotifStyle;
+
+  tComboBox = new QComboBox(this);
+  tComboBox->addItem("Motif ComboBox");
+  tComboBox->setStyle(tStyle);
+//  tComboBox->setPalette(getSonarPalette(tComboBox->palette()));
+  tComboBoxes.push_back(tComboBox);
+
+  tComboBox = new QComboBox(this);
+  tComboBox->addItem("Motif ComboBox");
+  tComboBox->setStyle(tStyle);
+//  tComboBox->setPalette(getSonarPalette(tComboBox->palette()));
+  tComboBox->setEnabled(false);
+  tComboBoxes.push_back(tComboBox);
+
+  tStyle = new QCDEStyle;
+
+  tComboBox = new QComboBox(this);
+  tComboBox->addItem("CDE ComboBox");
+  tComboBox->setStyle(tStyle);
+//  tComboBox->setPalette(getSonarPalette(tComboBox->palette()));
+  tComboBoxes.push_back(tComboBox);
+
+  tComboBox = new QComboBox(this);
+  tComboBox->addItem("CDE ComboBox");
+  tComboBox->setStyle(tStyle);
+//  tComboBox->setPalette(getSonarPalette(tComboBox->palette()));
+  tComboBox->setEnabled(false);
+  tComboBoxes.push_back(tComboBox);
+
+  tStyle = new QWindowsStyle;
+
+  tComboBox = new QComboBox(this);
+  tComboBox->addItem("Windows ComboBox");
+  tComboBox->setStyle(tStyle);
+//  tComboBox->setPalette(getSonarPalette(tComboBox->palette()));
+  tComboBoxes.push_back(tComboBox);
+
+  tComboBox = new QComboBox(this);
+  tComboBox->addItem("Windows ComboBox");
+  tComboBox->setStyle(tStyle);
+//  tComboBox->setPalette(getSonarPalette(tComboBox->palette()));
+  tComboBox->setEnabled(false);
+  tComboBoxes.push_back(tComboBox);
+#endif
+
   /*
    * Create buttons.
    */
@@ -279,6 +455,22 @@ void MainWindow::setupView()
    * Add buttons to the layout.
    */
   QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
+
+  for (size_t i = 0; i < tComboBoxes.size(); i++)
+  {
+    tBoxLayout->addWidget(tComboBoxes[i]);
+  }
+
+  for (size_t i = 0; i < tRadioButtons.size(); i++)
+  {
+    tBoxLayout->addWidget(tRadioButtons[i]);
+  }
+
+  for (size_t i = 0; i < tCheckBoxes.size(); i++)
+  {
+    tBoxLayout->addWidget(tCheckBoxes[i]);
+  }
+
   for (size_t i = 0; i < tButtons.size(); i++)
   {
     tBoxLayout->addWidget(tButtons[i]);
