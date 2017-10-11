@@ -80,15 +80,56 @@ void MainWindow::setupView()
 
   const int ROWS = 6;
   const int COLS = 10;
-  QLabel *tGrid[ROWS][COLS];
+  QFrame *tGrid[ROWS][COLS];
 
   for (int i = 0; i < ROWS; i++)
     for (int j = 0; j < COLS; j++)
     {
+      QFrame *tFrame = new QFrame(this);
+      tFrame->setFrameShape(QFrame::Box);
+      tFrame->setLineWidth(2);
+      tFrame->setFrameStyle(QFrame::Box | QFrame::Plain);
+      if (i == 0 && j == 0)
+      {
+        tFrame->setContentsMargins(2,2,2,2);
+tFrame->setPalette(QPalette(Qt::blue));
+tFrame->setAutoFillBackground(true);
+      }
+      else if (i == 0)
+      {
+        tFrame->setContentsMargins(0,2,2,2);
+      }
+      else if (j == 0)
+      {
+        tFrame->setContentsMargins(2,0,2,2);
+      }
+      else
+      {
+        tFrame->setContentsMargins(0,0,2,2);
+      }
+tFrame->setSizePolicy(QSizePolicy::MinimumExpanding,
+                     QSizePolicy::MinimumExpanding);
+
+
+      tFrame->setMinimumSize(QSize(60,20));
+
       char buff[100];
       sprintf(buff,"hello %d,%d",i,j);
-//      tGrid[i][j].setText(QString(buff));
-      tGrid[i][j] = new QLabel(buff);
+      QLabel *tLabel = new QLabel(buff,tFrame);
+//      tLabel->setIndent(30);
+      tLabel->setAlignment(Qt::AlignRight | Qt::AlignAbsolute);
+//      tLabel->setAlignment(Qt::AlignLeft | Qt::AlignAbsolute);
+      tLabel->setPalette(QPalette(Qt::gray));
+      tLabel->setAutoFillBackground(true);
+tLabel->setMinimumWidth(60);
+tLabel->setContentsMargins(0,0,0,0);
+tLabel->setSizePolicy(QSizePolicy::MinimumExpanding,
+                     QSizePolicy::MinimumExpanding);
+
+QVBoxLayout *tBL = new QVBoxLayout(tFrame);
+tBL->addWidget(tLabel);
+
+      tGrid[i][j] = tFrame;
     }
 
 
@@ -101,6 +142,9 @@ void MainWindow::setupView()
 //  _lineEdit2 = new QLineEdit();
 
   QGridLayout *tGridLayout = new QGridLayout(this);
+  tGridLayout->setHorizontalSpacing(0);
+  tGridLayout->setVerticalSpacing(0);
+tGridLayout->setContentsMargins(0,0,0,0);
 
   for (int i = 0; i < ROWS; i++)
     for (int j = 0; j < COLS; j++)
