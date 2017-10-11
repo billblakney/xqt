@@ -78,9 +78,27 @@ void MainWindow::setupView()
 #else
   std::cout << "setupView" << std::endl;
 
+
   const int ROWS = 6;
   const int COLS = 10;
   QFrame *tGrid[ROWS][COLS];
+
+  QString _Notes[ROWS][COLS];
+  for (int i = 0; i < ROWS; i++)
+    for (int j = 0; j < COLS; j++)
+    {
+      _Notes[0][0] = "x";
+    }
+  _Notes[0][0] = "E";
+  _Notes[0][1] = "F";
+  _Notes[0][2] = "f#";
+  _Notes[0][3] = "G";
+  _Notes[0][4] = "g#";
+  _Notes[0][5] = "A";
+  _Notes[0][6] = "a#";
+  _Notes[0][7] = "B";
+  _Notes[0][8] = "b#";
+  _Notes[0][9] = "C";
 
   for (int i = 0; i < ROWS; i++)
     for (int j = 0; j < COLS; j++)
@@ -113,11 +131,11 @@ tFrame->setSizePolicy(QSizePolicy::MinimumExpanding,
 
       tFrame->setMinimumSize(QSize(60,20));
 
-      char buff[100];
-      sprintf(buff,"hello %d,%d",i,j);
-      QLabel *tLabel = new QLabel(buff,tFrame);
+//      char buff[100];
+//      sprintf(buff,"hello %d,%d",i,j);
+      QLabel *tLabel = new QLabel(_Notes[i][j],tFrame);
 //      tLabel->setIndent(30);
-      tLabel->setAlignment(Qt::AlignRight | Qt::AlignAbsolute);
+      tLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight | Qt::AlignAbsolute);
 //      tLabel->setAlignment(Qt::AlignLeft | Qt::AlignAbsolute);
       tLabel->setPalette(QPalette(Qt::gray));
       tLabel->setAutoFillBackground(true);
