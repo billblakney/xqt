@@ -1,8 +1,8 @@
 #include <cstdio>
 #include <iostream>
-#include <QString>
-#include <QVBoxLayout>
-#include <QGridLayout>
+#include <map>
+#include <QImage>
+#include <QRgb>
 #include "MainWindow.hh"
 
 //-----------------------------------------------------------------------------
@@ -10,6 +10,87 @@
 MainWindow::MainWindow(QWidget *aParent)
 : QWidget(aParent)
 {
+  QImage tImage("/home/bill/Downloads/unnamed.jpg");
+
+  QSize tSize = tImage.size();
+  std::cout << "Image size: " << tSize.width() << "," << tSize.height() << std::endl;
+
+  std::map<int,int> tColorCounts; // key qGray, value count
+  std::map<int,int>::iterator tIter;
+
+  for (int i = 0; i < tSize.width(); i++)
+    for (int j = 0; j < tSize.width(); j++)
+    {
+      QRgb tColor = tImage.pixel(i,j);
+      int tGray = qGray(tColor);
+
+      tIter = tColorCounts.find(tGray);
+
+      if (tIter != tColorCounts.end())
+      {
+        tColorCounts[tGray]++;
+      }
+      else
+      {
+        tColorCounts[tGray] = 1;
+      }
+
+      if ( tGray <= 25)
+//      if ( tGray <= 171)
+//      if ( tGray <= 220)
+      {
+        tImage.setPixel(i,j,Qt::black);
+      }
+    }
+
+std::cout << "Color count: " << tColorCounts.size() << std::endl;
+
+  for (tIter = tColorCounts.begin(); tIter != tColorCounts.end(); tIter++)
+  {
+    std::cout << "Color/count: "
+        << tIter->first << "/"
+        << tIter->second << std::endl;
+  }
+
+  std::cout << "Saving altered image..." << std::endl;
+
+  tImage.save("/home/bill/Downloads/modified.jpg");
+
+#if 0
+  QImage tImage("/home/bill/Downloads/unnamed.jpg");
+
+  QSize tSize = tImage.size();
+  std::cout << "Image size: " << tSize.width() << "," << tSize.height() << std::endl;
+
+  std::map<QRgb,int> tColorCounts;
+  std::map<QRgb,int>::iterator tIter;
+
+  for (int i = 0; i < tSize.width(); i++)
+    for (int j = 0; j < tSize.width(); j++)
+    {
+      QRgb tColor = tImage.pixel(i,j);
+
+      tIter = tColorCounts.find(tColor);
+
+      if (tIter != tColorCounts.end())
+      {
+        tColorCounts[tImage.pixel(i,j)]++;
+      }
+      else
+      {
+        tColorCounts[tImage.pixel(i,j)] = 1;
+      }
+    }
+
+std::cout << "Color count: " << tColorCounts.size() << std::endl;
+
+  for (tIter = tColorCounts.begin(); tIter != tColorCounts.end(); tIter++)
+  {
+    std::cout << "Color/count: "
+        << tIter->first << "/"
+        << tIter->second << std::endl;
+  }
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -18,6 +99,7 @@ MainWindow::~MainWindow()
 {
 }
 
+#if 0
 void MainWindow::onSend()
 {
   std::cout << "onSend" << std::endl;
@@ -30,11 +112,13 @@ void MainWindow::onSend()
   std::cout << "_lineEdit1: " << qPrintable(_lineEdit1->text()) << std::endl;
   std::cout << "_lineEdit2: " << qPrintable(_lineEdit2->text()) << std::endl;
 }
+#endif
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 void MainWindow::setupView()
 {
+#if 0
 #ifdef OLD
   std::cout << "setupView" << std::endl;
 
@@ -201,5 +285,6 @@ tGridLayout->setContentsMargins(0,0,0,0);
 //  resize(200,120);
 
   setLayout(tBoxLayout);
+#endif
 #endif
 }

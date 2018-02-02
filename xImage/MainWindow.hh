@@ -2,10 +2,10 @@
 #define MAINWINDOW_HH_
 
 #include <string>
-#include <QCheckBox>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
+//#include <QCheckBox>
+//#include <QLabel>
+//#include <QLineEdit>
+//#include <QPushButton>
 #include <QWidget>
 
 class MainWindow: public QWidget
@@ -21,16 +21,16 @@ public:
 
 public slots:
 
-  void onSend();
+//  void onSend();
 
 protected:
 
-  QCheckBox *_checkBox;
-  QLabel *_label1;
-  QLabel *_label2;
-  QLineEdit *_lineEdit1;
-  QLineEdit *_lineEdit2;
-  QPushButton *_startButton;
+//  QCheckBox *_checkBox;
+//  QLabel *_label1;
+//  QLabel *_label2;
+//  QLineEdit *_lineEdit1;
+//  QLineEdit *_lineEdit2;
+//  QPushButton *_startButton;
 };
 
 #endif /* MAINWINDOW_HH_ */
