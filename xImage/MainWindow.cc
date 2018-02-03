@@ -1,7 +1,10 @@
 #include <cstdio>
 #include <iostream>
 #include <map>
+#include <QVBoxLayout>
 #include <QImage>
+#include <QLabel>
+#include <QPixmap>
 #include <QRgb>
 #include "MainWindow.hh"
 
@@ -10,7 +13,38 @@
 MainWindow::MainWindow(QWidget *aParent)
 : QWidget(aParent)
 {
-  QImage tImage("/home/bill/Downloads/unnamed.jpg");
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+MainWindow::~MainWindow()
+{
+}
+
+#if 0
+void MainWindow::onSend()
+{
+  std::cout << "onSend" << std::endl;
+  QString tChecked = "false";
+  if (_checkBox->checkState() == Qt::Checked)
+  {
+    tChecked = "true";
+  }
+  std::cout << "_checkBox: " << qPrintable(tChecked) << std::endl;
+  std::cout << "_lineEdit1: " << qPrintable(_lineEdit1->text()) << std::endl;
+  std::cout << "_lineEdit2: " << qPrintable(_lineEdit2->text()) << std::endl;
+}
+#endif
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::setupView()
+{
+  std::cout << "setupView" << std::endl;
+
+  //QImage tImage("/cygdrive/m/workspace/xqt/xImange/images/unnamed.jpg");
+  //QImage tImage("/cygdrive/m/workspace/xqt/xImage/images/unnamed.jpg");
+  QImage tImage("M://workspace/xqt/xImage/images/unnamed.jpg");
 
   QSize tSize = tImage.size();
   std::cout << "Image size: " << tSize.width() << "," << tSize.height() << std::endl;
@@ -42,6 +76,20 @@ MainWindow::MainWindow(QWidget *aParent)
         tImage.setPixel(i,j,Qt::black);
       }
     }
+
+  QVBoxLayout *tLayout = new QVBoxLayout(this);
+  QPixmap tPixmap;
+  tPixmap.convertFromImage(tImage);
+  QLabel *tLabel = new QLabel(this);
+  tLabel->setPixmap(tPixmap);
+  tLayout->addWidget(tLabel);
+
+  QLabel *tLabel2 = new QLabel("this is a test",this);
+  tLayout->addWidget(tLabel2);
+//
+//  QLabel *tLabel3 = new QLabel("this is a test",this);
+
+  setLayout(tLayout);
 
 std::cout << "Color count: " << tColorCounts.size() << std::endl;
 
@@ -90,34 +138,9 @@ std::cout << "Color count: " << tColorCounts.size() << std::endl;
         << tIter->first << "/"
         << tIter->second << std::endl;
   }
+
 #endif
-}
-
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-MainWindow::~MainWindow()
-{
-}
-
-#if 0
-void MainWindow::onSend()
-{
-  std::cout << "onSend" << std::endl;
-  QString tChecked = "false";
-  if (_checkBox->checkState() == Qt::Checked)
-  {
-    tChecked = "true";
-  }
-  std::cout << "_checkBox: " << qPrintable(tChecked) << std::endl;
-  std::cout << "_lineEdit1: " << qPrintable(_lineEdit1->text()) << std::endl;
-  std::cout << "_lineEdit2: " << qPrintable(_lineEdit2->text()) << std::endl;
-}
-#endif
-
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-void MainWindow::setupView()
-{
+  setMinimumSize(800,800);
 #if 0
 #ifdef OLD
   std::cout << "setupView" << std::endl;

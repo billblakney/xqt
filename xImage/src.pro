@@ -7,6 +7,10 @@ TARGET = go
 DEPENDPATH += .
 INCLUDEPATH += .
 QT += widgets
+QMAKE_CLEAN   = $(BIN_DIR)/go
+QMAKE_CLEAN  += debug/* release/*
+CONFIG       += debug_and_release
+
 
 # Input
 HEADERS += MainWindow.hh
