@@ -20,21 +20,32 @@ MainWindow::MainWindow(QWidget *aParent)
   _OriginalPixmap(0),
   _CopyPixmap(0),
   _Slider(0),
-  _Label2(0)
+  _Label2(0),
+  _ODarkSquareColor(0),
+  _OLiteSquareColor(0),
+  _ODarkPieceColor(0),
+  _OLitePieceColor(0),
+  _NDarkSquareColor(0),
+  _NLiteSquareColor(0),
+  _NDarkPieceColor(0),
+  _NLitePieceColor(0)
 {
+  _ODarkSquareColor = new QColor(221,145,69);
+  _OLiteSquareColor = new QColor(254,206,157);
+  _ODarkPieceColor = new QColor(0,0,0);
+  _OLitePieceColor = new QColor(255,255,255);
+
+  _NDarkSquareColor = new QColor(72,72,72);
+//  _NDarkSquareColor = new QColor(Qt::blue);//TODO rm
+  _NLiteSquareColor = new QColor(194,194,194);
+  _NDarkPieceColor = new QColor(0,0,0);
+  _NLitePieceColor = new QColor(255,255,255);
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 MainWindow::~MainWindow()
 {
-}
-
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-void MainWindow::onSliderValueChanged(int aValue)
-{
-  updateCopyImage(aValue);
 }
 
 //-----------------------------------------------------------------------------
@@ -67,11 +78,105 @@ void MainWindow::loadOriginalImage()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+void MainWindow::onSliderValueChanged(int aValue)
+{
+  updateCopyImage(aValue);
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+int MainWindow::colorDiff(QColor *aColor1,QColor *aColor2)
+{
+  return
+      (abs(aColor1->red() - aColor2->red()) +
+      abs(aColor1->green() - aColor2->green()) +
+      abs(aColor1->blue() - aColor2->blue()));
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+QColor *MainWindow::getNormalizedColor(QColor &aColor)
+{
+  QColor *tColor = _NDarkSquareColor;
+  int tMinDiff = colorDiff(&aColor,_ODarkSquareColor);
+
+  int tDiff = colorDiff(&aColor,_OLiteSquareColor);
+  if (tDiff < tMinDiff)
+  {
+    tColor = _NLiteSquareColor;
+    tMinDiff = tDiff;
+  }
+
+  tDiff = colorDiff(&aColor,_ODarkPieceColor);
+  if (tDiff < tMinDiff)
+  {
+    tColor = _NDarkPieceColor;
+    tMinDiff = tDiff;
+  }
+
+  tDiff = colorDiff(&aColor,_OLitePieceColor);
+  if (tDiff < tMinDiff)
+  {
+    tColor = _NLitePieceColor;
+    tMinDiff = tDiff;
+  }
+
+  return tColor;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void MainWindow::updateCopyImage(int aValue)
 {
-  QSize tSize = _OriginalImage->size();
-
+  // Get a copy of the original image, which will be "normalized".
   QImage tImage = _OriginalPixmap->toImage();
+  std::cout << "FORMAT: " << tImage.format() << std::endl;
+
+//  QSize tSize = _OriginalImage->size();
+  QSize tSize = tImage.size();
+
+  for (int i = 0; i < tSize.width(); i++)
+    for (int j = 0; j < tSize.height(); j++)
+    {
+      QRgb tRgb = _OriginalImage->pixel(i,j);
+      QColor tOriginalColor = QColor(tRgb);
+
+      QColor *tNormalizedColor = getNormalizedColor(tOriginalColor);
+
+      tImage.setPixel(i,j,tNormalizedColor->rgb());
+
+#if 0
+      int tGray = qGray(tColor);
+      if ( tGray <= aValue)
+      {
+//std::cout << "BLACK" << std::endl;
+        tImage.setPixel(i,j,qRgb(0,99,99));
+//        tImage.setPixel(i,j,qRgb(Qt::blue));
+//        tImage.setPixel(i,j,2);
+      }
+      else
+      {
+//std::cout << "WHITE" << std::endl;
+//        tImage.setPixel(i,j,qRgb(Qt::gray));
+        tImage.setPixel(i,j,qRgb(99,255,0));
+      }
+#endif
+    }
+
+  *_CopyPixmap = _CopyPixmap->fromImage(tImage);
+  _Label2->setPixmap(*_CopyPixmap);
+}
+
+#if 0
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::updateCopyImage(int aValue)
+{
+  QImage tImage = _OriginalPixmap->toImage();
+  std::cout << "FORMAT: " << tImage.format() << std::endl;
+
+//  QSize tSize = _OriginalImage->size();
+  QSize tSize = tImage.size();
 
   for (int i = 0; i < tSize.width(); i++)
     for (int j = 0; j < tSize.height(); j++)
@@ -80,13 +185,23 @@ void MainWindow::updateCopyImage(int aValue)
       int tGray = qGray(tColor);
       if ( tGray <= aValue)
       {
-        tImage.setPixel(i,j,Qt::black);
+//std::cout << "BLACK" << std::endl;
+        tImage.setPixel(i,j,qRgb(0,99,99));
+//        tImage.setPixel(i,j,qRgb(Qt::blue));
+//        tImage.setPixel(i,j,2);
+      }
+      else
+      {
+//std::cout << "WHITE" << std::endl;
+//        tImage.setPixel(i,j,qRgb(Qt::gray));
+        tImage.setPixel(i,j,qRgb(99,255,0));
       }
     }
 
   *_CopyPixmap = _CopyPixmap->fromImage(tImage);
   _Label2->setPixmap(*_CopyPixmap);
 }
+#endif
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -130,6 +245,8 @@ void MainWindow::setupView()
   _Slider->setMinimum(0);
   _Slider->setMaximum(255);
   _Slider->setTracking(true);
+  _Slider->setTickInterval(16);
+  _Slider->setTickPosition(QSlider::TicksBothSides);
   tControlsLayout->addWidget(_Slider);
 
 //  tControlsWidget->setLayout(tControlsLayout);
@@ -180,5 +297,5 @@ std::cout << "Color count: " << tColorCounts.size() << std::endl;
 
   std::cout << "Saving altered image..." << std::endl;
 
-  setMinimumSize(800,800);
+  setMinimumSize(800,1000);
 }
