@@ -3,10 +3,11 @@
 
 #include <string>
 //#include <QCheckBox>
-//#include <QLabel>
+#include <QLabel>
 //#include <QLineEdit>
 //#include <QPushButton>
 #include <QWidget>
+#include <QSlider>
 
 class MainWindow: public QWidget
 {
@@ -18,9 +19,11 @@ public:
   virtual ~MainWindow();
 
 	void setupView();
+  void setupConnections();
 
 public slots:
 
+  void onSliderValueChanged(int aValue);
 //  void onSend();
 
 protected:
@@ -31,6 +34,16 @@ protected:
 //  QLineEdit *_lineEdit1;
 //  QLineEdit *_lineEdit2;
 //  QPushButton *_startButton;
+
+  void updateCopyImage(int aValue);
+  void loadOriginalImage();
+
+  QImage *_OriginalImage;
+  QImage *_CopyImage;
+  QPixmap *_OriginalPixmap;
+  QPixmap *_CopyPixmap;
+  QSlider *_Slider;
+  QLabel *_Label2;
 };
 
 #endif /* MAINWINDOW_HH_ */

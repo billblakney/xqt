@@ -1,11 +1,15 @@
 .cproject
 .project
 language.settings.xml
-Makefile
+Makefile*
 *.o
 moc_*
 go
+go.exe
 lib*so*
 *.stash
 *.app/
 .DS_Store
+elease/
+debug/
+images/

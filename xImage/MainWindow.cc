@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <iostream>
 #include <map>
+#include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QImage>
 #include <QLabel>
@@ -11,7 +12,13 @@
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *aParent)
-: QWidget(aParent)
+: QWidget(aParent),
+  _OriginalImage(0),
+  _CopyImage(0),
+  _OriginalPixmap(0),
+  _CopyPixmap(0),
+  _Slider(0),
+  _Label2(0)
 {
 }
 
@@ -19,6 +26,25 @@ MainWindow::MainWindow(QWidget *aParent)
 //-----------------------------------------------------------------------------
 MainWindow::~MainWindow()
 {
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::onSliderValueChanged(int aValue)
+{
+  std::cout << "Updating with value " << aValue << std::endl;
+  updateCopyImage(aValue);
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::setupConnections()
+{
+  std::cout << "Setting up connections" << std::endl;
+
+//  QObject::connect(_Slider, SIGNAL(valueChanged(int)),
+  connect(_Slider, SIGNAL(valueChanged(int)),
+      this, SLOT(onSliderValueChanged(int)) );
 }
 
 #if 0
@@ -38,24 +64,113 @@ void MainWindow::onSend()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+void MainWindow::loadOriginalImage()
+{
+  static int _first = true;
+
+  if (_first)
+  {
+    /*
+     * Load the image.
+     */
+    //QImage tImage("/cygdrive/m/workspace/xqt/xImange/images/unnamed.jpg");
+    //QImage tImage("/cygdrive/m/workspace/xqt/xImage/images/unnamed.jpg");
+    _OriginalImage = new QImage(
+        "M://workspace/xqt/xImage/images/unnamed.jpg");
+  }
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::updateCopyImage(int aValue)
+{
+  QSize tSize = _OriginalImage->size();
+
+  QImage tImage = _OriginalPixmap->toImage();
+
+  for (int i = 0; i < tSize.width(); i++)
+    for (int j = 0; j < tSize.height(); j++)
+    {
+      QRgb tColor = _OriginalImage->pixel(i,j);
+      int tGray = qGray(tColor);
+//      std::cout << "tGray, aValue: " << tGray << "," << aValue << std::endl;
+
+//      if ( tGray <= 25)
+//      if ( tGray <= 171)
+      if ( tGray <= aValue)
+      {
+        tImage.setPixel(i,j,Qt::black);
+//      std::cout << "SETTING PIXEL" << std::endl;
+      }
+    }
+
+  *_CopyPixmap = _CopyPixmap->fromImage(tImage);
+  _Label2->setPixmap(*_CopyPixmap);
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void MainWindow::setupView()
 {
   std::cout << "setupView" << std::endl;
 
-  //QImage tImage("/cygdrive/m/workspace/xqt/xImange/images/unnamed.jpg");
-  //QImage tImage("/cygdrive/m/workspace/xqt/xImage/images/unnamed.jpg");
-  QImage tImage("M://workspace/xqt/xImage/images/unnamed.jpg");
+  loadOriginalImage();
+  _CopyImage = new QImage(_OriginalImage->copy());
 
-  QSize tSize = tImage.size();
+  QWidget *tImagesWidget = new QWidget(this);
+
+  QHBoxLayout *tImagesLayout = new QHBoxLayout(tImagesWidget);
+
+  _OriginalPixmap = new QPixmap();
+  _OriginalPixmap->convertFromImage(*_OriginalImage);
+  QLabel *tLabel1 = new QLabel(this);
+  tLabel1->setPixmap(*_OriginalPixmap);
+  tImagesLayout->addWidget(tLabel1);
+
+  _CopyPixmap = new QPixmap;
+  _CopyPixmap->convertFromImage(*_CopyImage);
+  _Label2 = new QLabel(this);
+  _Label2->setPixmap(*_CopyPixmap);
+  tImagesLayout->addWidget(_Label2);
+
+
+  QWidget *tControlsWidget = new QWidget(this);
+
+  QHBoxLayout *tControlsLayout = new QHBoxLayout(tControlsWidget);
+
+  _Slider = new QSlider(Qt::Horizontal,tControlsWidget);
+  _Slider->setMinimum(0);
+  _Slider->setMaximum(255);
+  _Slider->setTracking(true);
+  tControlsLayout->addWidget(_Slider);
+
+  tControlsWidget->setLayout(tControlsLayout);
+
+  QVBoxLayout *tLayout = new QVBoxLayout(this);
+//  QHBoxLayout *tLayout = new QHBoxLayout(this);
+  tLayout->addWidget(tImagesWidget);
+  tLayout->addWidget(tControlsWidget);
+
+  QLabel *t3 = new QLabel("test label3",tControlsWidget);
+  tLayout->addWidget(t3);
+
+  setLayout(tLayout);
+
+//  updateCopyImage(220);
+//      if ( tGray <= 25)
+//      if ( tGray <= 171)
+//      if ( tGray <= 220)
+
+  QSize tSize = _OriginalImage->size();
   std::cout << "Image size: " << tSize.width() << "," << tSize.height() << std::endl;
 
-  std::map<int,int> tColorCounts; // key qGray, value count
   std::map<int,int>::iterator tIter;
+  std::map<int,int> tColorCounts; // key qGray, value count
 
   for (int i = 0; i < tSize.width(); i++)
-    for (int j = 0; j < tSize.width(); j++)
+    for (int j = 0; j < tSize.height(); j++)
     {
-      QRgb tColor = tImage.pixel(i,j);
+      QRgb tColor = _OriginalImage->pixel(i,j);
       int tGray = qGray(tColor);
 
       tIter = tColorCounts.find(tGray);
@@ -68,41 +183,30 @@ void MainWindow::setupView()
       {
         tColorCounts[tGray] = 1;
       }
-
-      if ( tGray <= 25)
-//      if ( tGray <= 171)
-//      if ( tGray <= 220)
-      {
-        tImage.setPixel(i,j,Qt::black);
-      }
-    }
-
-  QVBoxLayout *tLayout = new QVBoxLayout(this);
-  QPixmap tPixmap;
-  tPixmap.convertFromImage(tImage);
-  QLabel *tLabel = new QLabel(this);
-  tLabel->setPixmap(tPixmap);
-  tLayout->addWidget(tLabel);
-
-  QLabel *tLabel2 = new QLabel("this is a test",this);
-  tLayout->addWidget(tLabel2);
 //
-//  QLabel *tLabel3 = new QLabel("this is a test",this);
-
-  setLayout(tLayout);
+////      if ( tGray <= 25)
+////      if ( tGray <= 171)
+//      if ( tGray <= aValue)
+//      {
+////        _OriginalImage->setPixel(i,j,Qt::black);
+//        _CopyImage->setPixel(i,j,Qt::black);
+//      }
+    }
 
 std::cout << "Color count: " << tColorCounts.size() << std::endl;
 
+#if 0
   for (tIter = tColorCounts.begin(); tIter != tColorCounts.end(); tIter++)
   {
     std::cout << "Color/count: "
         << tIter->first << "/"
         << tIter->second << std::endl;
   }
+#endif
 
   std::cout << "Saving altered image..." << std::endl;
 
-  tImage.save("/home/bill/Downloads/modified.jpg");
+//  tImage.save("/home/bill/Downloads/modified.jpg");
 
 #if 0
   QImage tImage("/home/bill/Downloads/unnamed.jpg");
@@ -173,7 +277,7 @@ std::cout << "Color count: " << tColorCounts.size() << std::endl;
 
   QObject::connect( tSendButton, SIGNAL(clicked()), this, SLOT(onSend()) );
 
-  QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
+  QHBoxLayout *tBoxLayout = new QHBoxLayout(this);
   tBoxLayout->setStretch(0,0);
   tBoxLayout->setStretch(1,1);
   tBoxLayout->addWidget(tEditorsWidget);
@@ -251,7 +355,7 @@ tLabel->setContentsMargins(0,0,0,0);
 tLabel->setSizePolicy(QSizePolicy::MinimumExpanding,
                      QSizePolicy::MinimumExpanding);
 
-QVBoxLayout *tBL = new QVBoxLayout(tFrame);
+QHBoxLayout *tBL = new QHBoxLayout(tFrame);
 tBL->addWidget(tLabel);
 
       tGrid[i][j] = tFrame;
@@ -298,7 +402,7 @@ tGridLayout->setContentsMargins(0,0,0,0);
   QWidget *tEditorsWidget = new QWidget(this);
   tEditorsWidget->setLayout(tGridLayout);
 
-  QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
+  QHBoxLayout *tBoxLayout = new QHBoxLayout(this);
 //  tBoxLayout->setStretch(0,0);
 //  tBoxLayout->setStretch(1,1);
 //  tBoxLayout->addWidget(tEditorsWidget);
