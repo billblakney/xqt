@@ -6,7 +6,11 @@ TEMPLATE = app
 TARGET = go
 DEPENDPATH += .
 INCLUDEPATH += .
-QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += widgets
+    DEFINES += QT_V5
+}
+
 QMAKE_CLEAN   = $(BIN_DIR)/go
 QMAKE_CLEAN  += debug/* release/*
 CONFIG       += debug_and_release
