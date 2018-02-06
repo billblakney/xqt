@@ -18,7 +18,7 @@ public:
 
   virtual ~MainWindow();
 
-	void setupView();
+	void setupView(std::string aFilename);
   void setupConnections();
 
 public slots:
@@ -55,7 +55,7 @@ protected:
   QColor   *_NLitePieceColor;
 
   void updateCopyImage(int aValue);
-  void loadOriginalImage();
+  void loadImage(std::string aFilename);
   int colorDiff(QColor *aColor1,QColor *aColor2);
   QColor *getNormalizedColor(QColor &aColor);
 };

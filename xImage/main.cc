@@ -12,7 +12,7 @@ using namespace std;
 
      std::cout << "creating MainWindow" << std::endl;
      MainWindow *window = new MainWindow(0);
-     window->setupView();
+     window->setupView(argv[1]);
      window->setupConnections();
      window->setVisible(true);
 //     window->setGeometry(1920      ,135,500,900);

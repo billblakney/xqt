@@ -60,19 +60,14 @@ void MainWindow::setupConnections()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void MainWindow::loadOriginalImage()
+void MainWindow::loadImage(std::string aFilename)
 {
   static int _first = true;
 
   if (_first)
   {
-    /*
-     * Load the image.
-     */
-    //QImage tImage("/cygdrive/m/workspace/xqt/xImange/images/unnamed.jpg");
-    //QImage tImage("/cygdrive/m/workspace/xqt/xImage/images/unnamed.jpg");
-    _OriginalImage = new QImage(
-        "M://workspace/xqt/xImage/images/unnamed.jpg");
+    QString tFilename(aFilename.c_str());
+    _OriginalImage = new QImage(tFilename);
   }
 }
 
@@ -126,11 +121,11 @@ QColor *MainWindow::getNormalizedColor(QColor &aColor)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void MainWindow::updateCopyImage(int aValue)
+void MainWindow::updateCopyImage(int /*aValue*/)
 {
   // Get a copy of the original image, which will be "normalized".
   QImage tImage = _OriginalPixmap->toImage();
-  std::cout << "FORMAT: " << tImage.format() << std::endl;
+//  std::cout << "FORMAT: " << tImage.format() << std::endl;
 
 //  QSize tSize = _OriginalImage->size();
   QSize tSize = tImage.size();
@@ -205,14 +200,14 @@ void MainWindow::updateCopyImage(int aValue)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void MainWindow::setupView()
+void MainWindow::setupView(std::string aFilename)
 {
   std::cout << "setupView" << std::endl;
 
   /*
    * Load the original image, and make a copy.
    */
-  loadOriginalImage();
+  loadImage(aFilename);
   _CopyImage = new QImage(_OriginalImage->copy());
 
   /*
