@@ -54,10 +54,12 @@ protected:
   QColor   *_NDarkPieceColor;
   QColor   *_NLitePieceColor;
 
-  void updateCopyImage(int aValue);
+  void colorizeCopyImage(int aValue);
+  void removeImageSpeckles();
   void loadImage(std::string aFilename);
   int colorDiff(QColor *aColor1,QColor *aColor2);
   QColor *getNormalizedColor(QColor &aColor);
+  QColor findSquareColorOnYAxis(QImage &aImage,bool aSearchBelow,int aX, int &aY);
 };
 
 #endif /* MAINWINDOW_HH_ */

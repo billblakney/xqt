@@ -12,6 +12,7 @@
 //  std::cout << "_checkBox: " << qPrintable(tChecked) << std::endl;
 
 //-----------------------------------------------------------------------------
+// constructor
 //-----------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *aParent)
 : QWidget(aParent),
@@ -43,12 +44,14 @@ MainWindow::MainWindow(QWidget *aParent)
 }
 
 //-----------------------------------------------------------------------------
+// Destructor.
 //-----------------------------------------------------------------------------
 MainWindow::~MainWindow()
 {
 }
 
 //-----------------------------------------------------------------------------
+// Setup connections.
 //-----------------------------------------------------------------------------
 void MainWindow::setupConnections()
 {
@@ -59,6 +62,7 @@ void MainWindow::setupConnections()
 }
 
 //-----------------------------------------------------------------------------
+// Load the image to be processed.
 //-----------------------------------------------------------------------------
 void MainWindow::loadImage(std::string aFilename)
 {
@@ -75,10 +79,11 @@ void MainWindow::loadImage(std::string aFilename)
 //-----------------------------------------------------------------------------
 void MainWindow::onSliderValueChanged(int aValue)
 {
-  updateCopyImage(aValue);
+  colorizeCopyImage(aValue);
 }
 
 //-----------------------------------------------------------------------------
+// Compute a difference metric between two colors.
 //-----------------------------------------------------------------------------
 int MainWindow::colorDiff(QColor *aColor1,QColor *aColor2)
 {
@@ -89,6 +94,7 @@ int MainWindow::colorDiff(QColor *aColor1,QColor *aColor2)
 }
 
 //-----------------------------------------------------------------------------
+// Get the normalized color that best matches a specified color.
 //-----------------------------------------------------------------------------
 QColor *MainWindow::getNormalizedColor(QColor &aColor)
 {
@@ -120,16 +126,21 @@ QColor *MainWindow::getNormalizedColor(QColor &aColor)
 }
 
 //-----------------------------------------------------------------------------
+// Colorizes the copy image. The "colorize" operation changes each pixel in
+// the image to the normalized color that best matches the pixel color.
 //-----------------------------------------------------------------------------
-void MainWindow::updateCopyImage(int /*aValue*/)
+void MainWindow::colorizeCopyImage(int /*aValue*/)
 {
   // Get a copy of the original image, which will be "normalized".
   QImage tImage = _OriginalPixmap->toImage();
 //  std::cout << "FORMAT: " << tImage.format() << std::endl;
 
-//  QSize tSize = _OriginalImage->size();
   QSize tSize = tImage.size();
 
+  /*
+   * If a pixel's color is not a normalized color, set it's color to the
+   * closest normalized color.
+   */
   for (int i = 0; i < tSize.width(); i++)
     for (int j = 0; j < tSize.height(); j++)
     {
@@ -139,64 +150,109 @@ void MainWindow::updateCopyImage(int /*aValue*/)
       QColor *tNormalizedColor = getNormalizedColor(tOriginalColor);
 
       tImage.setPixel(i,j,tNormalizedColor->rgb());
-
-#if 0
-      int tGray = qGray(tColor);
-      if ( tGray <= aValue)
-      {
-//std::cout << "BLACK" << std::endl;
-        tImage.setPixel(i,j,qRgb(0,99,99));
-//        tImage.setPixel(i,j,qRgb(Qt::blue));
-//        tImage.setPixel(i,j,2);
-      }
-      else
-      {
-//std::cout << "WHITE" << std::endl;
-//        tImage.setPixel(i,j,qRgb(Qt::gray));
-        tImage.setPixel(i,j,qRgb(99,255,0));
-      }
-#endif
     }
 
-  *_CopyPixmap = _CopyPixmap->fromImage(tImage);
-  _Label2->setPixmap(*_CopyPixmap);
-}
-
-#if 0
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-void MainWindow::updateCopyImage(int aValue)
-{
-  QImage tImage = _OriginalPixmap->toImage();
-  std::cout << "FORMAT: " << tImage.format() << std::endl;
-
-//  QSize tSize = _OriginalImage->size();
-  QSize tSize = tImage.size();
-
-  for (int i = 0; i < tSize.width(); i++)
-    for (int j = 0; j < tSize.height(); j++)
+  /*
+   * If a pixel is surrounded by pixels of some other color, change its color
+   * to that of those surrounding pixels. Don't bother with the edge cases.
+   */
+  for (int i = 1; i < tSize.width()-1; i++)
+    for (int j = 1; j < tSize.height()-1; j++)
     {
-      QRgb tColor = _OriginalImage->pixel(i,j);
-      int tGray = qGray(tColor);
-      if ( tGray <= aValue)
+      QRgb tRgb = tImage.pixel(i,j);
+
+      QRgb tLeftRgb = tImage.pixel(i-1,j);
+      QRgb tRightRgb = tImage.pixel(i+1,j);
+      QRgb tAboveRgb = tImage.pixel(i,j-1);
+      QRgb tBelowRgb = tImage.pixel(i,j+1);
+
+      if ((tRgb != tLeftRgb)
+       && (tRgb != tRightRgb)
+       && (tRgb != tAboveRgb)
+       && (tRgb != tBelowRgb)
+       && (tLeftRgb == tRightRgb)
+       && (tLeftRgb == tAboveRgb)
+       && (tLeftRgb == tBelowRgb))
       {
-//std::cout << "BLACK" << std::endl;
-        tImage.setPixel(i,j,qRgb(0,99,99));
-//        tImage.setPixel(i,j,qRgb(Qt::blue));
-//        tImage.setPixel(i,j,2);
-      }
-      else
-      {
-//std::cout << "WHITE" << std::endl;
-//        tImage.setPixel(i,j,qRgb(Qt::gray));
-        tImage.setPixel(i,j,qRgb(99,255,0));
+        std::cout << "Found island pixel at " << i << "," << j << std::endl;
+        tImage.setPixel(i,j,tLeftRgb);
       }
     }
 
+  /*
+   * Find square boundaries.
+   */
+  int tStartX = ((float)7/(float)16)*(float)tSize.width();
+  int tStartY = ((float)7/(float)16)*(float)tSize.height();
+
+  int tX = tStartX;
+  int tY = tStartY;
+std::cout << "start x,y: " << tStartX << "," << tStartY << std::endl;
+
+  QColor tColor = findSquareColorOnYAxis(tImage,false,tX,tY);
+
+  if (tY < 0)
+  {
+    std::cout << "ERROR: Couldn't find square color" << std::endl;
+    exit(0);
+  }
+  else if (tColor == *_NDarkSquareColor)
+  {
+    std::cout << "Start point is DarkSquare" << std::endl;
+  }
+  else if (tColor == *_NLiteSquareColor)
+  {
+    std::cout << "Start point is LiteSquare!!" << std::endl;
+  }
+  else
+  {
+    std::cout << "ERROR Bad start point!!" << std::endl;
+  }
+
+  /*
+   * Display the modified image.
+   */
   *_CopyPixmap = _CopyPixmap->fromImage(tImage);
   _Label2->setPixmap(*_CopyPixmap);
 }
-#endif
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+QColor MainWindow::findSquareColorOnYAxis(QImage &aImage,bool aSearchBelow,
+    int aX, int &aY)
+{
+  int tIncrement = ((aSearchBelow==true)?1:-1);
+  int tBound = ((aSearchBelow==true)?aImage.height()-1:0);
+
+  std::cout << "tIncr,tBound: " << tIncrement << "," << tBound << std::endl;
+
+  if (aSearchBelow)
+  {
+    while (aY <= tBound)
+    {
+      QColor tColor = QColor(aImage.pixel(aX,aY));
+      if (tColor == *_NDarkSquareColor || tColor == *_NLiteSquareColor)
+      {
+        return tColor;
+      }
+      aY += tIncrement;
+std:: cout << "below aY: " << aY << std::endl;
+    }
+  }
+  else
+  {
+    while (aY >= tBound)
+    {
+      QColor tColor = QColor(aImage.pixel(aX,aY));
+      if (tColor == *_NDarkSquareColor || tColor == *_NLiteSquareColor)
+      {
+        return tColor;
+      }
+      aY += tIncrement;
+std:: cout << "above aY: " << aY << std::endl;
+    }
+  }
+}
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
