@@ -29,7 +29,8 @@ MainWindow::MainWindow(QWidget *aParent)
   _NDarkSquareColor(0),
   _NLiteSquareColor(0),
   _NDarkPieceColor(0),
-  _NLitePieceColor(0)
+  _NLitePieceColor(0),
+  _ContrastColor(0)
 {
   _ODarkSquareColor = new QColor(221,145,69);
   _OLiteSquareColor = new QColor(254,206,157);
@@ -41,6 +42,8 @@ MainWindow::MainWindow(QWidget *aParent)
   _NLiteSquareColor = new QColor(194,194,194);
   _NDarkPieceColor = new QColor(0,0,0);
   _NLitePieceColor = new QColor(255,255,255);
+
+  _ContrastColor = new QColor(Qt::yellow);
 }
 
 //-----------------------------------------------------------------------------
@@ -122,6 +125,13 @@ QColor *MainWindow::getNormalizedColor(QColor &aColor)
     tMinDiff = tDiff;
   }
 
+//if (tMinDiff > 30)
+if (tMinDiff > 100)
+{
+  std::cout << "tMinDiff: " << tMinDiff << std::endl;
+  return _ContrastColor;
+}
+
   return tColor;
 }
 
@@ -183,31 +193,74 @@ void MainWindow::colorizeCopyImage(int /*aValue*/)
    * Find square boundaries.
    */
   int tStartX = ((float)7/(float)16)*(float)tSize.width();
+//  int tStartX = ((float)9/(float)16)*(float)tSize.width();
   int tStartY = ((float)7/(float)16)*(float)tSize.height();
+
+//tStartX -= 25;
+//tStartY -= 25;
 
   int tX = tStartX;
   int tY = tStartY;
-std::cout << "start x,y: " << tStartX << "," << tStartY << std::endl;
+std::cout << "start point: " << tStartX << "," << tStartY << std::endl;
 
-  QColor tColor = findSquareColorOnYAxis(tImage,false,tX,tY);
+  QRect tRect;
+  QPoint tTopLeft;
+  QPoint tBottomRight;
 
-  if (tY < 0)
+  tX = tStartX;
+  tY = tStartY;
+
+  bool tFoundIt = false;
+
+  int tStartAboveY = -1;
+  int tStartBelowY = -1;
+  int tStartLeftX = -1;
+  int tStartRightX = -1;
+
+  tFoundIt = findColorAbove(
+      _NLiteSquareColor,tImage,tStartX,tStartY,tStartAboveY);
+  if (!tFoundIt)
   {
-    std::cout << "ERROR: Couldn't find square color" << std::endl;
-    exit(0);
+    std::cout << "ERROR: findColorAbove failed" << std::endl;
   }
-  else if (tColor == *_NDarkSquareColor)
+
+  tFoundIt = findColorBelow(
+      _NLiteSquareColor,tImage,tStartX,tStartY,tStartBelowY);
+  if (!tFoundIt)
   {
-    std::cout << "Start point is DarkSquare" << std::endl;
+    std::cout << "ERROR: findColorBelow failed" << std::endl;
   }
-  else if (tColor == *_NLiteSquareColor)
+
+  tFoundIt = findColorLeft(
+      _NLiteSquareColor,tImage,tStartX,tStartY,tStartLeftX);
+  if (!tFoundIt)
   {
-    std::cout << "Start point is LiteSquare!!" << std::endl;
+    std::cout << "ERROR: findColorLeft failed" << std::endl;
   }
-  else
+
+  tFoundIt = findColorRight(
+      _NLiteSquareColor,tImage,tStartX,tStartY,tStartRightX);
+  if (!tFoundIt)
   {
-    std::cout << "ERROR Bad start point!!" << std::endl;
+    std::cout << "ERROR: findColorRight failed" << std::endl;
   }
+
+  QPoint tStartAbove(tStartX,tStartAboveY);
+  QPoint tStartBelow(tStartX,tStartBelowY);
+  QPoint tStartLeft(tStartLeftX,tStartY);
+  QPoint tStartRight(tStartRightX,tStartY);
+
+  QColor tColor(Qt::blue);
+
+  emphasizePoint(tImage,tStartX,tStartY,tColor);
+
+  emphasizePoint(tImage,tStartAbove,tColor);
+  emphasizePoint(tImage,tStartBelow,tColor);
+  emphasizePoint(tImage,tStartLeft,tColor);
+  emphasizePoint(tImage,tStartRight,tColor);
+
+//  std::cout << "Start square TL: " << tTopLeft.x() << "," << tTopLeft.y() << std::endl;
+//  std::cout << "Start square BR: " << tBottomRight.x() << "," << tBottomRight.y() << std::endl;
 
   /*
    * Display the modified image.
@@ -218,40 +271,111 @@ std::cout << "start x,y: " << tStartX << "," << tStartY << std::endl;
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-QColor MainWindow::findSquareColorOnYAxis(QImage &aImage,bool aSearchBelow,
-    int aX, int &aY)
+void MainWindow::emphasizePoint(QImage &aImage,QPoint aPoint,QColor aColor)
 {
-  int tIncrement = ((aSearchBelow==true)?1:-1);
-  int tBound = ((aSearchBelow==true)?aImage.height()-1:0);
+  emphasizePoint(aImage,aPoint.x(),aPoint.y(),aColor);
+}
 
-  std::cout << "tIncr,tBound: " << tIncrement << "," << tBound << std::endl;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::emphasizePoint(QImage &aImage,int aX,int aY,QColor aColor)
+{
+  QRgb tRgb = aColor.rgb();
+  aImage.setPixel(aX,aY,tRgb);
+  aImage.setPixel(aX-1,aY-1,tRgb);
+  aImage.setPixel(aX-1,aY,tRgb);
+  aImage.setPixel(aX-1,aY+1,tRgb);
+  aImage.setPixel(aX+1,aY-1,tRgb);
+  aImage.setPixel(aX+1,aY,tRgb);
+  aImage.setPixel(aX+1,aY+1,tRgb);
+  aImage.setPixel(aX,aY-1,tRgb);
+  aImage.setPixel(aX,aY+1,tRgb);
+}
 
-  if (aSearchBelow)
+//-----------------------------------------------------------------------------
+// Finds the first square color along the YAxis from specified start point.
+//-----------------------------------------------------------------------------
+bool MainWindow::findColorAbove(QColor *aColor,QImage &aImage,int aX,int aY,
+    int &aFoundAtY)
+{
+  aFoundAtY = aY;
+
+  while (aFoundAtY >= 0)
   {
-    while (aY <= tBound)
+    QColor tColor = QColor(aImage.pixel(aX,aFoundAtY));
+
+    if (tColor == *aColor)
     {
-      QColor tColor = QColor(aImage.pixel(aX,aY));
-      if (tColor == *_NDarkSquareColor || tColor == *_NLiteSquareColor)
-      {
-        return tColor;
-      }
-      aY += tIncrement;
-std:: cout << "below aY: " << aY << std::endl;
+      return true;
     }
+    aFoundAtY--;
   }
-  else
+
+  return false;
+}
+
+//-----------------------------------------------------------------------------
+// Finds the first square color along the YAxis from specified start point.
+//-----------------------------------------------------------------------------
+bool MainWindow::findColorBelow(QColor *aColor,QImage &aImage,int aX,int aY,
+    int &aFoundAtY)
+{
+  aFoundAtY = aY;
+
+  while (aFoundAtY <= aImage.height()-1)
   {
-    while (aY >= tBound)
+    QColor tColor = QColor(aImage.pixel(aX,aFoundAtY));
+
+    if (tColor == *aColor)
     {
-      QColor tColor = QColor(aImage.pixel(aX,aY));
-      if (tColor == *_NDarkSquareColor || tColor == *_NLiteSquareColor)
-      {
-        return tColor;
-      }
-      aY += tIncrement;
-std:: cout << "above aY: " << aY << std::endl;
+      return true;
     }
+    aFoundAtY++;
   }
+
+  return false;
+}
+
+//-----------------------------------------------------------------------------
+// Finds the first square color along the XAxis from specified start point.
+//-----------------------------------------------------------------------------
+bool MainWindow::findColorRight(QColor *aColor,QImage &aImage,int aX,int aY,
+    int &aFoundAtX)
+{
+  aFoundAtX = aX;
+
+  while (aFoundAtX <= aImage.width()-1)
+  {
+    QColor tColor = QColor(aImage.pixel(aFoundAtX,aY));
+    if (tColor == *aColor)
+    {
+      return true;
+    }
+    aFoundAtX++;
+  }
+
+  return false;
+}
+
+//-----------------------------------------------------------------------------
+// Finds the first square color along the XAxis from specified start point.
+//-----------------------------------------------------------------------------
+bool MainWindow::findColorLeft(QColor *aColor,QImage &aImage,int aX,int aY,
+    int &aFoundAtX)
+{
+  aFoundAtX = aX;
+
+  while (aFoundAtX >= 0)
+  {
+    QColor tColor = QColor(aImage.pixel(aFoundAtX,aY));
+    if (tColor == *aColor)
+    {
+      return true;
+    }
+    aFoundAtX--;
+  }
+
+  return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -348,5 +472,5 @@ std::cout << "Color count: " << tColorCounts.size() << std::endl;
 
   std::cout << "Saving altered image..." << std::endl;
 
-  setMinimumSize(800,1000);
+  setMinimumSize(1000,800);
 }

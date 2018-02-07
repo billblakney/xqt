@@ -14,6 +14,8 @@ class MainWindow: public QWidget
   Q_OBJECT
 public:
 
+  enum ColorType {eNone, eDarkSquare, eLiteSquare, eDarkPiece, eLitePiece};
+
   MainWindow(QWidget *aParent);
 
   virtual ~MainWindow();
@@ -54,12 +56,25 @@ protected:
   QColor   *_NDarkPieceColor;
   QColor   *_NLitePieceColor;
 
+  QColor   *_ContrastColor;
+
   void colorizeCopyImage(int aValue);
   void removeImageSpeckles();
   void loadImage(std::string aFilename);
   int colorDiff(QColor *aColor1,QColor *aColor2);
   QColor *getNormalizedColor(QColor &aColor);
-  QColor findSquareColorOnYAxis(QImage &aImage,bool aSearchBelow,int aX, int &aY);
+
+  bool findColorAbove(QColor *aColor,
+      QImage &aImage,int aX,int aY,int &aFoundAtY);
+  bool findColorBelow(QColor *aColor,
+      QImage &aImage,int aX,int aY,int &aFoundAtY);
+  bool findColorLeft(QColor *aColor,
+      QImage &aImage,int aX,int aY,int &aFoundAtX);
+  bool findColorRight(QColor *aColor,
+      QImage &aImage,int aX,int aY,int &aFoundAtX);
+
+  void emphasizePoint(QImage &aImage,QPoint aPoint,QColor aColor);
+  void emphasizePoint(QImage &aImage,int aX,int aY,QColor aColor);
 };
 
 #endif /* MAINWINDOW_HH_ */
