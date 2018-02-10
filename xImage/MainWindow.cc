@@ -75,6 +75,7 @@ void MainWindow::loadImage(std::string aFilename)
   {
     QString tFilename(aFilename.c_str());
     _OriginalImage = new QImage(tFilename);
+//  std::cout << "FORMAT: " << _OriginalImage.format() << std::endl;
   }
 }
 
@@ -82,7 +83,7 @@ void MainWindow::loadImage(std::string aFilename)
 //-----------------------------------------------------------------------------
 void MainWindow::onSliderValueChanged(int aValue)
 {
-  colorizeCopyImage(aValue);
+  processCopyImage(aValue);
 }
 
 //-----------------------------------------------------------------------------
@@ -316,6 +317,13 @@ std::cout << "square seed" << tSeedX << "," << tSeedY << std::endl;
   QPoint tBottomRight(tRightX,tLowerY);
   QRect tSquare(tTopLeft,tBottomRight);
 
+  if( tShowDebugPoints)
+  {
+    QColor tYellow(Qt::yellow);
+    emphasizePoint(aImage,tSquare.topLeft(),tYellow);
+    emphasizePoint(aImage,tSquare.bottomRight(),tYellow);
+  }
+
   return tSquare;
 }
 
@@ -323,11 +331,10 @@ std::cout << "square seed" << tSeedX << "," << tSeedY << std::endl;
 // Colorizes the copy image. The "colorize" operation changes each pixel in
 // the image to the normalized color that best matches the pixel color.
 //-----------------------------------------------------------------------------
-void MainWindow::colorizeCopyImage(int /*aValue*/)
+void MainWindow::processCopyImage(int /*aValue*/)
 {
-  // Get a copy of the original image, which will be "normalized".
+  // Get a copy of the original image.
   QImage tImage = _OriginalPixmap->toImage();
-//  std::cout << "FORMAT: " << tImage.format() << std::endl;
 
   normalizeColors(tImage);
   eliminateIslands(tImage);
@@ -335,19 +342,28 @@ void MainWindow::colorizeCopyImage(int /*aValue*/)
   QSize tSize = tImage.size();
 
   /*
-   * Get estimate of the center of square 3,3.
-   */
-  QPoint tCenterAt33 = getSquareCenter(tSize,3,3);
-
-  /*
    * Get the rectangle for square 3,3.
    */
-  QRect tSquareAt33 = getSquareAt(tImage,tCenterAt33);
+  QPoint tCenter = getSquareCenter(tSize,3,3);
+  QRect tSquare = getSquareAt(tImage,tCenter);
 
-  QColor tYellow(Qt::yellow);
+  /*
+   * Get the rectangle for square 2,2.
+   */
+  tCenter = getSquareCenter(tSize,2,2);
+  tSquare = getSquareAt(tImage,tCenter);
 
-  emphasizePoint(tImage,tSquareAt33.topLeft(),tYellow);
-  emphasizePoint(tImage,tSquareAt33.bottomRight(),tYellow);
+  /*
+   * Get the rectangle for square 1,1.
+   */
+  tCenter = getSquareCenter(tSize,1,1);
+  tSquare = getSquareAt(tImage,tCenter);
+
+  /*
+   * Get the rectangle for square 0,0.
+   */
+  tCenter = getSquareCenter(tSize,0,0);
+  tSquare = getSquareAt(tImage,tCenter);
 
   /*
    * Display the modified image.

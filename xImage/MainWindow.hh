@@ -63,7 +63,7 @@ protected:
 
   QRect _Squares[ROWS][COLS];
 
-  void colorizeCopyImage(int aValue);
+  void processCopyImage(int aValue);
   void normalizeColors(QImage &aImage);
   void eliminateIslands(QImage &aImage);
   QPoint getSquareCenter(QSize aBoardSize,int aRow,int aCol);
