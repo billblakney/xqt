@@ -217,32 +217,60 @@ std::cout << "start point: " << tStartX << "," << tStartY << std::endl;
   int tStartLeftX = -1;
   int tStartRightX = -1;
 
+  // above
   tFoundIt = findColorAbove(
       _NLiteSquareColor,tImage,tStartX,tStartY,tStartAboveY);
   if (!tFoundIt)
   {
-    std::cout << "ERROR: findColorAbove failed" << std::endl;
+    std::cout << "ERROR: findColorAbove failed for Lite square" << std::endl;
+  }
+  tFoundIt = findColorAbove(
+      _NDarkSquareColor,tImage,tStartX,tStartY,tStartAboveY);
+  if (!tFoundIt)
+  {
+    std::cout << "ERROR: findColorAbove failed for Dark square" << std::endl;
   }
 
+  // below
   tFoundIt = findColorBelow(
       _NLiteSquareColor,tImage,tStartX,tStartY,tStartBelowY);
   if (!tFoundIt)
   {
-    std::cout << "ERROR: findColorBelow failed" << std::endl;
+    std::cout << "ERROR: findColorBelow failed for Lite square" << std::endl;
+  }
+  tFoundIt = findColorBelow(
+      _NDarkSquareColor,tImage,tStartX,tStartY,tStartBelowY);
+  if (!tFoundIt)
+  {
+    std::cout << "ERROR: findColorBelow failed for Dark square" << std::endl;
   }
 
+  // left
   tFoundIt = findColorLeft(
       _NLiteSquareColor,tImage,tStartX,tStartY,tStartLeftX);
   if (!tFoundIt)
   {
-    std::cout << "ERROR: findColorLeft failed" << std::endl;
+    std::cout << "ERROR: findColorLeft failed for Lite square" << std::endl;
+  }
+  tFoundIt = findColorLeft(
+      _NDarkSquareColor,tImage,tStartX,tStartY,tStartLeftX);
+  if (!tFoundIt)
+  {
+    std::cout << "ERROR: findColorLeft failed for Dark square" << std::endl;
   }
 
+  // right
   tFoundIt = findColorRight(
       _NLiteSquareColor,tImage,tStartX,tStartY,tStartRightX);
   if (!tFoundIt)
   {
-    std::cout << "ERROR: findColorRight failed" << std::endl;
+    std::cout << "ERROR: findColorRight failed for Lite square" << std::endl;
+  }
+  tFoundIt = findColorRight(
+      _NDarkSquareColor,tImage,tStartX,tStartY,tStartRightX);
+  if (!tFoundIt)
+  {
+    std::cout << "ERROR: findColorRight failed for Dark square" << std::endl;
   }
 
   QPoint tStartAbove(tStartX,tStartAboveY);
