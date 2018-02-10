@@ -67,6 +67,7 @@ protected:
   void normalizeColors(QImage &aImage);
   void eliminateIslands(QImage &aImage);
   QPoint getSquareCenter(QSize aBoardSize,int aRow,int aCol);
+  QRect getSquareAt(QImage &aImage,QPoint aSeed);
   void removeImageSpeckles();
   void loadImage(std::string aFilename);
   int colorDiff(QColor *aColor1,QColor *aColor2);

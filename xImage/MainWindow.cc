@@ -212,6 +212,114 @@ QPoint MainWindow::getSquareCenter(QSize aBoardSize,int aRow,int aCol)
 }
 
 //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+QRect MainWindow::getSquareAt(QImage &aImage,QPoint aSeed)
+{
+  QRect tRect;
+
+  int tSeedX = aSeed.x();
+  int tSeedY = aSeed.y();
+
+  int tX = tSeedX;
+  int tY = tSeedY;
+std::cout << "square seed" << tSeedX << "," << tSeedY << std::endl;
+
+  tX = tSeedX;
+  tY = tSeedY;
+
+  bool tFoundIt = false;
+
+  int tUpperY = -1;
+  int tLowerY = -1;
+  int tLeftX = -1;
+  int tRightX = -1;
+
+  // above
+  tFoundIt = findColorAbove(
+      _NLiteSquareColor,aImage,tSeedX,tSeedY,tUpperY);
+  if (!tFoundIt)
+  {
+    std::cout << "ERROR: findColorAbove failed for Lite square" << std::endl;
+  }
+  tFoundIt = findColorAbove(
+      _NDarkSquareColor,aImage,tSeedX,tSeedY,tUpperY);
+  if (!tFoundIt)
+  {
+    std::cout << "ERROR: findColorAbove failed for Dark square" << std::endl;
+  }
+  tUpperY++;
+
+  // below
+  tFoundIt = findColorBelow(
+      _NLiteSquareColor,aImage,tSeedX,tSeedY,tLowerY);
+  if (!tFoundIt)
+  {
+    std::cout << "ERROR: findColorBelow failed for Lite square" << std::endl;
+  }
+  tFoundIt = findColorBelow(
+      _NDarkSquareColor,aImage,tSeedX,tSeedY,tLowerY);
+  if (!tFoundIt)
+  {
+    std::cout << "ERROR: findColorBelow failed for Dark square" << std::endl;
+  }
+  tLowerY--;
+
+  // left
+  tFoundIt = findColorLeft(
+      _NLiteSquareColor,aImage,tSeedX,tSeedY,tLeftX);
+  if (!tFoundIt)
+  {
+    std::cout << "ERROR: findColorLeft failed for Lite square" << std::endl;
+  }
+  tFoundIt = findColorLeft(
+      _NDarkSquareColor,aImage,tSeedX,tSeedY,tLeftX);
+  if (!tFoundIt)
+  {
+    std::cout << "ERROR: findColorLeft failed for Dark square" << std::endl;
+  }
+  tLeftX++;
+
+  // right
+  tFoundIt = findColorRight(
+      _NLiteSquareColor,aImage,tSeedX,tSeedY,tRightX);
+  if (!tFoundIt)
+  {
+    std::cout << "ERROR: findColorRight failed for Lite square" << std::endl;
+  }
+  tFoundIt = findColorRight(
+      _NDarkSquareColor,aImage,tSeedX,tSeedY,tRightX);
+  if (!tFoundIt)
+  {
+    std::cout << "ERROR: findColorRight failed for Dark square" << std::endl;
+  }
+  tRightX--;
+
+  int tShowDebugPoints = true;
+  if( tShowDebugPoints)
+  {
+    QColor tColor(Qt::blue);
+
+    emphasizePoint(aImage,aSeed,tColor);
+
+    QPoint tStartAbove(tSeedX,tUpperY);
+    QPoint tStartBelow(tSeedX,tLowerY);
+    QPoint tStartLeft(tLeftX,tSeedY);
+    QPoint tStartRight(tRightX,tSeedY);
+
+    emphasizePoint(aImage,tStartAbove,tColor);
+    emphasizePoint(aImage,tStartBelow,tColor);
+    emphasizePoint(aImage,tStartLeft,tColor);
+    emphasizePoint(aImage,tStartRight,tColor);
+  }
+
+  QPoint tTopLeft(tLeftX,tUpperY);
+  QPoint tBottomRight(tRightX,tLowerY);
+  QRect tSquare(tTopLeft,tBottomRight);
+
+  return tSquare;
+}
+
+//-----------------------------------------------------------------------------
 // Colorizes the copy image. The "colorize" operation changes each pixel in
 // the image to the normalized color that best matches the pixel color.
 //-----------------------------------------------------------------------------
@@ -227,119 +335,19 @@ void MainWindow::colorizeCopyImage(int /*aValue*/)
   QSize tSize = tImage.size();
 
   /*
-   * Find square boundaries.
+   * Get estimate of the center of square 3,3.
    */
-  QPoint tCenterAtRow3Col3 = getSquareCenter(tSize,3,3);
+  QPoint tCenterAt33 = getSquareCenter(tSize,3,3);
 
-  int tStartX = tCenterAtRow3Col3.x();
-  int tStartY = tCenterAtRow3Col3.y();
-
-  int tX = tStartX;
-  int tY = tStartY;
-std::cout << "start point: " << tStartX << "," << tStartY << std::endl;
-
-  QRect tRect;
-
-  tX = tStartX;
-  tY = tStartY;
-
-  bool tFoundIt = false;
-
-  int tStartAboveY = -1;
-  int tStartBelowY = -1;
-  int tStartLeftX = -1;
-  int tStartRightX = -1;
-
-  // above
-  tFoundIt = findColorAbove(
-      _NLiteSquareColor,tImage,tStartX,tStartY,tStartAboveY);
-  if (!tFoundIt)
-  {
-    std::cout << "ERROR: findColorAbove failed for Lite square" << std::endl;
-  }
-  tFoundIt = findColorAbove(
-      _NDarkSquareColor,tImage,tStartX,tStartY,tStartAboveY);
-  if (!tFoundIt)
-  {
-    std::cout << "ERROR: findColorAbove failed for Dark square" << std::endl;
-  }
-  int tUpperY = tStartAboveY + 1;
-
-  // below
-  tFoundIt = findColorBelow(
-      _NLiteSquareColor,tImage,tStartX,tStartY,tStartBelowY);
-  if (!tFoundIt)
-  {
-    std::cout << "ERROR: findColorBelow failed for Lite square" << std::endl;
-  }
-  tFoundIt = findColorBelow(
-      _NDarkSquareColor,tImage,tStartX,tStartY,tStartBelowY);
-  if (!tFoundIt)
-  {
-    std::cout << "ERROR: findColorBelow failed for Dark square" << std::endl;
-  }
-  int tLowerY = tStartBelowY - 1;
-
-  // left
-  tFoundIt = findColorLeft(
-      _NLiteSquareColor,tImage,tStartX,tStartY,tStartLeftX);
-  if (!tFoundIt)
-  {
-    std::cout << "ERROR: findColorLeft failed for Lite square" << std::endl;
-  }
-  tFoundIt = findColorLeft(
-      _NDarkSquareColor,tImage,tStartX,tStartY,tStartLeftX);
-  if (!tFoundIt)
-  {
-    std::cout << "ERROR: findColorLeft failed for Dark square" << std::endl;
-  }
-  int tLeftX = tStartLeftX + 1;
-
-  // right
-  tFoundIt = findColorRight(
-      _NLiteSquareColor,tImage,tStartX,tStartY,tStartRightX);
-  if (!tFoundIt)
-  {
-    std::cout << "ERROR: findColorRight failed for Lite square" << std::endl;
-  }
-  tFoundIt = findColorRight(
-      _NDarkSquareColor,tImage,tStartX,tStartY,tStartRightX);
-  if (!tFoundIt)
-  {
-    std::cout << "ERROR: findColorRight failed for Dark square" << std::endl;
-  }
-  int tRightX = tStartRightX - 1;
-
-  std::cout << "TTT: "
-      << tLeftX << ","
-      << tUpperY << ","
-      << tRightX << ","
-      << tLowerY << std::endl;
-  QPoint tTopLeft(tLeftX,tUpperY);
-  QPoint tBottomRight(tRightX,tLowerY);
-  QRect tSquare(tTopLeft,tBottomRight);
-
-  QPoint tStartAbove(tStartX,tStartAboveY);
-  QPoint tStartBelow(tStartX,tStartBelowY);
-  QPoint tStartLeft(tStartLeftX,tStartY);
-  QPoint tStartRight(tStartRightX,tStartY);
+  /*
+   * Get the rectangle for square 3,3.
+   */
+  QRect tSquareAt33 = getSquareAt(tImage,tCenterAt33);
 
   QColor tYellow(Qt::yellow);
 
-  emphasizePoint(tImage,tSquare.topLeft(),tYellow);
-  emphasizePoint(tImage,tSquare.bottomRight(),tYellow);
-
-  QColor tColor(Qt::blue);
-
-  emphasizePoint(tImage,tStartX,tStartY,tColor);
-
-  emphasizePoint(tImage,tStartAbove,tColor);
-  emphasizePoint(tImage,tStartBelow,tColor);
-  emphasizePoint(tImage,tStartLeft,tColor);
-  emphasizePoint(tImage,tStartRight,tColor);
-
-//  std::cout << "Start square TL: " << tTopLeft.x() << "," << tTopLeft.y() << std::endl;
-//  std::cout << "Start square BR: " << tBottomRight.x() << "," << tBottomRight.y() << std::endl;
+  emphasizePoint(tImage,tSquareAt33.topLeft(),tYellow);
+  emphasizePoint(tImage,tSquareAt33.bottomRight(),tYellow);
 
   /*
    * Display the modified image.
