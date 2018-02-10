@@ -159,32 +159,24 @@ void MainWindow::normalizeColors(QImage &aImage)
 }
 
 //-----------------------------------------------------------------------------
-// Colorizes the copy image. The "colorize" operation changes each pixel in
-// the image to the normalized color that best matches the pixel color.
+// Sets the color of pixel islands to the surrounding color.
+// Note: Doesn't bother with the edge pixels.
 //-----------------------------------------------------------------------------
-void MainWindow::colorizeCopyImage(int /*aValue*/)
+void MainWindow::eliminateIslands(QImage &aImage)
 {
-  // Get a copy of the original image, which will be "normalized".
-  QImage tImage = _OriginalPixmap->toImage();
-//  std::cout << "FORMAT: " << tImage.format() << std::endl;
+  QSize tSize = aImage.size();
 
-  normalizeColors(tImage);
+  int tNumIslands = 0;
 
-  QSize tSize = tImage.size();
-
-  /*
-   * If a pixel is surrounded by pixels of some other color, change its color
-   * to that of those surrounding pixels. Don't bother with the edge cases.
-   */
   for (int i = 1; i < tSize.width()-1; i++)
     for (int j = 1; j < tSize.height()-1; j++)
     {
-      QRgb tRgb = tImage.pixel(i,j);
+      QRgb tRgb = aImage.pixel(i,j);
 
-      QRgb tLeftRgb = tImage.pixel(i-1,j);
-      QRgb tRightRgb = tImage.pixel(i+1,j);
-      QRgb tAboveRgb = tImage.pixel(i,j-1);
-      QRgb tBelowRgb = tImage.pixel(i,j+1);
+      QRgb tLeftRgb = aImage.pixel(i-1,j);
+      QRgb tRightRgb = aImage.pixel(i+1,j);
+      QRgb tAboveRgb = aImage.pixel(i,j-1);
+      QRgb tBelowRgb = aImage.pixel(i,j+1);
 
       if ((tRgb != tLeftRgb)
        && (tRgb != tRightRgb)
@@ -195,9 +187,28 @@ void MainWindow::colorizeCopyImage(int /*aValue*/)
        && (tLeftRgb == tBelowRgb))
       {
         std::cout << "Found island pixel at " << i << "," << j << std::endl;
-        tImage.setPixel(i,j,tLeftRgb);
+        tNumIslands++;
+        aImage.setPixel(i,j,tLeftRgb);
       }
     }
+
+  std::cout << "Number of island pixel removed: " << tNumIslands << std::endl;
+}
+
+//-----------------------------------------------------------------------------
+// Colorizes the copy image. The "colorize" operation changes each pixel in
+// the image to the normalized color that best matches the pixel color.
+//-----------------------------------------------------------------------------
+void MainWindow::colorizeCopyImage(int /*aValue*/)
+{
+  // Get a copy of the original image, which will be "normalized".
+  QImage tImage = _OriginalPixmap->toImage();
+//  std::cout << "FORMAT: " << tImage.format() << std::endl;
+
+  normalizeColors(tImage);
+  eliminateIslands(tImage);
+
+  QSize tSize = tImage.size();
 
   /*
    * Find square boundaries.
