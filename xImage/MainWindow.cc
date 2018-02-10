@@ -216,27 +216,13 @@ QPoint MainWindow::getSquareCenter(QSize aBoardSize,int aRow,int aCol)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-QPoint MainWindow::getNeighborSquareCenter(QRect aFromSquare,
-    Direction aDirection,int aNumSquares)
+QPoint MainWindow::getNeighborSquareCenter(QRect aFromSquare,int aRowOffset,
+    int aColOffset)
 {
   QPoint tCenter = aFromSquare.center();
 
-  if (aDirection == eLeft)
-  {
-    tCenter.setX(tCenter.x() - aNumSquares * aFromSquare.width());
-  }
-  else if (aDirection == eRight)
-  {
-    tCenter.setX(tCenter.x() + aNumSquares * aFromSquare.width());
-  }
-  else if (aDirection == eUp)
-  {
-    tCenter.setY(tCenter.y() - aNumSquares * aFromSquare.height());
-  }
-  else // (aDirection == eDown)
-  {
-    tCenter.setY(tCenter.y() + aNumSquares * aFromSquare.height());
-  }
+  tCenter.setX(tCenter.x() + aRowOffset * aFromSquare.width());
+  tCenter.setY(tCenter.y() + aColOffset * aFromSquare.height());
 
   return tCenter;
 }
@@ -416,62 +402,70 @@ void MainWindow::processCopyImage(int /*aValue*/)
    * Get the rectangle for square 3,3.
    */
   QPoint tCenter = getSquareCenter(tSize,3,3);
-  QRect tSquare = getSquareAt(tImage,tCenter);
-  std::cout << "Square(3,3) width,height: " << tSquare.width() << "," << tSquare.height() << std::endl;
-  _Squares[3][3] = Square(3,3,tSquare);
-
-
-contrastPiece(tImage,tSquare,eLiteSquare);
+  QRect tRect = getSquareAt(tImage,tCenter);
+  std::cout << "Square(3,3) width,height: " << tRect.width() << "," << tRect.height() << std::endl;
+  _Squares[3][3] = Square(3,3,tRect);
 
   /*
-   * Get the rectangle for square 1,3.
+   * Get the rectangle for square 3,1.
    */
-  tCenter = getNeighborSquareCenter(_Squares[3][3]._Rect,eLeft,2);
-  tSquare = getSquareAt(tImage,tCenter);
-  std::cout << "Square(3,1) width,height: " << tSquare.width() << "," << tSquare.height() << std::endl;
-  _Squares[3][1] = Square(3,1,tSquare);
+  tCenter = getNeighborSquareCenter(_Squares[3][3]._Rect,-2,0);
+  tRect = getSquareAt(tImage,tCenter);
+  std::cout << "Square(3,1) width,height: " << tRect.width() << "," << tRect.height() << std::endl;
+  _Squares[3][1] = Square(3,1,tRect);
 
   /*
    * Get the rectangle for square 3,5.
    */
-  tCenter = getNeighborSquareCenter(_Squares[3][3]._Rect,eRight,2);
-  tSquare = getSquareAt(tImage,tCenter);
-  std::cout << "Square(3,5) width,height: " << tSquare.width() << "," << tSquare.height() << std::endl;
-  _Squares[3][5] = Square(3,5,tSquare);
+  tCenter = getNeighborSquareCenter(_Squares[3][3]._Rect,2,0);
+  tRect = getSquareAt(tImage,tCenter);
+  std::cout << "Square(3,5) width,height: " << tRect.width() << "," << tRect.height() << std::endl;
+  _Squares[3][5] = Square(3,5,tRect);
 
   /*
    * Get the rectangle for square 3,7.
    */
-  tCenter = getNeighborSquareCenter(_Squares[3][5]._Rect,eRight,2);
-  tSquare = getSquareAt(tImage,tCenter);
-  std::cout << "Square(3,7) width,height: " << tSquare.width() << "," << tSquare.height() << std::endl;
-  _Squares[3][7] = Square(3,7,tSquare);
+  tCenter = getNeighborSquareCenter(_Squares[3][5]._Rect,2,0);
+  tRect = getSquareAt(tImage,tCenter);
+  std::cout << "Square(3,7) width,height: " << tRect.width() << "," << tRect.height() << std::endl;
+  _Squares[3][7] = Square(3,7,tRect);
 
-#if 0
   /*
-   * Get the rectangle for square 3,2.
+   * Get the rectangle for square 2,0.
    */
-  QPoint tCenter = getSquareCenter(tSize,3,2);
-  QRect tSquare = getSquareAt(tImage,tCenter);
-  std::cout << "Square width,height: " << tSquare.width() << "," << tSquare.height() << std::endl;
+  tCenter = getNeighborSquareCenter(_Squares[3][1]._Rect,-1,-1);
+  tRect = getSquareAt(tImage,tCenter);
+  std::cout << "Square(2,0) width,height: " << tRect.width() << "," << tRect.height() << std::endl;
+  _Squares[2][0] = Square(2,0,tRect);
 
   /*
    * Get the rectangle for square 2,2.
    */
-  tCenter = getSquareCenter(tSize,2,2);
-  tSquare = getSquareAt(tImage,tCenter);
+  tCenter = getNeighborSquareCenter(_Squares[2][0]._Rect,2,0);
+  tRect = getSquareAt(tImage,tCenter);
+  std::cout << "Square(2,2) width,height: " << tRect.width() << "," << tRect.height() << std::endl;
+  _Squares[2][2] = Square(2,2,tRect);
 
   /*
-   * Get the rectangle for square 1,1.
+   * Get the rectangle for square 2,4.
    */
-  tCenter = getSquareCenter(tSize,1,1);
-  tSquare = getSquareAt(tImage,tCenter);
+  tCenter = getNeighborSquareCenter(_Squares[2][2]._Rect,2,0);
+  tRect = getSquareAt(tImage,tCenter);
+  std::cout << "Square(2,4) width,height: " << tRect.width() << "," << tRect.height() << std::endl;
+  _Squares[2][4] = Square(2,4,tRect);
+
   /*
-   * Get the rectangle for square 0,0.
+   * Get the rectangle for square 2,6.
    */
-  tCenter = getSquareCenter(tSize,0,0);
-  tSquare = getSquareAt(tImage,tCenter);
-#endif
+  tCenter = getNeighborSquareCenter(_Squares[2][4]._Rect,2,0);
+  tRect = getSquareAt(tImage,tCenter);
+  std::cout << "Square(2,6) width,height: " << tRect.width() << "," << tRect.height() << std::endl;
+  _Squares[2][6] = Square(2,6,tRect);
+
+  /*
+   * Contrast the pieces.
+   */
+contrastPiece(tImage,_Squares[3][3]._Rect,eLiteSquare);
 
   /*
    * Display the modified image.

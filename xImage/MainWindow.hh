@@ -70,7 +70,7 @@ protected:
   void normalizeColors(QImage &aImage);
   void eliminateIslands(QImage &aImage);
   QPoint getSquareCenter(QSize aBoardSize,int aRow,int aCol);
-  QPoint getNeighborSquareCenter(QRect aFromSquare, Direction aDirection,int aNumSquares = 1);
+  QPoint getNeighborSquareCenter(QRect aFromSquare,int aRowOffset,int aColOffset);
   QRect getSquareAt(QImage &aImage,QPoint aSeed);
   QColor *getPieceColor(QImage &aImage,QRect aSquare,QColor *aSquareColor);
   void contrastPiece(QImage &aImage,QRect aSquare,BoardItem aSquareType);
