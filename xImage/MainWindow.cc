@@ -136,16 +136,11 @@ if (tMinDiff > 100)
 }
 
 //-----------------------------------------------------------------------------
-// Colorizes the copy image. The "colorize" operation changes each pixel in
-// the image to the normalized color that best matches the pixel color.
+// Sets the color of each pixel image to the closest normalizing color.
 //-----------------------------------------------------------------------------
-void MainWindow::colorizeCopyImage(int /*aValue*/)
+void MainWindow::normalizeColors(QImage &aImage)
 {
-  // Get a copy of the original image, which will be "normalized".
-  QImage tImage = _OriginalPixmap->toImage();
-//  std::cout << "FORMAT: " << tImage.format() << std::endl;
-
-  QSize tSize = tImage.size();
+  QSize tSize = aImage.size();
 
   /*
    * If a pixel's color is not a normalized color, set it's color to the
@@ -159,8 +154,23 @@ void MainWindow::colorizeCopyImage(int /*aValue*/)
 
       QColor *tNormalizedColor = getNormalizedColor(tOriginalColor);
 
-      tImage.setPixel(i,j,tNormalizedColor->rgb());
+      aImage.setPixel(i,j,tNormalizedColor->rgb());
     }
+}
+
+//-----------------------------------------------------------------------------
+// Colorizes the copy image. The "colorize" operation changes each pixel in
+// the image to the normalized color that best matches the pixel color.
+//-----------------------------------------------------------------------------
+void MainWindow::colorizeCopyImage(int /*aValue*/)
+{
+  // Get a copy of the original image, which will be "normalized".
+  QImage tImage = _OriginalPixmap->toImage();
+//  std::cout << "FORMAT: " << tImage.format() << std::endl;
+
+  normalizeColors(tImage);
+
+  QSize tSize = tImage.size();
 
   /*
    * If a pixel is surrounded by pixels of some other color, change its color
