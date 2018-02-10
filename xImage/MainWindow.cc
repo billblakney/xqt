@@ -196,8 +196,9 @@ void MainWindow::eliminateIslands(QImage &aImage)
 }
 
 //-----------------------------------------------------------------------------
+// Estimates the center of a square on a board of specified dimension.
 //-----------------------------------------------------------------------------
-QPoint MainWindow::estimateSquareCenter(QSize aBoardSize,int aRow,int aCol)
+QPoint MainWindow::getSquareCenter(QSize aBoardSize,int aRow,int aCol)
 {
   QPoint tCenter;
 
@@ -228,7 +229,7 @@ void MainWindow::colorizeCopyImage(int /*aValue*/)
   /*
    * Find square boundaries.
    */
-  QPoint tCenterAtRow3Col3 = estimateSquareCenter(tSize,3,3);
+  QPoint tCenterAtRow3Col3 = getSquareCenter(tSize,3,3);
 
   int tStartX = tCenterAtRow3Col3.x();
   int tStartY = tCenterAtRow3Col3.y();
@@ -238,8 +239,6 @@ void MainWindow::colorizeCopyImage(int /*aValue*/)
 std::cout << "start point: " << tStartX << "," << tStartY << std::endl;
 
   QRect tRect;
-  QPoint tTopLeft;
-  QPoint tBottomRight;
 
   tX = tStartX;
   tY = tStartY;
@@ -264,6 +263,7 @@ std::cout << "start point: " << tStartX << "," << tStartY << std::endl;
   {
     std::cout << "ERROR: findColorAbove failed for Dark square" << std::endl;
   }
+  int tUpperY = tStartAboveY + 1;
 
   // below
   tFoundIt = findColorBelow(
@@ -278,6 +278,7 @@ std::cout << "start point: " << tStartX << "," << tStartY << std::endl;
   {
     std::cout << "ERROR: findColorBelow failed for Dark square" << std::endl;
   }
+  int tLowerY = tStartBelowY - 1;
 
   // left
   tFoundIt = findColorLeft(
@@ -292,6 +293,7 @@ std::cout << "start point: " << tStartX << "," << tStartY << std::endl;
   {
     std::cout << "ERROR: findColorLeft failed for Dark square" << std::endl;
   }
+  int tLeftX = tStartLeftX + 1;
 
   // right
   tFoundIt = findColorRight(
@@ -306,11 +308,26 @@ std::cout << "start point: " << tStartX << "," << tStartY << std::endl;
   {
     std::cout << "ERROR: findColorRight failed for Dark square" << std::endl;
   }
+  int tRightX = tStartRightX - 1;
+
+  std::cout << "TTT: "
+      << tLeftX << ","
+      << tUpperY << ","
+      << tRightX << ","
+      << tLowerY << std::endl;
+  QPoint tTopLeft(tLeftX,tUpperY);
+  QPoint tBottomRight(tRightX,tLowerY);
+  QRect tSquare(tTopLeft,tBottomRight);
 
   QPoint tStartAbove(tStartX,tStartAboveY);
   QPoint tStartBelow(tStartX,tStartBelowY);
   QPoint tStartLeft(tStartLeftX,tStartY);
   QPoint tStartRight(tStartRightX,tStartY);
+
+  QColor tYellow(Qt::yellow);
+
+  emphasizePoint(tImage,tSquare.topLeft(),tYellow);
+  emphasizePoint(tImage,tSquare.bottomRight(),tYellow);
 
   QColor tColor(Qt::blue);
 
