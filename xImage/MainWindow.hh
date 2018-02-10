@@ -16,6 +16,9 @@ public:
 
   enum ColorType {eNone, eDarkSquare, eLiteSquare, eDarkPiece, eLitePiece};
 
+  static const int ROWS = 8;
+  static const int COLS = 8;
+
   MainWindow(QWidget *aParent);
 
   virtual ~MainWindow();
@@ -58,11 +61,12 @@ protected:
 
   QColor   *_ContrastColor;
 
-  QRect _Squares[8][8];
+  QRect _Squares[ROWS][COLS];
 
   void colorizeCopyImage(int aValue);
   void normalizeColors(QImage &aImage);
   void eliminateIslands(QImage &aImage);
+  QPoint estimateSquareCenter(QSize aBoardSize,int aRow,int aCol);
   void removeImageSpeckles();
   void loadImage(std::string aFilename);
   int colorDiff(QColor *aColor1,QColor *aColor2);

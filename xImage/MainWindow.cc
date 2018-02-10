@@ -196,6 +196,21 @@ void MainWindow::eliminateIslands(QImage &aImage)
 }
 
 //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+QPoint MainWindow::estimateSquareCenter(QSize aBoardSize,int aRow,int aCol)
+{
+  QPoint tCenter;
+
+  float tX = (2.0*(aRow+1) -1)/(2.0*(float)ROWS);
+  float tY = (2.0*(aCol+1) -1)/(2.0*(float)COLS);
+
+  tCenter.setX(tX*aBoardSize.width());
+  tCenter.setY(tY*aBoardSize.height());
+
+  return tCenter;
+}
+
+//-----------------------------------------------------------------------------
 // Colorizes the copy image. The "colorize" operation changes each pixel in
 // the image to the normalized color that best matches the pixel color.
 //-----------------------------------------------------------------------------
@@ -213,12 +228,10 @@ void MainWindow::colorizeCopyImage(int /*aValue*/)
   /*
    * Find square boundaries.
    */
-  int tStartX = ((float)7/(float)16)*(float)tSize.width();
-//  int tStartX = ((float)9/(float)16)*(float)tSize.width();
-  int tStartY = ((float)7/(float)16)*(float)tSize.height();
+  QPoint tCenterAtRow3Col3 = estimateSquareCenter(tSize,3,3);
 
-//tStartX -= 25;
-//tStartY -= 25;
+  int tStartX = tCenterAtRow3Col3.x();
+  int tStartY = tCenterAtRow3Col3.y();
 
   int tX = tStartX;
   int tY = tStartY;
