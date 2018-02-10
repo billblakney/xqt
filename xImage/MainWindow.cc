@@ -44,6 +44,12 @@ MainWindow::MainWindow(QWidget *aParent)
   _NLitePieceColor = new QColor(255,255,255);
 
   _ContrastColor = new QColor(Qt::yellow);
+
+  for (int i = 0; i < ROWS; i++)
+    for( int j = 0; j < COLS; j++)
+    {
+      _Squares[i][j] = Square();
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -143,10 +149,6 @@ void MainWindow::normalizeColors(QImage &aImage)
 {
   QSize tSize = aImage.size();
 
-  /*
-   * If a pixel's color is not a normalized color, set it's color to the
-   * closest normalized color.
-   */
   for (int i = 0; i < tSize.width(); i++)
     for (int j = 0; j < tSize.height(); j++)
     {
@@ -214,6 +216,33 @@ QPoint MainWindow::getSquareCenter(QSize aBoardSize,int aRow,int aCol)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+QPoint MainWindow::getNeighborSquareCenter(QRect aFromSquare,
+    Direction aDirection,int aNumSquares)
+{
+  QPoint tCenter = aFromSquare.center();
+
+  if (aDirection == eLeft)
+  {
+    tCenter.setX(tCenter.x() - aNumSquares * aFromSquare.width());
+  }
+  else if (aDirection == eRight)
+  {
+    tCenter.setX(tCenter.x() + aNumSquares * aFromSquare.width());
+  }
+  else if (aDirection == eUp)
+  {
+    tCenter.setY(tCenter.y() - aNumSquares * aFromSquare.height());
+  }
+  else // (aDirection == eDown)
+  {
+    tCenter.setY(tCenter.y() + aNumSquares * aFromSquare.height());
+  }
+
+  return tCenter;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 QRect MainWindow::getSquareAt(QImage &aImage,QPoint aSeed)
 {
   QRect tRect;
@@ -223,7 +252,7 @@ QRect MainWindow::getSquareAt(QImage &aImage,QPoint aSeed)
 
   int tX = tSeedX;
   int tY = tSeedY;
-std::cout << "square seed" << tSeedX << "," << tSeedY << std::endl;
+std::cout << "square seed " << tSeedX << "," << tSeedY << std::endl;
 
   tX = tSeedX;
   tY = tSeedY;
@@ -328,6 +357,48 @@ std::cout << "square seed" << tSeedX << "," << tSeedY << std::endl;
 }
 
 //-----------------------------------------------------------------------------
+// TODO  implement
+//-----------------------------------------------------------------------------
+QColor *MainWindow::getPieceColor(QImage &aImage,QRect aSquare,
+    QColor *aSquareColor)
+{
+  Q_UNUSED(aImage);
+  Q_UNUSED(aSquare);
+  Q_UNUSED(aSquareColor);
+  return _NDarkPieceColor;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::contrastPiece(QImage &aImage,QRect aSquare,
+    BoardItem aSquareType)
+{
+  QColor *tSquareColor = ((aSquareType == eLiteSquare)?
+      _NLiteSquareColor:_NDarkSquareColor);
+
+  QColor *tPieceColor = getPieceColor(aImage,aSquare,tSquareColor);
+
+  int tStartX = aSquare.topLeft().x();
+  int tStartY = aSquare.topLeft().y();
+  int tWidth = aSquare.width();
+  int tHeight = aSquare.height();
+
+  for (int i = 0; i < tWidth; i++)
+    for (int j = 0; j < tHeight; j++)
+    {
+      int tX = tStartX + i;
+      int tY = tStartY + j;
+
+      QColor tColor = QColor(aImage.pixel(tX,tY));
+
+      if (tColor != *tSquareColor)
+      {
+        aImage.setPixel(tX,tY,tPieceColor->rgb());
+      }
+    }
+}
+
+//-----------------------------------------------------------------------------
 // Colorizes the copy image. The "colorize" operation changes each pixel in
 // the image to the normalized color that best matches the pixel color.
 //-----------------------------------------------------------------------------
@@ -346,6 +417,43 @@ void MainWindow::processCopyImage(int /*aValue*/)
    */
   QPoint tCenter = getSquareCenter(tSize,3,3);
   QRect tSquare = getSquareAt(tImage,tCenter);
+  std::cout << "Square(3,3) width,height: " << tSquare.width() << "," << tSquare.height() << std::endl;
+  _Squares[3][3] = Square(3,3,tSquare);
+
+
+contrastPiece(tImage,tSquare,eLiteSquare);
+
+  /*
+   * Get the rectangle for square 1,3.
+   */
+  tCenter = getNeighborSquareCenter(_Squares[3][3]._Rect,eLeft,2);
+  tSquare = getSquareAt(tImage,tCenter);
+  std::cout << "Square(3,1) width,height: " << tSquare.width() << "," << tSquare.height() << std::endl;
+  _Squares[3][1] = Square(3,1,tSquare);
+
+  /*
+   * Get the rectangle for square 3,5.
+   */
+  tCenter = getNeighborSquareCenter(_Squares[3][3]._Rect,eRight,2);
+  tSquare = getSquareAt(tImage,tCenter);
+  std::cout << "Square(3,5) width,height: " << tSquare.width() << "," << tSquare.height() << std::endl;
+  _Squares[3][5] = Square(3,5,tSquare);
+
+  /*
+   * Get the rectangle for square 3,7.
+   */
+  tCenter = getNeighborSquareCenter(_Squares[3][5]._Rect,eRight,2);
+  tSquare = getSquareAt(tImage,tCenter);
+  std::cout << "Square(3,7) width,height: " << tSquare.width() << "," << tSquare.height() << std::endl;
+  _Squares[3][7] = Square(3,7,tSquare);
+
+#if 0
+  /*
+   * Get the rectangle for square 3,2.
+   */
+  QPoint tCenter = getSquareCenter(tSize,3,2);
+  QRect tSquare = getSquareAt(tImage,tCenter);
+  std::cout << "Square width,height: " << tSquare.width() << "," << tSquare.height() << std::endl;
 
   /*
    * Get the rectangle for square 2,2.
@@ -358,18 +466,20 @@ void MainWindow::processCopyImage(int /*aValue*/)
    */
   tCenter = getSquareCenter(tSize,1,1);
   tSquare = getSquareAt(tImage,tCenter);
-
   /*
    * Get the rectangle for square 0,0.
    */
   tCenter = getSquareCenter(tSize,0,0);
   tSquare = getSquareAt(tImage,tCenter);
+#endif
 
   /*
    * Display the modified image.
    */
   *_CopyPixmap = _CopyPixmap->fromImage(tImage);
   _Label2->setPixmap(*_CopyPixmap);
+
+  std::cout << "Done processing image" << std::endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -575,5 +685,5 @@ std::cout << "Color count: " << tColorCounts.size() << std::endl;
 
   std::cout << "Saving altered image..." << std::endl;
 
-  setMinimumSize(1000,800);
+  setMinimumSize(1400,800);
 }

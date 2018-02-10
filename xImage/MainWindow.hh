@@ -8,13 +8,16 @@
 //#include <QPushButton>
 #include <QWidget>
 #include <QSlider>
+#include "Square.hh"
 
 class MainWindow: public QWidget
 {
   Q_OBJECT
 public:
 
-  enum ColorType {eNone, eDarkSquare, eLiteSquare, eDarkPiece, eLitePiece};
+  enum BoardItem {eNone, eDarkSquare, eLiteSquare, eDarkPiece, eLitePiece};
+
+  enum Direction {eLeft, eRight, eUp, eDown};
 
   static const int ROWS = 8;
   static const int COLS = 8;
@@ -61,13 +64,16 @@ protected:
 
   QColor   *_ContrastColor;
 
-  QRect _Squares[ROWS][COLS];
+  Square _Squares[ROWS][COLS];
 
   void processCopyImage(int aValue);
   void normalizeColors(QImage &aImage);
   void eliminateIslands(QImage &aImage);
   QPoint getSquareCenter(QSize aBoardSize,int aRow,int aCol);
+  QPoint getNeighborSquareCenter(QRect aFromSquare, Direction aDirection,int aNumSquares = 1);
   QRect getSquareAt(QImage &aImage,QPoint aSeed);
+  QColor *getPieceColor(QImage &aImage,QRect aSquare,QColor *aSquareColor);
+  void contrastPiece(QImage &aImage,QRect aSquare,BoardItem aSquareType);
   void removeImageSpeckles();
   void loadImage(std::string aFilename);
   int colorDiff(QColor *aColor1,QColor *aColor2);
