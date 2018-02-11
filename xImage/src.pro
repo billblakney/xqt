@@ -19,8 +19,10 @@ CONFIG       += debug_and_release
 # Input
 HEADERS += MainWindow.hh \
            Board.hh \
+           ImageUtil.hh \
            Square.hh \
 
 SOURCES += main.cc MainWindow.cc \
            Board.cc \
+           ImageUtil.cc \
            Square.cc \

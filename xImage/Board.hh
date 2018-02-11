@@ -76,10 +76,6 @@ protected:
       int &aFoundAtX);
   void contrastPiece(QImage &aImage,QRect aSquare,
       Board::BoardElement aSquareType);
-  void emphasizePoint(QImage &aImage,QPoint aPoint,QColor aColor,
-      int aRadius = 1);
-  void emphasizePoint(QImage &aImage,int aX,int aY,QColor aColor,
-      int aRadius = 1);
 
   QColor *getPieceColor(QImage &aImage,QRect aSquare,
     QColor *aSquareColor);
