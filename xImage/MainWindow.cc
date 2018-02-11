@@ -235,13 +235,7 @@ QRect MainWindow::getSquareAt(QImage &aImage,QPoint aSeed)
 
   int tSeedX = aSeed.x();
   int tSeedY = aSeed.y();
-
-  int tX = tSeedX;
-  int tY = tSeedY;
 std::cout << "square seed " << tSeedX << "," << tSeedY << std::endl;
-
-  tX = tSeedX;
-  tY = tSeedY;
 
   bool tFoundIt = false;
 
@@ -422,26 +416,49 @@ void MainWindow::processCopyImage(int /*aValue*/)
 
   QSize tSize = tImage.size();
 
-  // Get the initial square at 3,3.
+  /*
+   * First, get all the lite squares.
+   */
+  // Get the initial square at 3,3. Then get the others on the row.
   QPoint tCenter = getSquareCenter(tSize,3,3);
   addSquareAt(3,3,tImage,tCenter);
   generateSimilarRowSquares(tImage,3,3,-2,1);
   generateSimilarRowSquares(tImage,3,3,2,2);
 
-  // Get the square at 2,0.
+  // Get the square at 2,0, then the others on the row.
   tCenter = getNeighborSquareCenter(_Squares[3][1]._Rect,-1,-1);
   addSquareAt(2,0,tImage,tCenter);
   generateSimilarRowSquares(tImage,2,0,2,3);
 
-  // Get the square at 1,1.
+  // Get the square at 1,1, then the others on the row.
   tCenter = getNeighborSquareCenter(_Squares[2][0]._Rect,-1,1);
   addSquareAt(1,1,tImage,tCenter);
   generateSimilarRowSquares(tImage,1,1,2,3);
 
-  // Get the square at 0,0.
+  // Get the square at 0,0, then the others on the row.
   tCenter = getNeighborSquareCenter(_Squares[1][1]._Rect,-1,-1);
   addSquareAt(0,0,tImage,tCenter);
   generateSimilarRowSquares(tImage,0,0,2,3);
+
+  // Get the square at 4,0, then the others on the row.
+  tCenter = getNeighborSquareCenter(_Squares[3][1]._Rect,1,-1);
+  addSquareAt(4,0,tImage,tCenter);
+  generateSimilarRowSquares(tImage,4,0,2,3);
+
+  // Get the square at 5,1, then the others on the row.
+  tCenter = getNeighborSquareCenter(_Squares[4][0]._Rect,1,1);
+  addSquareAt(5,1,tImage,tCenter);
+  generateSimilarRowSquares(tImage,5,1,2,3);
+
+  // Get the square at 6,0, then the others on the row.
+  tCenter = getNeighborSquareCenter(_Squares[5][1]._Rect,1,-1);
+  addSquareAt(6,0,tImage,tCenter);
+  generateSimilarRowSquares(tImage,6,0,2,3);
+
+  // Get the square at 7,1, then the others on the row.
+  tCenter = getNeighborSquareCenter(_Squares[6][0]._Rect,1,1);
+  addSquareAt(7,1,tImage,tCenter);
+  generateSimilarRowSquares(tImage,7,1,2,3);
 
   /*
    * Contrast the pieces.

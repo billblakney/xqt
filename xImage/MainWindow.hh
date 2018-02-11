@@ -26,6 +26,7 @@ public:
 
   virtual ~MainWindow();
 
+  void processCopyImage(int aValue);
 	void setupView(std::string aFilename);
   void setupConnections();
 
@@ -66,7 +67,6 @@ protected:
 
   Square _Squares[ROWS][COLS];
 
-  void processCopyImage(int aValue);
   void normalizeColors(QImage &aImage);
   void eliminateIslands(QImage &aImage);
   QPoint getSquareCenter(QSize aBoardSize,int aRow,int aCol);

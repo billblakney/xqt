@@ -15,6 +15,7 @@ using namespace std;
      window->setupView(argv[1]);
      window->setupConnections();
      window->setVisible(true);
+     window->processCopyImage(0/*is dummy value, not used*/);
 //     window->setGeometry(1920      ,135,500,900);
      window->show();
 
