@@ -14,30 +14,12 @@
 //  std::cout << "_checkBox: " << qPrintable(tChecked) << std::endl;
 
 //-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-void MainWindow::processImage()
-{
-#if 0
-  _Board->processCopyImage(0);
-  /*
-   * Display the modified image.
-   */
-  *_CopyPixmap = _Board->getCopyPixmap()->fromImage(tImage);
-  _Label2->setPixmap(*_CopyPixmap);
-#endif
-}
-
-//-----------------------------------------------------------------------------
 // constructor
 //-----------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *aParent)
 : QWidget(aParent),
   _Slider(0),
   _Label2(0),
-  _OriginalImage(0),
-  _CopyImage(0),
-  _OriginalPixmap(0),
-  _CopyPixmap(0),
   _Board(0)
 {
   std::cout << "MainWindow ctor" << std::endl;
@@ -65,7 +47,7 @@ void MainWindow::setupConnections()
 //-----------------------------------------------------------------------------
 void MainWindow::onSliderValueChanged(int aValue)
 {
-  _Board->processCopyImage(aValue);
+  _Board->processImage();
 }
 
 //-----------------------------------------------------------------------------
@@ -75,12 +57,9 @@ void MainWindow::setupView(std::string aFilename)
   std::cout << "setupView" << std::endl;
 
   _Board = new Board(aFilename);
-  _Board->processCopyImage(0);//TODO arg
+  _Board->processImage();
 
-  _OriginalPixmap = _Board->getOriginalPixmap();
-  _OriginalImage = _Board->getOriginalImage();
-  _CopyPixmap = _Board->getCopyPixmap();
-  _CopyImage = _Board->getCopyImage();
+  QImage *tOriginalImage = _Board->getOriginalImage();
 
   /*
    * Create the images widget.
@@ -89,16 +68,11 @@ void MainWindow::setupView(std::string aFilename)
 
   QHBoxLayout *tImagesLayout = new QHBoxLayout(tImagesWidget);
 
-
-//_Board->processCopyImage(0/*TODO*/);//TODO where to put?
-
   QLabel *tLabel1 = new QLabel(this);
-//  tLabel1->setPixmap(*_OriginalPixmap);
   tLabel1->setPixmap(*_Board->getOriginalPixmap());
   tImagesLayout->addWidget(tLabel1);
 
   _Label2 = new QLabel(this);
-//  _Label2->setPixmap(*_CopyPixmap);
   _Label2->setPixmap(*_Board->getCopyPixmap());
   tImagesLayout->addWidget(_Label2);
 
@@ -128,7 +102,7 @@ void MainWindow::setupView(std::string aFilename)
 
   setLayout(tLayout);
 
-  QSize tSize = _OriginalImage->size();
+  QSize tSize = tOriginalImage->size();
   std::cout << "Image size: " << tSize.width() << "," << tSize.height() << std::endl;
 
   std::map<int,int>::iterator tIter;
@@ -137,7 +111,7 @@ void MainWindow::setupView(std::string aFilename)
   for (int i = 0; i < tSize.width(); i++)
     for (int j = 0; j < tSize.height(); j++)
     {
-      QRgb tColor = _OriginalImage->pixel(i,j);
+      QRgb tColor = tOriginalImage->pixel(i,j);
       int tGray = qGray(tColor);
 
       tIter = tColorCounts.find(tGray);

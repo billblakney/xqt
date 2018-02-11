@@ -26,10 +26,8 @@ public:
 
   virtual ~MainWindow();
 
-  void processCopyImage(int aValue);
 	void setupView(std::string aFilename);
   void setupConnections();
-  void processImage();
 
 public slots:
 
@@ -46,11 +44,6 @@ protected:
 //  QPushButton *_startButton;
   QSlider *_Slider;
   QLabel *_Label2;
-
-  QImage *_OriginalImage;
-  QImage *_CopyImage;
-  QPixmap *_OriginalPixmap;
-  QPixmap *_CopyPixmap;
 
   Board *_Board;
   void loadImage(std::string aFilename);

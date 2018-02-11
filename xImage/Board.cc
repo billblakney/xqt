@@ -127,9 +127,9 @@ QImage *Board::getCopyImage()
 // Colorizes the copy image. The "colorize" operation changes each pixel in
 // the image to the normalized color that best matches the pixel color.
 //-----------------------------------------------------------------------------
-void Board::processCopyImage(int /*aValue*/)//TOOD change name
+void Board::processImage()
 {
-std::cout << "in processCopyImage" << std::endl;
+std::cout << "in processImage" << std::endl;
   // Get a copy of the original image.
   QImage tImage = _OriginalPixmap->toImage();
 

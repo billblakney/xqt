@@ -34,7 +34,7 @@ public:
   QImage *getOriginalImage();
   QImage *getCopyImage();
 
-  void processCopyImage(int /*aValue*/);//TOOD change name
+  void processImage();
 
 protected:
 
