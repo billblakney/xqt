@@ -73,6 +73,7 @@ protected:
   QPoint getNeighborSquareCenter(QRect aFromSquare,int aRowOffset,int aColOffset);
   QRect getSquareAt(QImage &aImage,QPoint aSeed);
   void addSquareAt(int aRow,int aCol,QImage &aImage,QPoint aCenter);
+  void generateSimilarRowSquares(QImage &aImage,int aSeedRow,int aSeedCol,int aOffset,int aNumSquares);
   QColor *getPieceColor(QImage &aImage,QRect aSquare,QColor *aSquareColor);
   void contrastPiece(QImage &aImage,QRect aSquare,BoardItem aSquareType);
   void removeImageSpeckles();

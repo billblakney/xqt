@@ -393,6 +393,22 @@ void MainWindow::addSquareAt(int aRow,int aCol,QImage &aImage,QPoint aCenter)
 }
 
 //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::generateSimilarRowSquares(QImage &aImage,
+    int aSeedRow,int aSeedCol,int aOffset,int aNumSquares)
+{
+  int tCol = aSeedCol;
+
+  for (int i = 0; i < aNumSquares; i++)
+  {
+    QPoint tCenter = getNeighborSquareCenter(
+        _Squares[aSeedRow][tCol]._Rect,0,aOffset);
+    tCol += aOffset;
+    addSquareAt(aSeedRow,tCol,aImage,tCenter);
+  }
+}
+
+//-----------------------------------------------------------------------------
 // Colorizes the copy image. The "colorize" operation changes each pixel in
 // the image to the normalized color that best matches the pixel color.
 //-----------------------------------------------------------------------------
@@ -426,6 +442,9 @@ void MainWindow::processCopyImage(int /*aValue*/)
   tCenter = getNeighborSquareCenter(_Squares[3][1]._Rect,-1,-1);
   addSquareAt(2,0,tImage,tCenter);
 
+  generateSimilarRowSquares(tImage,2,0,2,3);
+
+#if 0
   // Get the square at 2,2.
   tCenter = getNeighborSquareCenter(_Squares[2][0]._Rect,0,2);
   addSquareAt(2,2,tImage,tCenter);
@@ -437,11 +456,15 @@ void MainWindow::processCopyImage(int /*aValue*/)
   // Get the square at 2,6.
   tCenter = getNeighborSquareCenter(_Squares[2][4]._Rect,0,2);
   addSquareAt(2,6,tImage,tCenter);
+#endif
 
   // Get the square at 1,1.
   tCenter = getNeighborSquareCenter(_Squares[2][0]._Rect,-1,1);
   addSquareAt(1,1,tImage,tCenter);
 
+  generateSimilarRowSquares(tImage,1,1,2,3);
+
+#if 0
   // Get the square at 1,3.
   tCenter = getNeighborSquareCenter(_Squares[1][1]._Rect,0,2);
   addSquareAt(1,3,tImage,tCenter);
@@ -453,16 +476,18 @@ void MainWindow::processCopyImage(int /*aValue*/)
   // Get the square at 1,7.
   tCenter = getNeighborSquareCenter(_Squares[1][5]._Rect,0,2);
   addSquareAt(1,7,tImage,tCenter);
+#endif
 
   // Get the square at 0,0.
   tCenter = getNeighborSquareCenter(_Squares[1][1]._Rect,-1,-1);
   addSquareAt(0,0,tImage,tCenter);
 
+  generateSimilarRowSquares(tImage,0,0,2,3);
+
   /*
    * Contrast the pieces.
    */
 contrastPiece(tImage,_Squares[3][3]._Rect,eLiteSquare);
-
   /*
    * Display the modified image.
    */
