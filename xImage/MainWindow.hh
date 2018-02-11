@@ -72,6 +72,7 @@ protected:
   QPoint getSquareCenter(QSize aBoardSize,int aRow,int aCol);
   QPoint getNeighborSquareCenter(QRect aFromSquare,int aRowOffset,int aColOffset);
   QRect getSquareAt(QImage &aImage,QPoint aSeed);
+  void addSquareAt(int aRow,int aCol,QImage &aImage,QPoint aCenter);
   QColor *getPieceColor(QImage &aImage,QRect aSquare,QColor *aSquareColor);
   void contrastPiece(QImage &aImage,QRect aSquare,BoardItem aSquareType);
   void removeImageSpeckles();
