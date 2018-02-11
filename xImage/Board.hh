@@ -61,19 +61,10 @@ protected:
 
   void normalizeColors(QImage &aImage);
   QColor *getNormalizedColor(QColor &aColor);
-  void eliminateIslands(QImage &aImage);
   void addSquareAt(int aRow,int aCol,QImage &aImage,QPoint aCenter);
   QRect getSquareAt(QImage &aImage,QPoint aSeed);
   void generateSimilarRowSquares(QImage &aImage,
       int aSeedRow,int aSeedCol,int aOffset,int aNumSquares);
-  bool findColorAbove(QColor *aColor,QImage &aImage,int aX,int aY,
-      int &aFoundAtY);
-  bool findColorBelow(QColor *aColor,QImage &aImage,int aX,int aY,
-      int &aFoundAtY);
-  bool findColorLeft(QColor *aColor,QImage &aImage,int aX,int aY,
-      int &aFoundAtX);
-  bool findColorRight(QColor *aColor,QImage &aImage,int aX,int aY,
-      int &aFoundAtX);
   void contrastPiece(QImage &aImage,QRect aSquare,
       Board::BoardElement aSquareType);
 
