@@ -3,10 +3,10 @@
 
 #include <string>
 #include <QRect>
-#include "Board.hh"
 
 class Square {
 public:
+  static const int NUM_SLICES = 8;
   Square();
   Square(int aRow,int aCol,QRect aRect);
   virtual ~Square();
@@ -19,7 +19,7 @@ public:
   QRect _Rect;
 
   int _PiecePixels;
-  int _PieceDist[Board::ROWS][Board::COLS];
+  int _PieceDist[NUM_SLICES][NUM_SLICES];
 
 private:
   void init();

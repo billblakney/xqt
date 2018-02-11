@@ -8,8 +8,12 @@
 //#include <QPushButton>
 #include <QWidget>
 #include <QSlider>
-#include "Board.hh"
+#include <QPixmap>
+#include <QImage>
+//#include "Board.hh"
 #include "Square.hh"
+
+class Board;
 
 class MainWindow: public QWidget
 {
@@ -25,6 +29,7 @@ public:
   void processCopyImage(int aValue);
 	void setupView(std::string aFilename);
   void setupConnections();
+  void processImage();
 
 public slots:
 
@@ -39,30 +44,18 @@ protected:
 //  QLineEdit *_lineEdit1;
 //  QLineEdit *_lineEdit2;
 //  QPushButton *_startButton;
+  QSlider *_Slider;
+  QLabel *_Label2;
 
   QImage *_OriginalImage;
   QImage *_CopyImage;
   QPixmap *_OriginalPixmap;
   QPixmap *_CopyPixmap;
-  QSlider *_Slider;
-  QLabel *_Label2;
 
-  /* Color of the original image to be processed */
-  QColor   *_ODarkSquareColor;
-  QColor   *_OLiteSquareColor;
-  QColor   *_ODarkPieceColor;
-  QColor   *_OLitePieceColor;
+  Board *_Board;
+  void loadImage(std::string aFilename);
 
-  /* Color of the "color normalized" image. */
-  QColor   *_NDarkSquareColor;
-  QColor   *_NLiteSquareColor;
-  QColor   *_NDarkPieceColor;
-  QColor   *_NLitePieceColor;
-
-  QColor   *_ContrastColor;
-
-  Square _Squares[Board::ROWS][Board::COLS];
-
+#if 0
   void normalizeColors(QImage &aImage);
   void normalizeSquareBorderColor(QImage &aImage,Square &aSquare);
   void eliminateIslands(QImage &aImage);
@@ -74,7 +67,6 @@ protected:
   QColor *getPieceColor(QImage &aImage,QRect aSquare,QColor *aSquareColor);
   void contrastPiece(QImage &aImage,QRect aSquare,Board::BoardElement aSquareType);
   void removeImageSpeckles();
-  void loadImage(std::string aFilename);
   int colorDiff(QColor *aColor1,QColor *aColor2);
   QColor *getNormalizedColor(QColor &aColor);
 
@@ -89,6 +81,7 @@ protected:
 
   void emphasizePoint(QImage &aImage,QPoint aPoint,QColor aColor,int aRadius = 1);
   void emphasizePoint(QImage &aImage,int aX,int aY,QColor aColor,int aRadius = 1);
+#endif
 };
 
 #endif /* MAINWINDOW_HH_ */

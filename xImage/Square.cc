@@ -14,8 +14,8 @@ void Square::init()
   _Col = 0;
   _Rect = QRect();
   _PiecePixels = 0;
-  for (int i = 0; i < Board::ROWS; i++)
-    for (int j = 0; j < Board::COLS; j++)
+  for (int i = 0; i < NUM_SLICES; i++)
+    for (int j = 0; j < NUM_SLICES; j++)
     {
       _PieceDist[i][j] = 0;
     }
@@ -45,8 +45,8 @@ Square& Square::operator=(const Square& aSquare)
     _Col = aSquare._Col;
     _Rect = QRect(aSquare._Rect.topLeft(),aSquare._Rect.bottomRight());
     _PiecePixels = 0;
-    for (int i = 0; i < Board::ROWS; i++)
-      for (int j = 0; j < Board::COLS; j++)
+    for (int i = 0; i < NUM_SLICES; i++)
+      for (int j = 0; j < NUM_SLICES; j++)
       {
         _PieceDist[i][j] = 0;
       }
