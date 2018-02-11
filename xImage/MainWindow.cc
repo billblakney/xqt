@@ -426,10 +426,17 @@ void MainWindow::processCopyImage(int /*aValue*/)
   QPoint tCenter = getSquareCenter(tSize,3,3);
   addSquareAt(3,3,tImage,tCenter);
 
+  generateSimilarRowSquares(tImage,3,3,-2,1);
+
+#if 0
   // Get the square at 3,1.
   tCenter = getNeighborSquareCenter(_Squares[3][3]._Rect,0,-2);
   addSquareAt(3,1,tImage,tCenter);
+#endif
 
+  generateSimilarRowSquares(tImage,3,3,2,2);
+
+#if 0
   // Get the square at 3,5.
   tCenter = getNeighborSquareCenter(_Squares[3][3]._Rect,0,2);
   addSquareAt(3,5,tImage,tCenter);
@@ -437,6 +444,7 @@ void MainWindow::processCopyImage(int /*aValue*/)
   // Get the square at 3,7.
   tCenter = getNeighborSquareCenter(_Squares[3][5]._Rect,0,2);
   addSquareAt(3,7,tImage,tCenter);
+#endif
 
   // Get the square at 2,0.
   tCenter = getNeighborSquareCenter(_Squares[3][1]._Rect,-1,-1);
