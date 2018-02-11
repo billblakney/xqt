@@ -9,6 +9,7 @@
 #include <QPixmap>
 #include <QRgb>
 #include "MainWindow.hh"
+#include "Board.hh"
 
 //  std::cout << "_checkBox: " << qPrintable(tChecked) << std::endl;
 
@@ -46,8 +47,8 @@ MainWindow::MainWindow(QWidget *aParent)
 
   _ContrastColor = new QColor(Qt::yellow);
 
-  for (int i = 0; i < ROWS; i++)
-    for( int j = 0; j < COLS; j++)
+  for (int i = 0; i < Board::ROWS; i++)
+    for( int j = 0; j < Board::COLS; j++)
     {
       _Squares[i][j] = Square();
     }
@@ -206,8 +207,8 @@ QPoint MainWindow::getSquareCenter(QSize aBoardSize,int aRow,int aCol)
 {
   QPoint tCenter;
 
-  float tX = (2.0*(aRow+1) -1)/(2.0*(float)ROWS);
-  float tY = (2.0*(aCol+1) -1)/(2.0*(float)COLS);
+  float tX = (2.0*(aRow+1) -1)/(2.0*(float)Board::ROWS);
+  float tY = (2.0*(aCol+1) -1)/(2.0*(float)Board::COLS);
 
   tCenter.setX(tX*aBoardSize.width());
   tCenter.setY(tY*aBoardSize.height());
@@ -352,9 +353,9 @@ QColor *MainWindow::getPieceColor(QImage &aImage,QRect aSquare,
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 void MainWindow::contrastPiece(QImage &aImage,QRect aSquare,
-    BoardItem aSquareType)
+    Board::BoardElement aSquareType)
 {
-  QColor *tSquareColor = ((aSquareType == eLiteSquare)?
+  QColor *tSquareColor = ((aSquareType == Board::eLiteSquare)?
       _NLiteSquareColor:_NDarkSquareColor);
 
   QColor *tPieceColor = getPieceColor(aImage,aSquare,tSquareColor);
@@ -464,7 +465,7 @@ void MainWindow::processCopyImage(int /*aValue*/)
   /*
    * Contrast the pieces.
    */
-contrastPiece(tImage,_Squares[3][3]._Rect,eLiteSquare);
+contrastPiece(tImage,_Squares[3][3]._Rect,Board::eLiteSquare);
   /*
    * Display the modified image.
    */

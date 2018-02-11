@@ -8,6 +8,7 @@
 //#include <QPushButton>
 #include <QWidget>
 #include <QSlider>
+#include "Board.hh"
 #include "Square.hh"
 
 class MainWindow: public QWidget
@@ -15,12 +16,7 @@ class MainWindow: public QWidget
   Q_OBJECT
 public:
 
-  enum BoardItem {eNone, eDarkSquare, eLiteSquare, eDarkPiece, eLitePiece};
-
-  enum Direction {eLeft, eRight, eUp, eDown};
-
-  static const int ROWS = 8;
-  static const int COLS = 8;
+//  enum Direction {eLeft, eRight, eUp, eDown};
 
   MainWindow(QWidget *aParent);
 
@@ -65,9 +61,10 @@ protected:
 
   QColor   *_ContrastColor;
 
-  Square _Squares[ROWS][COLS];
+  Square _Squares[Board::ROWS][Board::COLS];
 
   void normalizeColors(QImage &aImage);
+  void normalizeSquareBorderColor(QImage &aImage,Square &aSquare);
   void eliminateIslands(QImage &aImage);
   QPoint getSquareCenter(QSize aBoardSize,int aRow,int aCol);
   QPoint getNeighborSquareCenter(QRect aFromSquare,int aRowOffset,int aColOffset);
@@ -75,7 +72,7 @@ protected:
   void addSquareAt(int aRow,int aCol,QImage &aImage,QPoint aCenter);
   void generateSimilarRowSquares(QImage &aImage,int aSeedRow,int aSeedCol,int aOffset,int aNumSquares);
   QColor *getPieceColor(QImage &aImage,QRect aSquare,QColor *aSquareColor);
-  void contrastPiece(QImage &aImage,QRect aSquare,BoardItem aSquareType);
+  void contrastPiece(QImage &aImage,QRect aSquare,Board::BoardElement aSquareType);
   void removeImageSpeckles();
   void loadImage(std::string aFilename);
   int colorDiff(QColor *aColor1,QColor *aColor2);

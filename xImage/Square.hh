@@ -3,6 +3,7 @@
 
 #include <string>
 #include <QRect>
+#include "Board.hh"
 
 class Square {
 public:
@@ -18,7 +19,7 @@ public:
   QRect _Rect;
 
   int _PiecePixels;
-  int _PieceDist[8][8];
+  int _PieceDist[Board::ROWS][Board::COLS];
 
 private:
   void init();
