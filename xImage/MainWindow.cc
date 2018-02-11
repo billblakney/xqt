@@ -425,71 +425,22 @@ void MainWindow::processCopyImage(int /*aValue*/)
   // Get the initial square at 3,3.
   QPoint tCenter = getSquareCenter(tSize,3,3);
   addSquareAt(3,3,tImage,tCenter);
-
   generateSimilarRowSquares(tImage,3,3,-2,1);
-
-#if 0
-  // Get the square at 3,1.
-  tCenter = getNeighborSquareCenter(_Squares[3][3]._Rect,0,-2);
-  addSquareAt(3,1,tImage,tCenter);
-#endif
-
   generateSimilarRowSquares(tImage,3,3,2,2);
-
-#if 0
-  // Get the square at 3,5.
-  tCenter = getNeighborSquareCenter(_Squares[3][3]._Rect,0,2);
-  addSquareAt(3,5,tImage,tCenter);
-
-  // Get the square at 3,7.
-  tCenter = getNeighborSquareCenter(_Squares[3][5]._Rect,0,2);
-  addSquareAt(3,7,tImage,tCenter);
-#endif
 
   // Get the square at 2,0.
   tCenter = getNeighborSquareCenter(_Squares[3][1]._Rect,-1,-1);
   addSquareAt(2,0,tImage,tCenter);
-
   generateSimilarRowSquares(tImage,2,0,2,3);
-
-#if 0
-  // Get the square at 2,2.
-  tCenter = getNeighborSquareCenter(_Squares[2][0]._Rect,0,2);
-  addSquareAt(2,2,tImage,tCenter);
-
-  // Get the square at 2,4.
-  tCenter = getNeighborSquareCenter(_Squares[2][2]._Rect,0,2);
-  addSquareAt(2,4,tImage,tCenter);
-
-  // Get the square at 2,6.
-  tCenter = getNeighborSquareCenter(_Squares[2][4]._Rect,0,2);
-  addSquareAt(2,6,tImage,tCenter);
-#endif
 
   // Get the square at 1,1.
   tCenter = getNeighborSquareCenter(_Squares[2][0]._Rect,-1,1);
   addSquareAt(1,1,tImage,tCenter);
-
   generateSimilarRowSquares(tImage,1,1,2,3);
-
-#if 0
-  // Get the square at 1,3.
-  tCenter = getNeighborSquareCenter(_Squares[1][1]._Rect,0,2);
-  addSquareAt(1,3,tImage,tCenter);
-
-  // Get the square at 1,5.
-  tCenter = getNeighborSquareCenter(_Squares[1][3]._Rect,0,2);
-  addSquareAt(1,5,tImage,tCenter);
-
-  // Get the square at 1,7.
-  tCenter = getNeighborSquareCenter(_Squares[1][5]._Rect,0,2);
-  addSquareAt(1,7,tImage,tCenter);
-#endif
 
   // Get the square at 0,0.
   tCenter = getNeighborSquareCenter(_Squares[1][1]._Rect,-1,-1);
   addSquareAt(0,0,tImage,tCenter);
-
   generateSimilarRowSquares(tImage,0,0,2,3);
 
   /*
