@@ -90,8 +90,8 @@ protected:
   bool findColorRight(QColor *aColor,
       QImage &aImage,int aX,int aY,int &aFoundAtX);
 
-  void emphasizePoint(QImage &aImage,QPoint aPoint,QColor aColor);
-  void emphasizePoint(QImage &aImage,int aX,int aY,QColor aColor);
+  void emphasizePoint(QImage &aImage,QPoint aPoint,QColor aColor,int aRadius = 1);
+  void emphasizePoint(QImage &aImage,int aX,int aY,QColor aColor,int aRadius = 1);
 };
 
 #endif /* MAINWINDOW_HH_ */
