@@ -54,6 +54,11 @@ Square& Square::operator=(const Square& aSquare)
   return *this;
 }
 
+QRect Square::getRect()
+{
+  return _Rect;
+}
+
 float Square::getWeight()
 {
   return (float)_PiecePixels/(float)(_Rect.width()*_Rect.height());

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <QRgb>
 #include "Board.hh"
@@ -46,6 +47,8 @@ QPoint Board::getNeighborSquareCenter(QRect aFromSquare,int aRowOffset,
   return tCenter;
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 Board::Board(std::string aImageFilename)
  :_ODarkSquareColor(0),
   _OLiteSquareColor(0),
@@ -95,6 +98,8 @@ Board::Board(std::string aImageFilename)
   _CopyPixmap->convertFromImage(*_CopyImage);
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 Board::~Board()
 {
 }
@@ -186,6 +191,9 @@ std::cout << "in processImage" << std::endl;
   addSquareAt(7,1,tImage,tCenter);
   generateSimilarRowSquares(tImage,7,1,2,3);
 
+  // Get the alternate squares.
+  generateAlternateSquares();
+
   /*
    * Contrast the pieces.
    */
@@ -194,6 +202,161 @@ contrastPiece(tImage,_Squares[3][3]._Rect,Board::eLiteSquare);
   _CopyPixmap->convertFromImage(tImage);
 
   std::cout << "Done processing image" << std::endl;
+
+  printSummary();
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void Board::printSummary()
+{
+  for (int i = 0; i < ROWS; i++)
+    for (int j = 0; j < COLS; j++)
+    {
+      Square &tSquare = _Squares[i][j];
+      std::cout << "square" << i << j << ": "
+          << tSquare._Rect.width() << ","
+          << tSquare._Rect.height()
+          << std::endl;
+    }
+
+  for (int r = 0; r < ROWS; r++)
+  {
+    int tTotalWidth =0;
+    for (int c = 0; c < COLS; c++)
+    {
+      tTotalWidth += _Squares[r][c].getRect().width();
+    }
+    std::cout << "total width row " << r << ": " << tTotalWidth << std::endl;
+  }
+
+  for (int c = 0; c < COLS; c++)
+  {
+    int tTotalHeight =0;
+    for (int r = 0; r < ROWS; r++)
+    {
+      tTotalHeight += _Squares[r][c].getRect().height();
+    }
+    std::cout << "total height col " << c << ": " << tTotalHeight << std::endl;
+  }
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void Board::generateAlternateSquares()
+{
+  generateAlternateSquares(0,1);
+  generateAlternateSquares(1,0);
+  generateAlternateSquares(2,1);
+  generateAlternateSquares(3,0);
+  generateAlternateSquares(4,1);
+  generateAlternateSquares(5,0);
+  generateAlternateSquares(6,1);
+  generateAlternateSquares(7,0);
+}
+
+//-----------------------------------------------------------------------------
+// Computes square rectangle for specified row and column, and for the three
+// subsequent"alternating" squares to the right , i.e. (row,column+2),
+// (row,column+4), (row,column+6).
+//-----------------------------------------------------------------------------
+void Board::generateAlternateSquares(int aRow,int aCol)
+{
+  for (int i = 0; i < 4; i++)
+  {
+    generateAlternateSquareAt(aRow,aCol+2*i);
+  }
+
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void Board::generateAlternateSquareAt(int aRow,int aCol)
+{
+  Square *tSquareLeft = NULL;
+  Square *tSquareRight = NULL;
+  Square *tSquareAbove = NULL;
+  Square *tSquareBelow = NULL;
+  if (aCol > 0)
+  {
+    tSquareLeft = &_Squares[aRow][aCol-1];
+  }
+  if (aCol+1 < COLS)
+  {
+    tSquareRight = &_Squares[aRow][aCol+1];
+  }
+  if (aRow > 0)
+  {
+    tSquareAbove = &_Squares[aRow-1][aCol];
+  }
+  if (aRow+1 < ROWS)
+  {
+    tSquareBelow = &_Squares[aRow+1][aCol];
+  }
+
+  int tLeftX = 0;
+  int tRightX = 0;
+  int tTopY = 0;
+  int tBottomY = 0;
+
+  // set top/bottomY
+  if (tSquareLeft != NULL && tSquareRight != NULL)
+  {
+    QRect tRectLeft = tSquareLeft->getRect();
+    QRect tRectRight = tSquareRight->getRect();
+
+    tTopY = (tRectLeft.topRight().y() + tRectRight.topLeft().y())/2;
+    tBottomY = (tRectLeft.bottomRight().y() + tRectRight.bottomLeft().y())/2;
+  }
+  else if (tSquareLeft != NULL)
+  {
+    QRect tRectLeft = tSquareLeft->getRect();
+
+    tTopY = tRectLeft.topRight().y();
+    tBottomY = tRectLeft.bottomRight().y();
+  }
+  else if (tSquareRight != NULL)
+  {
+    QRect tRectRight = tSquareRight->getRect();
+
+    tTopY = tRectRight.topLeft().y();
+    tBottomY = tRectRight.bottomLeft().y();
+  }
+  else // both squares are NULL
+  {
+    std::cout << "ERROR: NULL squares left and right!" << std::endl;
+  }
+
+  // set left/rightX
+  if (tSquareAbove != NULL && tSquareBelow != NULL)
+  {
+    QRect tRectAbove = tSquareAbove->getRect();
+    QRect tRectBelow = tSquareBelow->getRect();
+
+    tLeftX = (tRectAbove.bottomLeft().x() + tRectBelow.topLeft().x())/2;
+    tRightX = (tRectAbove.bottomRight().x() + tRectBelow.topRight().x())/2;
+  }
+  else if (tSquareAbove != NULL)
+  {
+    QRect tRectAbove = tSquareAbove->getRect();
+
+    tLeftX = tRectAbove.bottomLeft().x();
+    tRightX = tRectAbove.bottomRight().x();
+  }
+  else if (tSquareBelow != NULL)
+  {
+    QRect tRectBelow = tSquareBelow->getRect();
+
+    tLeftX = tRectBelow.topLeft().x();
+    tRightX = tRectBelow.topRight().x();
+  }
+  else // both squares are NULL
+  {
+    std::cout << "ERROR: NULL squares above and below!" << std::endl;
+  }
+
+  QRect tRect(tLeftX,tTopY,tRightX-tLeftX+1,tBottomY-tTopY+1);
+  _Squares[aRow][aCol] = Square(aRow,aCol,tRect);
 }
 
 //-----------------------------------------------------------------------------

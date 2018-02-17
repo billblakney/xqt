@@ -12,6 +12,7 @@ public:
   virtual ~Square();
   Square &operator=(const Square &aSquare);
   std::string toString();
+  QRect getRect();
   float getWeight();
 
   int _Row;

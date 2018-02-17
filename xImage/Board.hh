@@ -35,6 +35,7 @@ public:
   QImage *getCopyImage();
 
   void processImage();
+  void printSummary();
 
 protected:
 
@@ -65,6 +66,9 @@ protected:
   QRect getSquareAt(QImage &aImage,QPoint aSeed);
   void generateSimilarRowSquares(QImage &aImage,
       int aSeedRow,int aSeedCol,int aOffset,int aNumSquares);
+  void generateAlternateSquares();
+  void generateAlternateSquares(int aRow,int aCol);
+  void generateAlternateSquareAt(int aRow,int aCol);
   void contrastPiece(QImage &aImage,QRect aSquare,
       Board::BoardElement aSquareType);
 
