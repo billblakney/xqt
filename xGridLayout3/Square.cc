@@ -7,12 +7,12 @@
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 Square::Square(QWidget *aParent,QPalette aPalette,int aRow,int aCol,
-    std::string aLabel)
+    QString aText)
 : QFrame(aParent),
   _Row(aRow),
   _Col(aCol),
   _Palette(aPalette),
-  _LabelText(aLabel)
+  _Text(aText)
 {
   // frame shape/style
   setFrameShape(QFrame::Box);
@@ -50,7 +50,7 @@ Square::Square(QWidget *aParent,QPalette aPalette,int aRow,int aCol,
   }
 #endif
 
-  _Label.setText(QString(_LabelText.c_str()));
+  _Label.setText(_Text);
   _Label.setAlignment(Qt::AlignCenter);
   _Label.setAutoFillBackground(true);
   _Label.setMinimumWidth(60);

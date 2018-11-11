@@ -1,10 +1,10 @@
 #ifndef SQUARE_HH_
 #define SQUARE_HH_
 
-#include <string>
 #include <QFrame>
 #include <QLabel>
 #include <QPalette>
+#include <QString>
 #include <QWidget>
 
 class Square: public QFrame
@@ -16,7 +16,7 @@ public:
   int _Col;
 
   Square(QWidget *aParent,QPalette aPalette,int aRow,int aCol,
-      std::string aLabel);
+      QString aText);
   ~Square();
 
 public slots:
@@ -27,7 +27,7 @@ protected:
 
   QPalette _Palette;
   QLabel _Label;
-  std::string _LabelText;
+  QString _Text;
 
 };
 
