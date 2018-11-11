@@ -34,8 +34,6 @@ void MainWindow::onSend()
 
 #ifndef ORIG
 //-----------------------------------------------------------------------------
-//  QPushButton *tSendButton = new QPushButton(QString("Send"),this);
-//  QObject::connect( tSendButton, SIGNAL(clicked()), this, SLOT(onSend()) );
 //-----------------------------------------------------------------------------
 void MainWindow::setupView()
 {
@@ -75,69 +73,8 @@ void MainWindow::setupView()
     for (int j = 0; j < COLS; j++)
     {
       QFrame *tFrame = new Square(this,tWhitePalette,i,j,_Notes[i][j]);
-#if 0
-      QFrame *tFrame = new QFrame(this);
-
-      // frame shape/style
-      tFrame->setFrameShape(QFrame::Box);
-      tFrame->setLineWidth(20);
-      tFrame->setFrameStyle(QFrame::Box | QFrame::Plain);
-
-      // frame size
-      tFrame->setSizePolicy(QSizePolicy::MinimumExpanding,
-          QSizePolicy::MinimumExpanding);
-
-      tFrame->setMinimumSize(QSize(60,60));
-
-      if (i == 0 && j == 0)
-      {
-        tFrame->setContentsMargins(2,2,2,2);
-      }
-      else if (i == 0)
-      {
-        tFrame->setContentsMargins(0,2,2,2);
-      }
-      else if (j == 0)
-      {
-        tFrame->setContentsMargins(2,0,2,2);
-      }
-      else
-      {
-        tFrame->setContentsMargins(0,0,2,2);
-      }
-#define SHOW_HIGHLIGHTED_MARGIN
-#ifdef SHOW_HIGHLIGHTED_MARGIN
-      if (i == 0 && j == 0)
-      {
-        tFrame->setPalette(QPalette(Qt::blue));
-        tFrame->setContentsMargins(10,10,10,10);
-        tFrame->setAutoFillBackground(true);
-      }
-#endif
-
-      QLabel *tLabel = new QLabel(_Notes[i][j],tFrame);
-      tLabel->setAlignment(Qt::AlignCenter);
-      if ((i+j)%2 == 0)
-      {
-        tLabel->setPalette(tWhitePalette);
-      }
-      else
-      {
-//        tLabel->setPalette(tBlackPalette);
-        tLabel->setPalette(tWhitePalette);
-      }
-      tLabel->setAutoFillBackground(true);
-tLabel->setMinimumWidth(60);
-tLabel->setContentsMargins(0,0,0,0);
-tLabel->setSizePolicy(QSizePolicy::MinimumExpanding,
-                     QSizePolicy::MinimumExpanding);
-
-QVBoxLayout *tBL = new QVBoxLayout(tFrame);
-//tBL->setHorizontalSpacing(0);
-//tBL->setVerticalSpacing(0);
-tBL->setContentsMargins(0,0,0,0);
-tBL->addWidget(tLabel);
-#endif
+//      QObject::connect(tFrame->getLabel(), SIGNAL(clicked()),
+//          this, SLOT(onSend()) );
 
       tGrid[i][j] = tFrame;
 //      tGrid[i][j] = tLabel;

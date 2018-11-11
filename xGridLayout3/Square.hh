@@ -18,6 +18,7 @@ public:
   Square(QWidget *aParent,QPalette aPalette,int aRow,int aCol,
       QString aText);
   ~Square();
+  QLabel *getLabel();
 
 public slots:
 
@@ -29,6 +30,7 @@ protected:
   QLabel _Label;
   QString _Text;
 
+  virtual void mouseReleaseEvent(QMouseEvent * ev);
 };
 
 #endif /* SQUARE_HH_ */

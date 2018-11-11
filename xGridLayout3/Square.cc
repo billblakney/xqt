@@ -61,6 +61,13 @@ Square::Square(QWidget *aParent,QPalette aPalette,int aRow,int aCol,
   QVBoxLayout *tBL = new QVBoxLayout(this);
   tBL->setContentsMargins(0,0,0,0);
   tBL->addWidget(&_Label);
+
+//      QObject::connect(&_Label,SIGNAL(clicked()),this, SLOT(onClick()) );
+}
+
+void Square::mouseReleaseEvent(QMouseEvent * ev)
+{
+  std::cout << "click on row,col = " << qPrintable(_Text) << "!!!!!!!!!!!!!!!" << std::endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -71,9 +78,16 @@ Square::~Square()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+QLabel *Square::getLabel()
+{
+  return &_Label;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void Square::onClick()
 {
-  std::cout << "ononClick" << std::endl;
+  std::cout << "click on row,col = " << qPrintable(_Text) << "!!!!!!!!!!!!!!!" << std::endl;
 //  std::cout << "_checkBox: " << qPrintable(tChecked) << std::endl;
 //  std::cout << "_lineEdit1: " << qPrintable(_lineEdit1->text()) << std::endl;
 }
