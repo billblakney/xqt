@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <iostream>
+#include <QMouseEvent>
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include "Square.hh"
@@ -67,7 +68,14 @@ Square::Square(QWidget *aParent,QPalette aPalette,int aRow,int aCol,
 
 void Square::mouseReleaseEvent(QMouseEvent * ev)
 {
-  std::cout << "click on row,col = " << qPrintable(_Text) << "!!!!!!!!!!!!!!!" << std::endl;
+  if (ev->button() == Qt::LeftButton)
+  {
+    std::cout << "LEFT click on row,col = " << qPrintable(_Text) << "!!!!!!!!!!!!!!!" << std::endl;
+  }
+  else
+  {
+    std::cout << "RIGHT click on row,col = " << qPrintable(_Text) << "!!!!!!!!!!!!!!!" << std::endl;
+  }
 }
 
 //-----------------------------------------------------------------------------
