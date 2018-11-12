@@ -13,6 +13,12 @@ class MainWindow: public QWidget
   Q_OBJECT
 public:
 
+  const int ROWS = 8;
+  const int COLS = 8;
+
+  QString _RowNames[8] = {"a", "b", "c", "d", "e", "f", "g", "h"};
+  QString _ColNames[8] = {"1", "2", "3", "4", "5", "6", "7", "8"};
+
   MainWindow(QWidget *aParent);
 
   virtual ~MainWindow();
