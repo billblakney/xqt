@@ -28,6 +28,11 @@ public:
 
 	void setupView();
 
+	typedef std::pair<int,int> Coord;
+
+  Coord mapSquareToGrid(Coord aSquareCoord);
+  Coord mapGridToSquare(Coord aGridCoord);
+
 public slots:
 
 void onFlipBoardToggled(bool aChecked);
@@ -36,6 +41,7 @@ void onSquareClick(int aRank,int aFile,bool aIsLeft);
 protected:
 
   QPushButton *_FlipBoardToggle;
+  QLabel *_FindLabel;
   Square *_Squares[8][8];
   QVBoxLayout *_SquareHolders[8][8];
 

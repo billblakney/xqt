@@ -85,6 +85,22 @@ void MainWindow::onSquareClick(int aRank,int aFile,bool aIsLeft)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+MainWindow::Coord MainWindow::mapSquareToGrid(Coord aSquareCoord)
+{
+  Coord tGridCoord;
+  return tGridCoord;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+MainWindow::Coord MainWindow::mapGridToSquare(Coord aGridCoord)
+{
+  Coord tGridCoord;
+  return tGridCoord;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void MainWindow::setupView()
 {
   std::cout << "setupView" << std::endl;
@@ -100,6 +116,10 @@ void MainWindow::setupView()
       this, SLOT(onFlipBoardToggled(bool)) );
 
   tBoxLayout->addWidget(_FlipBoardToggle);
+
+  _FindLabel =
+      new QLabel("<square_to_find>",this);
+  tBoxLayout->addWidget(_FindLabel);
 
   QPalette tBlackPalette = palette();
 //  tBlackPalette.setColor(QPalette::Background, Qt::black);
