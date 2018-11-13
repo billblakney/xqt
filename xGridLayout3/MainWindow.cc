@@ -21,12 +21,65 @@ MainWindow::~MainWindow()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+void MainWindow::onFlipBoardToggled(bool aChecked)
+{
+  if (aChecked)
+  {
+    std::cout << "Using BLACK perspective" << std::endl;
+    _FlipBoardToggle->setText("Perspective: BLACK");
+    loadBlackPerspective();
+  }
+  else
+  {
+    std::cout << "Using white perspective" << std::endl;
+    _FlipBoardToggle->setText("Perspective: WHITE");
+    loadWhitePerspective();
+  }
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::loadWhitePerspective()
+{
+  for (int i = 0; i < RANKS; i++)
+  {
+    for (int j = 0; j < FILES; j++)
+    {
+      _SquareHolders[i][j]->addWidget(_Squares[j][FILES-1-i]);
+    }
+  }
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::loadBlackPerspective()
+{
+  for (int i = 0; i < RANKS; i++)
+  {
+    for (int j = 0; j < FILES; j++)
+    {
+      _SquareHolders[i][j]->addWidget(_Squares[RANKS-1-j][i]);
+    }
+  }
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void MainWindow::setupView()
 {
   std::cout << "setupView" << std::endl;
   setMinimumSize(QSize(640,600));
 
-  QFrame *tGrid[RANKS][FILES];
+  QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
+
+  _FlipBoardToggle =
+      new QPushButton("Perspective: WHITE",this);
+  _FlipBoardToggle->setCheckable(true);
+
+  QObject::connect(_FlipBoardToggle, SIGNAL(toggled(bool)),
+      this, SLOT(onFlipBoardToggled(bool)) );
+
+  tBoxLayout->addWidget(_FlipBoardToggle);
 
   QPalette tBlackPalette = palette();
 //  tBlackPalette.setColor(QPalette::Background, Qt::black);
@@ -54,6 +107,7 @@ void MainWindow::setupView()
   tGridLayout->setContentsMargins(0,0,0,0);
 
   for (int i = 0; i < RANKS; i++)
+  {
     for (int j = 0; j < FILES; j++)
     {
       // frame shape/style
@@ -95,24 +149,18 @@ void MainWindow::setupView()
       QVBoxLayout *tBL = new QVBoxLayout(tFrame);
       tBL->setContentsMargins(0,0,0,0);
 
-      bool tUseWhitePerspective = true;
-      if (tUseWhitePerspective)
-      {
-        tBL->addWidget(_Squares[j][FILES-1-i]);
-      }
-      else
-      {
-        tBL->addWidget(_Squares[RANKS-1-j][i]);
-      }
+      _SquareHolders[i][j] = tBL;
 
       std::cout << "Adding to layout " << i << ", " << j <<std::endl;
       tGridLayout->addWidget(tFrame,i,j);
     }
+  }
+
+  loadWhitePerspective();
 
   QWidget *tEditorsWidget = new QWidget(this);
   tEditorsWidget->setLayout(tGridLayout);
 
-  QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
   tBoxLayout->addWidget(tEditorsWidget);
 
   //  resize(200,120);
