@@ -85,18 +85,18 @@ void MainWindow::onSquareClick(int aRank,int aFile,bool aIsLeft)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-MainWindow::Coord MainWindow::mapSquareToGrid(Coord aSquareCoord)
+GridCoord MainWindow::mapSquareToGrid(SquareCoord aSquareCoord)
 {
-  Coord tGridCoord;
+  GridCoord tGridCoord;
   return tGridCoord;
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-MainWindow::Coord MainWindow::mapGridToSquare(Coord aGridCoord)
+SquareCoord MainWindow::mapGridToSquare(GridCoord aGridCoord)
 {
-  Coord tGridCoord;
-  return tGridCoord;
+  SquareCoord tSquareCoord;
+  return tSquareCoord;
 }
 
 //-----------------------------------------------------------------------------

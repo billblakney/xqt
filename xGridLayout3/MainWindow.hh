@@ -10,6 +10,8 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include "Square.hh"
+#include "SquareCoord.hh"
+#include "GridCoord.hh"
 
 class MainWindow: public QWidget
 {
@@ -28,10 +30,8 @@ public:
 
 	void setupView();
 
-	typedef std::pair<int,int> Coord;
-
-  Coord mapSquareToGrid(Coord aSquareCoord);
-  Coord mapGridToSquare(Coord aGridCoord);
+  GridCoord mapSquareToGrid(SquareCoord aSquareCoord);
+  SquareCoord mapGridToSquare(GridCoord aGridCoord);
 
 public slots:
 
