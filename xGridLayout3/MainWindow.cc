@@ -39,9 +39,9 @@ void MainWindow::setupView()
   std::cout << "setupView" << std::endl;
   setMinimumSize(QSize(640,600));
 
-//  const int ROWS = 8;
-  const int COLS = 8;
-  QFrame *tGrid[ROWS][COLS];
+//  const int RANKS = 8;
+  const int FILES = 8;
+  QFrame *tGrid[RANKS][FILES];
 
   QPalette tBlackPalette = palette();
 //  tBlackPalette.setColor(QPalette::Background, Qt::black);
@@ -51,11 +51,13 @@ void MainWindow::setupView()
   tWhitePalette.setColor(QPalette::Background, Qt::white);
   tWhitePalette.setColor(QPalette::Foreground, Qt::black);
 
-  for (int i = 0; i < ROWS; i++)
-    for (int j = 0; j < COLS; j++)
+std::cout << "Setting up tGrid" << std::endl;
+  for (int i = 0; i < RANKS; i++)
+    for (int j = 0; j < FILES; j++)
     {
+std::cout << "Adding to grid " << i << ", " << j <<std::endl;
       QFrame *tFrame = new Square(this,tWhitePalette,i,j,
-          _RowNames[i] + _ColNames[j]);
+          _FileNames[i] + _RankNames[j]);
 //      QObject::connect(tFrame->getLabel(), SIGNAL(clicked()),
 //          this, SLOT(onSend()) );
 
@@ -77,10 +79,16 @@ void MainWindow::setupView()
   tGridLayout->setVerticalSpacing(0);
 tGridLayout->setContentsMargins(0,0,0,0);
 
-  for (int i = 0; i < ROWS; i++)
-    for (int j = 0; j < COLS; j++)
+std::cout << "Adding to layout" << std::endl;
+//  for (int i = 0; i < RANKS; i++)
+//    for (int j = 0; j < FILES; j++)
+//  for (int i = 0; i < RANKS; i++)
+//    for (int j = 0; j < FILES; j++)
+  for (int i = 0; i < RANKS; i++)
+    for (int j = 0; j < FILES; j++)
     {
-      tGridLayout->addWidget(tGrid[i][j],i,j);
+std::cout << "Adding to layout " << i << ", " << j <<std::endl;
+      tGridLayout->addWidget(tGrid[i][j],RANKS-1-i,j);
     }
 //  tGridLayout->setRowStretch(1,0);
 //  tGridLayout->setRowStretch(2,0);
