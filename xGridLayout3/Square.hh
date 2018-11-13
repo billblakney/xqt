@@ -16,7 +16,6 @@ public:
   Square(QWidget *aParent,QPalette aPalette,int aRow,int aCol,
       QString aText);
   ~Square();
-  QLabel *getLabel();
 
 public slots:
 

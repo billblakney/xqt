@@ -29,8 +29,6 @@ public:
 
 public slots:
 
-  void onSend();
-
 protected:
 
   QCheckBox *_checkBox;
