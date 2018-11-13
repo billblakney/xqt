@@ -32,6 +32,7 @@ void MainWindow::onFlipBoardToggled(bool aChecked)
     _Perspective = eBlack;
     _FlipBoardToggle->setText("Perspective: BLACK");
     loadPerspective();
+showSquareColors(true);
   }
   else
   {
@@ -39,6 +40,49 @@ void MainWindow::onFlipBoardToggled(bool aChecked)
     _Perspective = eWhite;
     _FlipBoardToggle->setText("Perspective: WHITE");
     loadPerspective();
+showSquareColors(false);
+  }
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool MainWindow::isLightSquare(SquareCoord aSquare)
+{
+  if ((aSquare._Rank + aSquare._File)%2 != 0)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::showSquareColors(bool aShow)
+{
+  for (int i = 0; i < RANKS; i++)
+  {
+    for (int j = 0; j < FILES; j++)
+    {
+      if (aShow == false)
+      {
+        _Squares[i][j]->setPalette(_WhitePalette);
+      }
+      else
+      {
+        SquareCoord tSquareCoord(i,j);
+        if (isLightSquare(tSquareCoord))
+        {
+          _Squares[i][j]->setPalette(_WhitePalette);
+        }
+        else
+        {
+          _Squares[i][j]->setPalette(_BlackPalette);
+        }
+      }
+    }
   }
 }
 
@@ -139,13 +183,13 @@ void MainWindow::setupView()
       new QLabel("<square_to_find>",this);
   tBoxLayout->addWidget(_FindLabel);
 
-  QPalette tBlackPalette = palette();
-//  tBlackPalette.setColor(QPalette::Background, Qt::black);
-  tBlackPalette.setColor(QPalette::Background, QColor(90,90,90));
-  tBlackPalette.setColor(QPalette::Foreground, Qt::white);
-  QPalette tWhitePalette = palette();
-  tWhitePalette.setColor(QPalette::Background, Qt::white);
-  tWhitePalette.setColor(QPalette::Foreground, Qt::black);
+  _BlackPalette = palette();
+//  _BlackPalette.setColor(QPalette::Background, Qt::black);
+  _BlackPalette.setColor(QPalette::Background, QColor(90,90,90));
+  _BlackPalette.setColor(QPalette::Foreground, Qt::white);
+  _WhitePalette = palette();
+  _WhitePalette.setColor(QPalette::Background, Qt::white);
+  _WhitePalette.setColor(QPalette::Foreground, Qt::black);
 
   /*
    * Create the squares.
@@ -153,7 +197,7 @@ void MainWindow::setupView()
   for (int i = 0; i < RANKS; i++)
     for (int j = 0; j < FILES; j++)
     {
-      Square *tSquare = new Square(this,tWhitePalette,i,j,
+      Square *tSquare = new Square(this,_WhitePalette,i,j,
           _FileNames[i] + _RankNames[j]);
 
       QObject::connect(tSquare, SIGNAL(squareClicked(int,int,bool)),

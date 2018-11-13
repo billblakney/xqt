@@ -16,6 +16,7 @@ public:
   Square(QWidget *aParent,QPalette aPalette,int aRank,int aFile,
       QString aText);
   ~Square();
+  void setPalette(QPalette aPalette);
 
 signals:
 	void squareClicked(int aRank,int aFile,bool aIsLeft);

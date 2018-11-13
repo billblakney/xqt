@@ -42,6 +42,8 @@ void onSquareClick(int aRank,int aFile,bool aIsLeft);
 
 protected:
 
+  QPalette _WhitePalette;
+  QPalette _BlackPalette;
   QPushButton *_FlipBoardToggle;
   QLabel *_FindLabel;
   Square *_Squares[8][8];
@@ -51,6 +53,8 @@ protected:
   int _LastClickedRank;
   int _LastClickedFile;
 
+  bool isLightSquare(SquareCoord aSquare);
+  void showSquareColors(bool aShow);
   void loadPerspective();
   void loadWhitePerspective();
   void loadBlackPerspective();
