@@ -18,6 +18,8 @@ class MainWindow: public QWidget
   Q_OBJECT
 public:
 
+  enum Perspective {eWhite, eBlack};
+
   const int RANKS = 8;
   const int FILES = 8;
 
@@ -45,12 +47,14 @@ protected:
   Square *_Squares[8][8];
   QVBoxLayout *_SquareHolders[8][8];
 
+  Perspective _Perspective;
   int _LastClickedRank;
   int _LastClickedFile;
 
+  void loadPerspective();
   void loadWhitePerspective();
   void loadBlackPerspective();
-  void highlightFrame(int aRow, int aCol);
+  void highlightFrame(GridCoord aGridCoord);
 };
 
 #endif /* MAINWINDOW_HH_ */

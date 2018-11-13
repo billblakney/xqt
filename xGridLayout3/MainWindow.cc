@@ -9,7 +9,8 @@
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *aParent)
-: QWidget(aParent)
+: QWidget(aParent),
+  _Perspective(eWhite)
 {
   _LastClickedRank = 1;
   _LastClickedFile = 1;
@@ -28,14 +29,30 @@ void MainWindow::onFlipBoardToggled(bool aChecked)
   if (aChecked)
   {
     std::cout << "Using BLACK perspective" << std::endl;
+    _Perspective = eBlack;
     _FlipBoardToggle->setText("Perspective: BLACK");
-    loadBlackPerspective();
+    loadPerspective();
   }
   else
   {
     std::cout << "Using white perspective" << std::endl;
+    _Perspective = eWhite;
     _FlipBoardToggle->setText("Perspective: WHITE");
+    loadPerspective();
+  }
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::loadPerspective()
+{
+  if (_Perspective == eWhite)
+  {
     loadWhitePerspective();
+  }
+  else // eBlack
+  {
+    loadBlackPerspective();
   }
 }
 
@@ -67,9 +84,10 @@ void MainWindow::loadBlackPerspective()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void MainWindow::highlightFrame(int aRow, int aCol)
+void MainWindow::highlightFrame(GridCoord aGridCoord)
 {
-  QFrame *tFrame = (QFrame*)_SquareHolders[aRow][aCol]->parent();
+  QFrame *tFrame =
+      (QFrame*)_SquareHolders[aGridCoord._Row][aGridCoord._Col]->parent();
   tFrame->setPalette(QPalette(Qt::blue));
   tFrame->setContentsMargins(10,10,10,10);
   tFrame->setAutoFillBackground(true);
@@ -80,7 +98,7 @@ void MainWindow::highlightFrame(int aRow, int aCol)
 void MainWindow::onSquareClick(int aRank,int aFile,bool aIsLeft)
 {
   std::cout << "click on " << aRank << "," << aFile << std::endl;
-  highlightFrame(aRank,aFile);
+  highlightFrame(GridCoord(aRank,aFile));
 }
 
 //-----------------------------------------------------------------------------
@@ -190,9 +208,9 @@ void MainWindow::setupView()
     }
   }
 
-  highlightFrame(0,0);
+  highlightFrame(GridCoord(0,0));
 
-  loadWhitePerspective();
+  loadPerspective();
 
   QWidget *tEditorsWidget = new QWidget(this);
   tEditorsWidget->setLayout(tGridLayout);
