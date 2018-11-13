@@ -11,6 +11,8 @@
 MainWindow::MainWindow(QWidget *aParent)
 : QWidget(aParent)
 {
+  _LastClickedRank = 1;
+  _LastClickedFile = 1;
 }
 
 //-----------------------------------------------------------------------------
@@ -65,6 +67,24 @@ void MainWindow::loadBlackPerspective()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+void MainWindow::highlightFrame(int aRow, int aCol)
+{
+  QFrame *tFrame = (QFrame*)_SquareHolders[aRow][aCol]->parent();
+  tFrame->setPalette(QPalette(Qt::blue));
+  tFrame->setContentsMargins(10,10,10,10);
+  tFrame->setAutoFillBackground(true);
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::onSquareClick(int aRank,int aFile,bool aIsLeft)
+{
+  std::cout << "click on " << aRank << "," << aFile << std::endl;
+  highlightFrame(aRank,aFile);
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void MainWindow::setupView()
 {
   std::cout << "setupView" << std::endl;
@@ -97,6 +117,9 @@ void MainWindow::setupView()
     {
       Square *tSquare = new Square(this,tWhitePalette,i,j,
           _FileNames[i] + _RankNames[j]);
+
+      QObject::connect(tSquare, SIGNAL(squareClicked(int,int,bool)),
+          this, SLOT(onSquareClick(int,int,bool)) );
 
       _Squares[i][j] = tSquare;
     }
@@ -137,24 +160,17 @@ void MainWindow::setupView()
       {
         tFrame->setContentsMargins(0,0,2,2);
       }
-#define SHOW_HIGHLIGHTED_MARGIN
-#ifdef SHOW_HIGHLIGHTED_MARGIN
-      if (i == 0 && j == 0)
-      {
-        tFrame->setPalette(QPalette(Qt::blue));
-        tFrame->setContentsMargins(10,10,10,10);
-        tFrame->setAutoFillBackground(true);
-      }
-#endif
+
       QVBoxLayout *tBL = new QVBoxLayout(tFrame);
       tBL->setContentsMargins(0,0,0,0);
 
       _SquareHolders[i][j] = tBL;
 
-      std::cout << "Adding to layout " << i << ", " << j <<std::endl;
       tGridLayout->addWidget(tFrame,i,j);
     }
   }
+
+  highlightFrame(0,0);
 
   loadWhitePerspective();
 

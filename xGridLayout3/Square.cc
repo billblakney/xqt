@@ -10,8 +10,8 @@
 Square::Square(QWidget *aParent,QPalette aPalette,int aRow,int aCol,
     QString aText)
 : QLabel(aParent),
-  _Row(aRow),
-  _Col(aCol),
+  _Rank(aRow),
+  _File(aCol),
   _Palette(aPalette),
   _Text(aText)
 {
@@ -30,11 +30,13 @@ void Square::mouseReleaseEvent(QMouseEvent * ev)
 {
   if (ev->button() == Qt::LeftButton)
   {
-    std::cout << "LEFT click on row,col = " << qPrintable(_Text) << "!!!!!!!!!!!!!!!" << std::endl;
+    std::cout << "LEFT click on square " << qPrintable(_Text) << std::endl;
+    emit squareClicked(_Rank,_File,true);
   }
   else
   {
-    std::cout << "RIGHT click on row,col = " << qPrintable(_Text) << "!!!!!!!!!!!!!!!" << std::endl;
+    std::cout << "RIGHT click on square " << qPrintable(_Text) << std::endl;
+    emit squareClicked(_Rank,_File,false);
   }
 }
 

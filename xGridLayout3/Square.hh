@@ -10,12 +10,15 @@ class Square: public QLabel
   Q_OBJECT
 public:
 
-  int _Row;
-  int _Col;
+  int _Rank;
+  int _File;
 
-  Square(QWidget *aParent,QPalette aPalette,int aRow,int aCol,
+  Square(QWidget *aParent,QPalette aPalette,int aRank,int aFile,
       QString aText);
   ~Square();
+
+signals:
+	void squareClicked(int aRank,int aFile,bool aIsLeft);
 
 public slots:
 

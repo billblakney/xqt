@@ -3,6 +3,7 @@
 
 #include <string>
 #include <QCheckBox>
+#include <QFrame>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
@@ -30,6 +31,7 @@ public:
 public slots:
 
 void onFlipBoardToggled(bool aChecked);
+void onSquareClick(int aRank,int aFile,bool aIsLeft);
 
 protected:
 
@@ -37,8 +39,12 @@ protected:
   Square *_Squares[8][8];
   QVBoxLayout *_SquareHolders[8][8];
 
+  int _LastClickedRank;
+  int _LastClickedFile;
+
   void loadWhitePerspective();
   void loadBlackPerspective();
+  void highlightFrame(int aRow, int aCol);
 };
 
 #endif /* MAINWINDOW_HH_ */
