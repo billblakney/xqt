@@ -9,12 +9,13 @@
 //-----------------------------------------------------------------------------
 Square::Square(QWidget *aParent,QPalette aPalette,int aRow,int aCol,
     QString aText)
-: QFrame(aParent),
+: QLabel(aParent),
   _Row(aRow),
   _Col(aCol),
   _Palette(aPalette),
   _Text(aText)
 {
+#ifdef TO_FRAME
   // frame shape/style
   setFrameShape(QFrame::Box);
   setLineWidth(20);
@@ -50,20 +51,29 @@ Square::Square(QWidget *aParent,QPalette aPalette,int aRow,int aCol,
     setAutoFillBackground(true);
   }
 #endif
+#endif
 
-  _Label.setText(_Text);
-  _Label.setAlignment(Qt::AlignCenter);
-  _Label.setAutoFillBackground(true);
-  _Label.setMinimumWidth(60);
-  _Label.setContentsMargins(0,0,0,0);
-  _Label.setSizePolicy(QSizePolicy::MinimumExpanding,
+//  _Label.setText(_Text);
+//  _Label.setAlignment(Qt::AlignCenter);
+//  _Label.setAutoFillBackground(true);
+//  _Label.setMinimumWidth(60);
+//  _Label.setContentsMargins(0,0,0,0);
+//  _Label.setSizePolicy(QSizePolicy::MinimumExpanding,
+//      QSizePolicy::MinimumExpanding);
+
+  setText(_Text);
+  setAlignment(Qt::AlignCenter);
+  setAutoFillBackground(true);
+  setMinimumWidth(60);
+  setContentsMargins(0,0,0,0);
+  setSizePolicy(QSizePolicy::MinimumExpanding,
       QSizePolicy::MinimumExpanding);
 
+#ifdef TO_FRAME
   QVBoxLayout *tBL = new QVBoxLayout(this);
   tBL->setContentsMargins(0,0,0,0);
   tBL->addWidget(&_Label);
-
-//      QObject::connect(&_Label,SIGNAL(clicked()),this, SLOT(onClick()) );
+#endif
 }
 
 void Square::mouseReleaseEvent(QMouseEvent * ev)

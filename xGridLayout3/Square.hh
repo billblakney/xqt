@@ -1,13 +1,11 @@
 #ifndef SQUARE_HH_
 #define SQUARE_HH_
 
-#include <QFrame>
 #include <QLabel>
 #include <QPalette>
 #include <QString>
-#include <QWidget>
 
-class Square: public QFrame
+class Square: public QLabel
 {
   Q_OBJECT
 public:

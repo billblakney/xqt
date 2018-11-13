@@ -7,6 +7,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QWidget>
+#include "Square.hh"
 
 class MainWindow: public QWidget
 {
@@ -38,6 +39,7 @@ protected:
   QLineEdit *_lineEdit1;
   QLineEdit *_lineEdit2;
   QPushButton *_startButton;
+  Square *_Squares[8][8];
 };
 
 #endif /* MAINWINDOW_HH_ */
