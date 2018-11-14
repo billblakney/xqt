@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
+#include "Board.hh"
 #include "Square.hh"
 #include "GridCoord.hh"
 
@@ -33,33 +34,15 @@ public:
 
 	void setupView();
 
-  GridCoord mapSquareToGrid(Square::Coord aSquare);
-  Square::Coord mapGridToSquare(GridCoord aGridCoord);
-
 public slots:
 
-void onFlipBoardToggled(bool aChecked);
-void onSquareClick(int aRank,int aFile,bool aIsLeft);
+  void onFlipBoardToggled(bool aChecked);
 
 protected:
 
-  QPalette _WhitePalette;
-  QPalette _BlackPalette;
   QPushButton *_FlipBoardToggle;
   QLabel *_FindLabel;
-  Square *_Squares[8][8];
-  QVBoxLayout *_SquareHolders[8][8];
-
-  Perspective _Perspective;
-  Square::Coord _LastClickedSquare;
-
-  void configurePalettes();
-  bool isLightSquare(Square::Coord aSquare);
-  void showSquareColors(bool aShow);
-  void loadPerspective();
-  void loadWhitePerspective();
-  void loadBlackPerspective();
-  void highlightFrame(GridCoord aGridCoord);
+  Board *_Board;
 };
 
 #endif /* MAINWINDOW_HH_ */
