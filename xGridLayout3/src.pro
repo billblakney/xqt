@@ -12,8 +12,11 @@ QT += widgets
 HEADERS += MainWindow.hh \
            Square.hh \
            GridCoord.hh \
+           Board.hh \
            
 SOURCES += main.cc \
            MainWindow.cc \
            Square.cc \
            GridCoord.cc \
+           Board.cc \
+
