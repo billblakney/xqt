@@ -10,7 +10,6 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include "Square.hh"
-#include "SquareCoord.hh"
 #include "GridCoord.hh"
 
 class MainWindow: public QWidget
@@ -34,8 +33,8 @@ public:
 
 	void setupView();
 
-  GridCoord mapSquareToGrid(SquareCoord aSquareCoord);
-  SquareCoord mapGridToSquare(GridCoord aGridCoord);
+  GridCoord mapSquareToGrid(Square::Coord aSquare);
+  Square::Coord mapGridToSquare(GridCoord aGridCoord);
 
 public slots:
 
@@ -52,10 +51,10 @@ protected:
   QVBoxLayout *_SquareHolders[8][8];
 
   Perspective _Perspective;
-  SquareCoord _LastClickedSquare;
+  Square::Coord _LastClickedSquare;
 
   void configurePalettes();
-  bool isLightSquare(SquareCoord aSquare);
+  bool isLightSquare(Square::Coord aSquare);
   void showSquareColors(bool aShow);
   void loadPerspective();
   void loadWhitePerspective();

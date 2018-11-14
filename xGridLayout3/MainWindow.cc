@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *aParent)
 : QWidget(aParent),
   _Perspective(eWhite)
 {
-  _LastClickedSquare = SquareCoord(-1,-1);
+  _LastClickedSquare = Square::Coord(-1,-1);
 }
 
 //-----------------------------------------------------------------------------
@@ -49,14 +49,14 @@ void MainWindow::onSquareClick(int aFile,int aRank,bool aIsLeft)
 {
   Q_UNUSED(aIsLeft);
   std::cout << "click on " << aFile << "," << aRank << std::endl;
-  highlightFrame(mapSquareToGrid(SquareCoord(aFile,aRank)));
+  highlightFrame(mapSquareToGrid(Square::Coord(aFile,aRank)));
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-bool MainWindow::isLightSquare(SquareCoord aSquare)
+bool MainWindow::isLightSquare(Square::Coord aSquare)
 {
-  if ((aSquare._Rank + aSquare._File)%2 != 0)
+  if ((aSquare.rank + aSquare.file)%2 != 0)
   {
     return true;
   }
@@ -80,7 +80,7 @@ void MainWindow::showSquareColors(bool aShow)
       }
       else
       {
-        SquareCoord tSquareCoord(i,j);
+        Square::Coord tSquareCoord(i,j);
         if (isLightSquare(tSquareCoord))
         {
           _Squares[i][j]->setPalette(_WhitePalette);
@@ -117,9 +117,9 @@ void MainWindow::loadWhitePerspective()
     for (int tCol = 0; tCol < COLS; tCol++)
     {
       GridCoord tGridCoord(tRow,tCol);
-      SquareCoord tSquareCoord = mapGridToSquare(tGridCoord);
+      Square::Coord tSquareCoord = mapGridToSquare(tGridCoord);
       _SquareHolders[tRow][tCol]->addWidget(
-          _Squares[tSquareCoord._File][tSquareCoord._Rank]);
+          _Squares[tSquareCoord.file][tSquareCoord.rank]);
     }
 }
 
@@ -133,9 +133,9 @@ void MainWindow::loadBlackPerspective()
     for (int tCol = 0; tCol < COLS; tCol++)
     {
       GridCoord tGridCoord(tRow,tCol);
-      SquareCoord tSquareCoord = mapGridToSquare(tGridCoord);
+      Square::Coord tSquareCoord = mapGridToSquare(tGridCoord);
       _SquareHolders[tRow][tCol]->addWidget(
-          _Squares[tSquareCoord._File][tSquareCoord._Rank]);
+          _Squares[tSquareCoord.file][tSquareCoord.rank]);
     }
 }
 
@@ -158,22 +158,22 @@ void MainWindow::highlightFrame(GridCoord aGridCoord)
 // For white, row inverts rank, col equals file.
 // For black, row equals rank, col inverts file.
 //-----------------------------------------------------------------------------
-GridCoord MainWindow::mapSquareToGrid(SquareCoord aSquareCoord)
+GridCoord MainWindow::mapSquareToGrid(Square::Coord aSquareCoord)
 {
   GridCoord tGridCoord;
   if (_Perspective == eWhite)
   {
-    tGridCoord._Row = RANKS-1-aSquareCoord._Rank;
-    tGridCoord._Col = aSquareCoord._File;
+    tGridCoord._Row = RANKS-1-aSquareCoord.rank;
+    tGridCoord._Col = aSquareCoord.file;
     std::cout << "White perspective: "
-        << "square(" << aSquareCoord._Rank << "," << aSquareCoord._File << ") "
+        << "square(" << aSquareCoord.rank << "," << aSquareCoord.file << ") "
         << "maps to "
         << "grid(" << tGridCoord._Row << "," << tGridCoord._Col << ");" << std::endl;
   }
   else
   {
-    tGridCoord._Row = aSquareCoord._Rank;
-    tGridCoord._Col = FILES-1-aSquareCoord._File;
+    tGridCoord._Row = aSquareCoord.rank;
+    tGridCoord._Col = FILES-1-aSquareCoord.file;
   }
   return tGridCoord;
 }
@@ -183,18 +183,18 @@ GridCoord MainWindow::mapSquareToGrid(SquareCoord aSquareCoord)
 // For white, row inverts rank, col equals file.
 // For black, row equals rank, col inverts file.
 //-----------------------------------------------------------------------------
-SquareCoord MainWindow::mapGridToSquare(GridCoord aGridCoord)
+Square::Coord MainWindow::mapGridToSquare(GridCoord aGridCoord)
 {
-  SquareCoord tSquareCoord;
+  Square::Coord tSquareCoord;
   if (_Perspective == eWhite)
   {
-    tSquareCoord._Rank = ROWS-1-aGridCoord._Row;
-    tSquareCoord._File = aGridCoord._Col;
+    tSquareCoord.rank = ROWS-1-aGridCoord._Row;
+    tSquareCoord.file = aGridCoord._Col;
   }
   else
   {
-    tSquareCoord._Rank = aGridCoord._Row;
-    tSquareCoord._File = COLS-1-aGridCoord._Col;
+    tSquareCoord.rank = aGridCoord._Row;
+    tSquareCoord.file = COLS-1-aGridCoord._Col;
   }
   return tSquareCoord;
 }
