@@ -12,8 +12,7 @@ MainWindow::MainWindow(QWidget *aParent)
 : QWidget(aParent),
   _Perspective(eWhite)
 {
-  _LastClickedRank = 1;
-  _LastClickedFile = 1;
+  _LastClickedSquare = SquareCoord(-1,-1);
 }
 
 //-----------------------------------------------------------------------------
@@ -148,8 +147,8 @@ void MainWindow::highlightFrame(GridCoord aGridCoord)
      << aGridCoord._Row << "," << aGridCoord._Col << std::endl;
   QFrame *tFrame =
       (QFrame*)_SquareHolders[aGridCoord._Row][aGridCoord._Col]->parent();
-  tFrame->setPalette(QPalette(Qt::blue));
 
+  tFrame->setPalette(QPalette(Qt::blue));
   tFrame->setContentsMargins(5,5,5,5);
   tFrame->setAutoFillBackground(true);
 }

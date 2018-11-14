@@ -5,16 +5,45 @@
 #include <QGridLayout>
 #include "Square.hh"
 
+Square::Coord::Coord()
+: file(-1),
+  rank(-1)
+{
+}
+
+Square::Coord::Coord(int aFile,int aRank)
+: file(aFile),
+  rank(aRank)
+{
+}
+
+Square::Coord::~Coord()
+{
+}
+
+bool Square::Coord::isValid()
+{
+  if (file >=0 && file < 7)
+  {
+    return true;
+  }
+  else
+  {
+    return true;
+  }
+}
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 Square::Square(QWidget *aParent,QPalette aPalette,int aFile,int aRank,
     QString aText)
 : QLabel(aParent),
-  _File(aFile),
-  _Rank(aRank),
   _Palette(aPalette),
   _Text(aText)
 {
+  _Coord.file = aFile;
+  _Coord.rank = aRank;
+
   setText(_Text);
   setAlignment(Qt::AlignCenter);
   setAutoFillBackground(true);
@@ -24,6 +53,22 @@ Square::Square(QWidget *aParent,QPalette aPalette,int aFile,int aRank,
       QSizePolicy::MinimumExpanding);
 }
 
+Square::Coord Square::getCoord()
+{
+  return _Coord;
+}
+
+int Square::getFile()
+{
+  return _Coord.file;
+}
+
+int Square::getRank()
+{
+  return _Coord.rank;
+}
+
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 void Square::mouseReleaseEvent(QMouseEvent * ev)
@@ -31,12 +76,12 @@ void Square::mouseReleaseEvent(QMouseEvent * ev)
   if (ev->button() == Qt::LeftButton)
   {
     std::cout << "LEFT click on square " << qPrintable(_Text) << std::endl;
-    emit squareClicked(_File,_Rank,true);
+    emit squareClicked(_Coord.file,_Coord.rank,true);
   }
   else
   {
     std::cout << "RIGHT click on square " << qPrintable(_Text) << std::endl;
-    emit squareClicked(_File,_Rank,false);
+    emit squareClicked(_Coord.file,_Coord.rank,false);
   }
 }
 

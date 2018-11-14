@@ -52,8 +52,7 @@ protected:
   QVBoxLayout *_SquareHolders[8][8];
 
   Perspective _Perspective;
-  int _LastClickedRank;
-  int _LastClickedFile;
+  SquareCoord _LastClickedSquare;
 
   void configurePalettes();
   bool isLightSquare(SquareCoord aSquare);

@@ -8,6 +8,7 @@ public:
   SquareCoord();
   SquareCoord(int aFile,int aRank);
   virtual ~SquareCoord();
+  bool isValid();
 };
 
 #endif /* SQUARECOORD_HH_ */

@@ -15,3 +15,15 @@ SquareCoord::SquareCoord(int aFile,int aRank)
 SquareCoord::~SquareCoord()
 {
 }
+
+bool SquareCoord::isValid()
+{
+  if (_File >=0 && _File < 7)
+  {
+    return true;
+  }
+  else
+  {
+    return true;
+  }
+}

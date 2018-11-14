@@ -10,13 +10,25 @@ class Square: public QLabel
   Q_OBJECT
 public:
 
-  int _File;
-  int _Rank;
+  class Coord
+  {
+  public:
+    int file;
+    int rank;
+
+    Coord();
+    Coord(int aFile,int aRank);
+    virtual ~Coord();
+    bool isValid();
+  };
 
   Square(QWidget *aParent,QPalette aPalette,int aFile,int aRank,
       QString aText);
   ~Square();
   void setPalette(QPalette aPalette);
+  Coord getCoord();
+  int getFile();
+  int getRank();
 
 signals:
 	void squareClicked(int aFile,int aRank,bool aIsLeft);
@@ -27,6 +39,7 @@ public slots:
 
 protected:
 
+  Coord _Coord;
   QPalette _Palette;
   QLabel _Label;
   QString _Text;
