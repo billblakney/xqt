@@ -114,16 +114,14 @@ void MainWindow::loadPerspective()
 void MainWindow::loadWhitePerspective()
 {
   std::cout << "loading white perspective" << std::endl;
-  for (int tX = 0; tX < COLS; tX++)
-  {
-    for (int tY = 0; tY < ROWS; tY++)
+  for (int tRow = 0; tRow < ROWS; tRow++)
+    for (int tCol = 0; tCol < COLS; tCol++)
     {
-      GridCoord tGridCoord(tX,tY);
+      GridCoord tGridCoord(tRow,tCol);
       SquareCoord tSquareCoord = mapGridToSquare(tGridCoord);
-      _SquareHolders[tX][tY]->addWidget(
+      _SquareHolders[tRow][tCol]->addWidget(
           _Squares[tSquareCoord._File][tSquareCoord._Rank]);
     }
-  }
 }
 
 //-----------------------------------------------------------------------------
@@ -132,13 +130,14 @@ void MainWindow::loadWhitePerspective()
 void MainWindow::loadBlackPerspective()
 {
   std::cout << "loading black perspective" << std::endl;
-  for (int i = 0; i < RANKS; i++)
-  {
-    for (int j = 0; j < FILES; j++)
+  for (int tRow = 0; tRow < ROWS; tRow++)
+    for (int tCol = 0; tCol < COLS; tCol++)
     {
-      _SquareHolders[i][j]->addWidget(_Squares[RANKS-1-j][i]);
+      GridCoord tGridCoord(tRow,tCol);
+      SquareCoord tSquareCoord = mapGridToSquare(tGridCoord);
+      _SquareHolders[tRow][tCol]->addWidget(
+          _Squares[tSquareCoord._File][tSquareCoord._Rank]);
     }
-  }
 }
 
 //-----------------------------------------------------------------------------
@@ -146,56 +145,57 @@ void MainWindow::loadBlackPerspective()
 void MainWindow::highlightFrame(GridCoord aGridCoord)
 {
   std::cout << "highlighting frame with grid coords "
-     << aGridCoord._x << "," << aGridCoord._y << std::endl;
+     << aGridCoord._Row << "," << aGridCoord._Col << std::endl;
   QFrame *tFrame =
-      (QFrame*)_SquareHolders[aGridCoord._x][aGridCoord._y]->parent();
+      (QFrame*)_SquareHolders[aGridCoord._Row][aGridCoord._Col]->parent();
   tFrame->setPalette(QPalette(Qt::blue));
+
   tFrame->setContentsMargins(5,5,5,5);
   tFrame->setAutoFillBackground(true);
 }
 
 //-----------------------------------------------------------------------------
 // Notes for mapSquareToGrid and mapGridToSquare:
-// For white, x equals file, y inverts rank.
-// For black, y equals rank, x inverts file.
+// For white, row inverts rank, col equals file.
+// For black, row equals rank, col inverts file.
 //-----------------------------------------------------------------------------
 GridCoord MainWindow::mapSquareToGrid(SquareCoord aSquareCoord)
 {
   GridCoord tGridCoord;
-  if (_Perspective == eBlack)
+  if (_Perspective == eWhite)
   {
-    tGridCoord._x = aSquareCoord._File;
-    tGridCoord._y = RANKS-1-aSquareCoord._Rank;
+    tGridCoord._Row = RANKS-1-aSquareCoord._Rank;
+    tGridCoord._Col = aSquareCoord._File;
     std::cout << "White perspective: "
         << "square(" << aSquareCoord._Rank << "," << aSquareCoord._File << ") "
         << "maps to "
-        << "grid(" << tGridCoord._x << "," << tGridCoord._y << ");" << std::endl;
+        << "grid(" << tGridCoord._Row << "," << tGridCoord._Col << ");" << std::endl;
   }
   else
   {
-    tGridCoord._x = FILES-1-aSquareCoord._File;
-    tGridCoord._y = aSquareCoord._Rank;
+    tGridCoord._Row = aSquareCoord._Rank;
+    tGridCoord._Col = FILES-1-aSquareCoord._File;
   }
   return tGridCoord;
 }
 
 //-----------------------------------------------------------------------------
 // Notes for mapSquareToGrid and mapGridToSquare:
-// For white, x equals file, y inverts rank.
-// For black, y equals rank, x inverts file.
+// For white, row inverts rank, col equals file.
+// For black, row equals rank, col inverts file.
 //-----------------------------------------------------------------------------
 SquareCoord MainWindow::mapGridToSquare(GridCoord aGridCoord)
 {
   SquareCoord tSquareCoord;
-  if (_Perspective == eBlack)
+  if (_Perspective == eWhite)
   {
-    tSquareCoord._File = aGridCoord._x;
-    tSquareCoord._Rank = RANKS-1-aGridCoord._y;
+    tSquareCoord._Rank = ROWS-1-aGridCoord._Row;
+    tSquareCoord._File = aGridCoord._Col;
   }
   else
   {
-    tSquareCoord._Rank = aGridCoord._y;
-    tSquareCoord._File = FILES-1-aGridCoord._x;
+    tSquareCoord._Rank = aGridCoord._Row;
+    tSquareCoord._File = COLS-1-aGridCoord._Col;
   }
   return tSquareCoord;
 }
@@ -250,16 +250,16 @@ void MainWindow::setupView()
   /*
    * Create the squares.
    */
-  for (int tFileIdx = 0; tFileIdx < FILES; tFileIdx++)
-    for (int tRankIdx = 0; tRankIdx < RANKS; tRankIdx++)
+  for (int tFile = 0; tFile < FILES; tFile++)
+    for (int tRank = 0; tRank < RANKS; tRank++)
     {
-      Square *tSquare = new Square(this,_WhitePalette,tFileIdx,tRankIdx,
-          _FileNames[tFileIdx] + _RankNames[tRankIdx]);
+      Square *tSquare = new Square(this,_WhitePalette,tFile,tRank,
+          _FileNames[tFile] + _RankNames[tRank]);
 
       QObject::connect(tSquare, SIGNAL(squareClicked(int,int,bool)),
           this, SLOT(onSquareClick(int,int,bool)) );
 
-      _Squares[tFileIdx][tRankIdx] = tSquare;
+      _Squares[tFile][tRank] = tSquare;
     }
 
   /*
@@ -270,9 +270,8 @@ void MainWindow::setupView()
   tGridLayout->setVerticalSpacing(0);
   tGridLayout->setContentsMargins(0,0,0,0);
 
-  for (int tCol = 0; tCol < COLS; tCol++)
-  {
-    for (int tRow = 0; tRow < ROWS; tRow++)
+  for (int tRow = 0; tRow < ROWS; tRow++)
+    for (int tCol = 0; tCol < COLS; tCol++)
     {
       // frame shape/style
       QFrame *tFrame = new QFrame(this);
@@ -285,7 +284,7 @@ void MainWindow::setupView()
 
       tFrame->setMinimumSize(QSize(60,60));
 
-      if (tCol == 0 && tRow == 0)
+      if (tRow == 0 && tCol == 0)
       {
         tFrame->setContentsMargins(2,2,2,2);
       }
@@ -309,7 +308,6 @@ void MainWindow::setupView()
 
       tGridLayout->addWidget(tFrame,tRow,tCol);
     }
-  }
 
   highlightFrame(GridCoord(0,0));
 

@@ -3,10 +3,10 @@
 
 class GridCoord {
 public:
-  int _x;
-  int _y;
+  int _Row;
+  int _Col;
   GridCoord();
-  GridCoord(int aX,int aY);
+  GridCoord(int aRow,int aCol);
   virtual ~GridCoord();
 };
 
