@@ -22,8 +22,8 @@ public:
 
   const int RANKS = 8;
   const int FILES = 8;
-//  const int ROWS = 8;
-//  const int COLS = 8;
+  const int ROWS = 8;
+  const int COLS = 8;
 
   QString _FileNames[8] = {"a", "b", "c", "d", "e", "f", "g", "h"};
   QString _RankNames[8] = {"1", "2", "3", "4", "5", "6", "7", "8"};
@@ -55,6 +55,7 @@ protected:
   int _LastClickedRank;
   int _LastClickedFile;
 
+  void configurePalettes();
   bool isLightSquare(SquareCoord aSquare);
   void showSquareColors(bool aShow);
   void loadPerspective();

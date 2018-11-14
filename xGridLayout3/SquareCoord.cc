@@ -1,14 +1,14 @@
 #include "SquareCoord.hh"
 
 SquareCoord::SquareCoord()
-: _Rank(-1),
-  _File(-1)
+: _File(-1),
+  _Rank(-1)
 {
 }
 
-SquareCoord::SquareCoord(int aRank,int aFile)
-: _Rank(aRank),
-  _File(aFile)
+SquareCoord::SquareCoord(int aFile,int aRank)
+: _File(aFile),
+  _Rank(aRank)
 {
 }
 

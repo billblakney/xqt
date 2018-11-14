@@ -46,11 +46,11 @@ showSquareColors(false);
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void MainWindow::onSquareClick(int aRank,int aFile,bool aIsLeft)
+void MainWindow::onSquareClick(int aFile,int aRank,bool aIsLeft)
 {
   Q_UNUSED(aIsLeft);
-  std::cout << "click on " << aRank << "," << aFile << std::endl;
-  highlightFrame(mapSquareToGrid(SquareCoord(aRank,aFile)));
+  std::cout << "click on " << aFile << "," << aRank << std::endl;
+  highlightFrame(mapSquareToGrid(SquareCoord(aFile,aRank)));
 }
 
 //-----------------------------------------------------------------------------
@@ -113,19 +113,25 @@ void MainWindow::loadPerspective()
 //-----------------------------------------------------------------------------
 void MainWindow::loadWhitePerspective()
 {
-  for (int i = 0; i < RANKS; i++)
+  std::cout << "loading white perspective" << std::endl;
+  for (int tX = 0; tX < COLS; tX++)
   {
-    for (int j = 0; j < FILES; j++)
+    for (int tY = 0; tY < ROWS; tY++)
     {
-      _SquareHolders[i][j]->addWidget(_Squares[j][FILES-1-i]);
+      GridCoord tGridCoord(tX,tY);
+      SquareCoord tSquareCoord = mapGridToSquare(tGridCoord);
+      _SquareHolders[tX][tY]->addWidget(
+          _Squares[tSquareCoord._File][tSquareCoord._Rank]);
     }
   }
 }
 
 //-----------------------------------------------------------------------------
+//TODO coords
 //-----------------------------------------------------------------------------
 void MainWindow::loadBlackPerspective()
 {
+  std::cout << "loading black perspective" << std::endl;
   for (int i = 0; i < RANKS; i++)
   {
     for (int j = 0; j < FILES; j++)
@@ -156,7 +162,7 @@ void MainWindow::highlightFrame(GridCoord aGridCoord)
 GridCoord MainWindow::mapSquareToGrid(SquareCoord aSquareCoord)
 {
   GridCoord tGridCoord;
-  if (_Perspective == eWhite)
+  if (_Perspective == eBlack)
   {
     tGridCoord._x = aSquareCoord._File;
     tGridCoord._y = RANKS-1-aSquareCoord._Rank;
@@ -181,7 +187,7 @@ GridCoord MainWindow::mapSquareToGrid(SquareCoord aSquareCoord)
 SquareCoord MainWindow::mapGridToSquare(GridCoord aGridCoord)
 {
   SquareCoord tSquareCoord;
-  if (_Perspective == eWhite)
+  if (_Perspective == eBlack)
   {
     tSquareCoord._File = aGridCoord._x;
     tSquareCoord._Rank = RANKS-1-aGridCoord._y;
@@ -196,13 +202,30 @@ SquareCoord MainWindow::mapGridToSquare(GridCoord aGridCoord)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+void MainWindow::configurePalettes()
+{
+  _BlackPalette = palette();
+  //  _BlackPalette.setColor(QPalette::Background, Qt::black);
+  _BlackPalette.setColor(QPalette::Background, QColor(90,90,90));
+  _BlackPalette.setColor(QPalette::Foreground, Qt::white);
+  _WhitePalette = palette();
+  _WhitePalette.setColor(QPalette::Background, Qt::white);
+  _WhitePalette.setColor(QPalette::Foreground, Qt::black);
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void MainWindow::setupView()
 {
   std::cout << "setupView" << std::endl;
   setMinimumSize(QSize(640,600));
 
+  // Overall layout.
   QVBoxLayout *tBoxLayout = new QVBoxLayout(this);
 
+  /*
+   * Configure the flip board toggle.
+   */
   _FlipBoardToggle =
       new QPushButton("Perspective: WHITE",this);
   _FlipBoardToggle->setCheckable(true);
@@ -212,41 +235,44 @@ void MainWindow::setupView()
 
   tBoxLayout->addWidget(_FlipBoardToggle);
 
+  /*
+   * Configure the find label.
+   */
   _FindLabel =
       new QLabel("<square_to_find>",this);
   tBoxLayout->addWidget(_FindLabel);
 
-  _BlackPalette = palette();
-//  _BlackPalette.setColor(QPalette::Background, Qt::black);
-  _BlackPalette.setColor(QPalette::Background, QColor(90,90,90));
-  _BlackPalette.setColor(QPalette::Foreground, Qt::white);
-  _WhitePalette = palette();
-  _WhitePalette.setColor(QPalette::Background, Qt::white);
-  _WhitePalette.setColor(QPalette::Foreground, Qt::black);
+  /*
+   * Configure palettes.
+   */
+  configurePalettes();
 
   /*
    * Create the squares.
    */
-  for (int i = 0; i < RANKS; i++)
-    for (int j = 0; j < FILES; j++)
+  for (int tFileIdx = 0; tFileIdx < FILES; tFileIdx++)
+    for (int tRankIdx = 0; tRankIdx < RANKS; tRankIdx++)
     {
-      Square *tSquare = new Square(this,_WhitePalette,i,j,
-          _FileNames[i] + _RankNames[j]);
+      Square *tSquare = new Square(this,_WhitePalette,tFileIdx,tRankIdx,
+          _FileNames[tFileIdx] + _RankNames[tRankIdx]);
 
       QObject::connect(tSquare, SIGNAL(squareClicked(int,int,bool)),
           this, SLOT(onSquareClick(int,int,bool)) );
 
-      _Squares[i][j] = tSquare;
+      _Squares[tFileIdx][tRankIdx] = tSquare;
     }
 
+  /*
+   * Create the grid that holds the squares.
+   */
   QGridLayout *tGridLayout = new QGridLayout(this);
   tGridLayout->setHorizontalSpacing(0);
   tGridLayout->setVerticalSpacing(0);
   tGridLayout->setContentsMargins(0,0,0,0);
 
-  for (int i = 0; i < RANKS; i++)
+  for (int tCol = 0; tCol < COLS; tCol++)
   {
-    for (int j = 0; j < FILES; j++)
+    for (int tRow = 0; tRow < ROWS; tRow++)
     {
       // frame shape/style
       QFrame *tFrame = new QFrame(this);
@@ -259,15 +285,15 @@ void MainWindow::setupView()
 
       tFrame->setMinimumSize(QSize(60,60));
 
-      if (i == 0 && j == 0)
+      if (tCol == 0 && tRow == 0)
       {
         tFrame->setContentsMargins(2,2,2,2);
       }
-      else if (i == 0)
+      else if (tRow == 0)
       {
         tFrame->setContentsMargins(0,2,2,2);
       }
-      else if (j == 0)
+      else if (tCol == 0)
       {
         tFrame->setContentsMargins(2,0,2,2);
       }
@@ -279,9 +305,9 @@ void MainWindow::setupView()
       QVBoxLayout *tBL = new QVBoxLayout(tFrame);
       tBL->setContentsMargins(0,0,0,0);
 
-      _SquareHolders[i][j] = tBL;
+      _SquareHolders[tRow][tCol] = tBL;
 
-      tGridLayout->addWidget(tFrame,i,j);
+      tGridLayout->addWidget(tFrame,tRow,tCol);
     }
   }
 

@@ -3,10 +3,10 @@
 
 class SquareCoord {
 public:
-  int _Rank;
   int _File;
+  int _Rank;
   SquareCoord();
-  SquareCoord(int aRank,int aFile);
+  SquareCoord(int aFile,int aRank);
   virtual ~SquareCoord();
 };
 
