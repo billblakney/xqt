@@ -46,6 +46,15 @@ showSquareColors(false);
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+void MainWindow::onSquareClick(int aRank,int aFile,bool aIsLeft)
+{
+  Q_UNUSED(aIsLeft);
+  std::cout << "click on " << aRank << "," << aFile << std::endl;
+  highlightFrame(mapSquareToGrid(SquareCoord(aRank,aFile)));
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool MainWindow::isLightSquare(SquareCoord aSquare)
 {
   if ((aSquare._Rank + aSquare._File)%2 != 0)
@@ -130,34 +139,58 @@ void MainWindow::loadBlackPerspective()
 //-----------------------------------------------------------------------------
 void MainWindow::highlightFrame(GridCoord aGridCoord)
 {
+  std::cout << "highlighting frame with grid coords "
+     << aGridCoord._x << "," << aGridCoord._y << std::endl;
   QFrame *tFrame =
-      (QFrame*)_SquareHolders[aGridCoord._Row][aGridCoord._Col]->parent();
+      (QFrame*)_SquareHolders[aGridCoord._x][aGridCoord._y]->parent();
   tFrame->setPalette(QPalette(Qt::blue));
-  tFrame->setContentsMargins(10,10,10,10);
+  tFrame->setContentsMargins(5,5,5,5);
   tFrame->setAutoFillBackground(true);
 }
 
 //-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-void MainWindow::onSquareClick(int aRank,int aFile,bool aIsLeft)
-{
-  std::cout << "click on " << aRank << "," << aFile << std::endl;
-  highlightFrame(GridCoord(aRank,aFile));
-}
-
-//-----------------------------------------------------------------------------
+// Notes for mapSquareToGrid and mapGridToSquare:
+// For white, x equals file, y inverts rank.
+// For black, y equals rank, x inverts file.
 //-----------------------------------------------------------------------------
 GridCoord MainWindow::mapSquareToGrid(SquareCoord aSquareCoord)
 {
   GridCoord tGridCoord;
+  if (_Perspective == eWhite)
+  {
+    tGridCoord._x = aSquareCoord._File;
+    tGridCoord._y = RANKS-1-aSquareCoord._Rank;
+    std::cout << "White perspective: "
+        << "square(" << aSquareCoord._Rank << "," << aSquareCoord._File << ") "
+        << "maps to "
+        << "grid(" << tGridCoord._x << "," << tGridCoord._y << ");" << std::endl;
+  }
+  else
+  {
+    tGridCoord._x = FILES-1-aSquareCoord._File;
+    tGridCoord._y = aSquareCoord._Rank;
+  }
   return tGridCoord;
 }
 
 //-----------------------------------------------------------------------------
+// Notes for mapSquareToGrid and mapGridToSquare:
+// For white, x equals file, y inverts rank.
+// For black, y equals rank, x inverts file.
 //-----------------------------------------------------------------------------
 SquareCoord MainWindow::mapGridToSquare(GridCoord aGridCoord)
 {
   SquareCoord tSquareCoord;
+  if (_Perspective == eWhite)
+  {
+    tSquareCoord._File = aGridCoord._x;
+    tSquareCoord._Rank = RANKS-1-aGridCoord._y;
+  }
+  else
+  {
+    tSquareCoord._Rank = aGridCoord._y;
+    tSquareCoord._File = FILES-1-aGridCoord._x;
+  }
   return tSquareCoord;
 }
 

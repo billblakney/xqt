@@ -1,14 +1,14 @@
 #include "GridCoord.hh"
 
 GridCoord::GridCoord()
-: _Row(-1),
-  _Col(-1)
+: _x(-1),
+  _y(-1)
 {
 }
 
-GridCoord::GridCoord(int aRow,int aCol)
-: _Row(aRow),
-  _Col(aCol)
+GridCoord::GridCoord(int aX,int aY)
+: _x(aX),
+  _y(aY)
 {
 }
 
