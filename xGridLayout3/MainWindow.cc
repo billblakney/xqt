@@ -20,22 +20,10 @@ MainWindow::~MainWindow()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void MainWindow::onFlipBoardToggled(bool aChecked)
+void MainWindow::setup()
 {
-  if (aChecked)
-  {
-    std::cout << "Using BLACK perspective" << std::endl;
-    _FlipBoardToggle->setText("Perspective: BLACK");
-    _Board->setPerspective(Board::eBlack);
-_Board->showSquareColors(true);
-  }
-  else
-  {
-    std::cout << "Using white perspective" << std::endl;
-    _FlipBoardToggle->setText("Perspective: WHITE");
-    _Board->setPerspective(Board::eWhite);
-_Board->showSquareColors(false);
-  }
+  setupView();
+  setupConnections();
 }
 
 //-----------------------------------------------------------------------------
@@ -69,20 +57,37 @@ void MainWindow::setupView()
    */
   _Board = new Board(this);
 
-#ifdef OLD
-  QWidget *tEditorsWidget = new QWidget(this);
-  tEditorsWidget->setLayout(tGridLayout);
-
-  tBoxLayout->addWidget(tEditorsWidget);
-#endif
-
   tBoxLayout->addWidget(_Board);
 
   //  resize(200,120);
 
   setLayout(tBoxLayout);
+}
 
-  //TODO move?
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::setupConnections()
+{
   QObject::connect(_FlipBoardToggle, SIGNAL(toggled(bool)),
       this, SLOT(onFlipBoardToggled(bool)) );
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void MainWindow::onFlipBoardToggled(bool aChecked)
+{
+  if (aChecked)
+  {
+    std::cout << "Using BLACK perspective" << std::endl;
+    _FlipBoardToggle->setText("Perspective: BLACK");
+    _Board->setPerspective(Board::eBlack);
+_Board->showSquareColors(true);
+  }
+  else
+  {
+    std::cout << "Using white perspective" << std::endl;
+    _FlipBoardToggle->setText("Perspective: WHITE");
+    _Board->setPerspective(Board::eWhite);
+_Board->showSquareColors(false);
+  }
 }
